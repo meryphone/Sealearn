@@ -19,13 +19,9 @@ public class LoginView extends JFrame {
         setLocationRelativeTo(null);
         getContentPane().setLayout(null);
 
-        // Colores según el diseño
-        Color beige = new Color(211, 204, 194); // Fondo beige
-        Color buttonColor = new Color(8, 32, 50); // Color más oscuro para los botones
-
-        // Panel principal con fondo beige
+        // Panel principal con fondo MainView.BEIGE
         JPanel panel = new JPanel();
-        panel.setBackground(beige);
+        panel.setBackground(MainView.BEIGE);
         panel.setBounds(0, 0, 500, 700);
         panel.setLayout(null);
         getContentPane().add(panel);
@@ -36,13 +32,13 @@ public class LoginView extends JFrame {
         panel.add(logoLabel);
 
         // Botón "Iniciar"
-        JButton iniciarButton = new RoundButton("Comenzar", buttonColor);
+        JButton iniciarButton = new RoundButton("Comenzar", MainView.BUTTON_COLOR);
         iniciarButton.setFont(new Font("Arial", Font.BOLD, 18));
         iniciarButton.setBounds(100, 400, 140, 60);
         panel.add(iniciarButton);
 
         // Botón "Cancelar"
-        JButton cancelarButton = new RoundButton("Cancelar", buttonColor);
+        JButton cancelarButton = new RoundButton("Cancelar", MainView.BUTTON_COLOR);
         cancelarButton.setFont(new Font("Arial", Font.BOLD, 18));
         cancelarButton.setBounds(260, 400, 140, 60);
         panel.add(cancelarButton);
