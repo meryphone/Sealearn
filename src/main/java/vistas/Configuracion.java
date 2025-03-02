@@ -15,7 +15,8 @@ import javax.swing.Box;
 import java.awt.Color;
 import javax.swing.ImageIcon;
 import java.awt.Dimension;
-import java.awt.Font;  // Importa la clase Font
+import java.awt.Font;
+import java.awt.Component;  // Importa la clase Font
 
 
 public class Configuracion extends JFrame {
@@ -63,6 +64,8 @@ public class Configuracion extends JFrame {
         dificultad.setFont(labelFont);
         panelDificultad.add(dificultad);
         centro.add(panelDificultad);
+        panelDificultad.setLayout(new FlowLayout(FlowLayout.CENTER, 1, 5));
+
 
         JPanel panelOrden = new JPanel();
         panelOrden.setBackground(new Color(230, 221, 206));
@@ -98,9 +101,12 @@ public class Configuracion extends JFrame {
         JPanel logo = new JPanel();
         logo.setBackground(new Color(230, 221, 206));
         contentPane.add(logo, BorderLayout.NORTH);
-
-        JLabel lblNewLabel = new JLabel("");
-        lblNewLabel.setIcon(new ImageIcon(Configuracion.class.getResource("/resources/logo(2)-Photoroom.png")));
-        logo.add(lblNewLabel);
+        
+        Component verticalStrut = Box.createVerticalStrut(40);
+        logo.add(verticalStrut);
+        
+                JLabel lblNewLabel = new JLabel("");
+                contentPane.add(lblNewLabel, BorderLayout.WEST);
+                lblNewLabel.setIcon(new ImageIcon(Configuracion.class.getResource("/resources/focaSinFondo(3).png")));
     }
 }

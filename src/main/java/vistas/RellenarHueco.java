@@ -35,7 +35,7 @@ public class RellenarHueco extends JFrame {
 
     public RellenarHueco() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 450, 300);
+        setBounds(100, 100, 536, 431);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
         setContentPane(contentPane);
@@ -74,7 +74,7 @@ public class RellenarHueco extends JFrame {
         contentPane.add(arriba, BorderLayout.NORTH);
         
         JLabel lblNewLabel_1 = new JLabel("");
-        lblNewLabel_1.setIcon(new ImageIcon(RellenarHueco.class.getResource("/resources/logo(2)-Photoroom.png")));
+        lblNewLabel_1.setIcon(new ImageIcon(RellenarHueco.class.getResource("/resources/focaSinFondo(3).png")));
         arriba.add(lblNewLabel_1);
         arriba.setBackground(new Color(230, 221, 206));
         
