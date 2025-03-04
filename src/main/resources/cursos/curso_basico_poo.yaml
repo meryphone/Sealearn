@@ -1,0 +1,54 @@
+nombre: "Curso Básico de POO"
+descripcion: "Introducción a los conceptos fundamentales de la Programación Orientada a Objetos."
+estrategia: "secuencial"
+dificultad: "fácil"
+progreso: 0
+preguntas:
+  - tipo: "PreguntaTest"
+    enunciado: "¿Cuál de los siguientes NO es un pilar de la POO?"
+    opciones: ["Abstracción", "Herencia", "Compilación"]
+    respuesta_correcta: "Compilación"
+
+  - tipo: "PreguntaTest"
+    enunciado: "¿Qué palabra clave en Java se usa para crear una instancia de una clase?"
+    opciones: ["instance", "new", "class"]
+    respuesta_correcta: "new"
+
+  - tipo: "PreguntaTest"
+    enunciado: "¿Qué es la encapsulación en POO?"
+    opciones: 
+      - "Ocultar los detalles internos de una clase."
+      - "Hacer que las variables sean públicas."
+      - "Convertir una clase en una interfaz."
+    respuesta_correcta: "Ocultar los detalles internos de una clase."
+
+  - tipo: "PreguntaTest"
+    enunciado: "En Java, ¿cómo se define una clase?"
+    opciones: ["class MiClase {}", "define MiClase {}", "public MiClase()"]
+    respuesta_correcta: "class MiClase {}"
+
+  - tipo: "PreguntaTest"
+    enunciado: "¿Cuál de las siguientes opciones describe correctamente la herencia en POO?"
+    opciones: 
+      - "Permite reutilizar atributos y métodos de otra clase."
+      - "Hace que una clase tenga múltiples constructores."
+      - "Sirve solo para cambiar el nombre de una clase."
+    respuesta_correcta: "Permite reutilizar atributos y métodos de otra clase."
+
+  - tipo: "PreguntaHueco"
+    enunciado: "En Java, la palabra clave para definir una clase es ___."
+    hueco: "class"
+    respuesta_correcta: "class"
+
+  - tipo: "PreguntaHueco"
+    enunciado: "La palabra clave para heredar de una clase en Java es ___."
+    hueco: "extends"
+    respuesta_correcta: "extends"
+
+  - tipo: "PreguntaRespuestaCorta"
+    enunciado: "¿Cuál es la capital de Francia?"
+    respuesta_correcta: "París"
+
+  - tipo: "PreguntaRespuestaCorta"
+    enunciado: "¿Qué palabra clave se usa en Java para definir una constante?"
+    respuesta_correcta: "final"
