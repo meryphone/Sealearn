@@ -27,7 +27,7 @@ public class LoginView extends JFrame {
         getContentPane().add(panel);
 
         // Cargar la imagen del logo (asegúrate de tener el archivo en el mismo directorio)
-        JLabel logoLabel = new JLabel(new ImageIcon(LoginView.class.getResource("/SeaLearn-Logo.png"))); 
+        JLabel logoLabel = new JLabel(new ImageIcon(LoginView.class.getResource("/imagenes/SeaLearn-Logo.png"))); 
         logoLabel.setBounds(100, 50, 300, 300); // Ajusta tamaño y posición
         panel.add(logoLabel);
 

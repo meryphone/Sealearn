@@ -35,7 +35,7 @@ public class MainView {
         frame.getContentPane().add(top, BorderLayout.NORTH);
         top.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-        JLabel title = new JLabel(new ImageIcon(MainView.class.getResource("/Titulo.png")));
+        JLabel title = new JLabel(new ImageIcon(MainView.class.getResource("/imagenes/Titulo.png")));
         top.add(title);
         top.setBackground(BEIGE);
 
@@ -53,11 +53,11 @@ public class MainView {
         frame.getContentPane().add(down, BorderLayout.SOUTH);
         down.setBackground(MainView.BEIGE);
 
-        JLabel sealLeft = new JLabel(new ImageIcon(MainView.class.getResource("/seal_looking_right.png")));
+        JLabel sealLeft = new JLabel(new ImageIcon(MainView.class.getResource("/imagenes/seal_looking_right.png")));
         down.add(sealLeft);
         down.add(Box.createRigidArea(new Dimension(550, 20)));
 
-        JLabel sealRight = new JLabel(new ImageIcon(MainView.class.getResource("/seal.png")));
+        JLabel sealRight = new JLabel(new ImageIcon(MainView.class.getResource("/imagenes/seal.png")));
         down.add(sealRight);
 
         JPanel center0 = new JPanel();
@@ -69,7 +69,7 @@ public class MainView {
         center0.add(panelButtons, BorderLayout.NORTH);
         panelButtons.setBackground(MainView.BEIGE);
 
-        JButton btnStats = new RoundButton("Estadísticas");
+        JButton btnStats = new RoundButton("Estadisticas");
         btnStats.setPreferredSize(new Dimension(100, 40));
         panelButtons.add(btnStats);
         Component rigidArea = Box.createRigidArea(new Dimension(20, 40));
@@ -77,7 +77,7 @@ public class MainView {
         rigidArea.setMinimumSize(new Dimension(20, 20));
         panelButtons.add(rigidArea);
 
-        JButton btnExportStats = new RoundButton("Exportar estadísticas");
+        JButton btnExportStats = new RoundButton("Exportar estadisticas");
         btnExportStats.setPreferredSize(new Dimension(150, 40));
         panelButtons.add(btnExportStats);
         Component rigidArea_1 = Box.createRigidArea(new Dimension(20, 20));
@@ -138,7 +138,7 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<String> {
         leftPanel.add(Box.createVerticalGlue());
 
         // Icono
-        iconLabel = new JLabel(new ImageIcon(MainView.class.getResource("/gorro-graduacion.png")));
+        iconLabel = new JLabel(new ImageIcon(MainView.class.getResource("/imagenes/gorro-graduacion.png")));
         iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10)); // Márgenes
         iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrar horizontalmente
         leftPanel.add(iconLabel);
@@ -202,7 +202,7 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<String> {
         nameLabel.setText(value);
 
         // Asignar una descripción de ejemplo (puedes personalizarla según tus datos)
-        descriptionLabel.setText("Descripción breve del curso " + value);
+        descriptionLabel.setText("Descripcion breve del curso " + value);
 
         // Cambiar el color de fondo si está seleccionado
         if (isSelected) {

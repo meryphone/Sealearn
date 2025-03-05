@@ -1,4 +1,4 @@
-package vistas;
+package GUI;
 
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -60,7 +60,7 @@ public class Configuracion extends JFrame {
         labelDificultad.setFont(labelFont);
         panelDificultad.add(labelDificultad);
         JComboBox<String> dificultad = new JComboBox<>();
-        dificultad.setModel(new DefaultComboBoxModel<>(new String[] {"Fácil", "Medio", "Difícil"}));
+        dificultad.setModel(new DefaultComboBoxModel<>(new String[] {"Facil", "Medio", "Dificil"}));
         dificultad.setFont(labelFont);
         panelDificultad.add(dificultad);
         centro.add(panelDificultad);
@@ -74,7 +74,7 @@ public class Configuracion extends JFrame {
         labelOrden.setFont(labelFont);
         panelOrden.add(labelOrden);
         JComboBox<String> orden = new JComboBox<>();
-        orden.setModel(new DefaultComboBoxModel<>(new String[] {"Secuencial", "Repetición espaciada", "Aleatoria"}));
+        orden.setModel(new DefaultComboBoxModel<>(new String[] {"Secuencial", "Repeticion espaciada", "Aleatoria"}));
         orden.setFont(labelFont);
         panelOrden.add(orden);
         centro.add(panelOrden);
@@ -85,12 +85,10 @@ public class Configuracion extends JFrame {
         abajo.setBorder(new EmptyBorder(10, 10, 10, 10));
         contentPane.add(abajo, BorderLayout.SOUTH);
 
-        JButton cancelar = new JButton("Cancelar");
-        cancelar.setFont(new Font("Arial", Font.PLAIN, 14));  // Establece la fuente para los botones
-        JButton comenzar = new JButton("Comenzar");
-        comenzar.setFont(new Font("Arial", Font.PLAIN, 14));
-        comenzar.setForeground(Color.WHITE);
-        comenzar.setBackground(new Color(29, 37, 56));
+        JButton cancelar = new RoundButton("Cancelar");
+      
+        JButton comenzar = new RoundButton("Comenzar");
+
 
         abajo.add(Box.createRigidArea(new Dimension(10, 0)));
         abajo.add(cancelar);
@@ -107,6 +105,6 @@ public class Configuracion extends JFrame {
         
                 JLabel lblNewLabel = new JLabel("");
                 contentPane.add(lblNewLabel, BorderLayout.WEST);
-                lblNewLabel.setIcon(new ImageIcon(Configuracion.class.getResource("/resources/focaSinFondo(3).png")));
+                lblNewLabel.setIcon(new ImageIcon(getClass().getResource("/imagenes/seal_looking_right.png")));
     }
 }

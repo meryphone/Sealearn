@@ -1,4 +1,4 @@
-package vistas;
+package GUI;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
@@ -74,7 +74,7 @@ public class RellenarHueco extends JFrame {
         contentPane.add(arriba, BorderLayout.NORTH);
         
         JLabel lblNewLabel_1 = new JLabel("");
-        lblNewLabel_1.setIcon(new ImageIcon(RellenarHueco.class.getResource("/resources/focaSinFondo(3).png")));
+        lblNewLabel_1.setIcon(new ImageIcon(getClass().getResource("/imagenes/seal_looking_right.png")));
         arriba.add(lblNewLabel_1);
         arriba.setBackground(new Color(230, 221, 206));
         

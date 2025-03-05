@@ -51,7 +51,7 @@ public class TestView {
 		panelQuestions.add(top, BorderLayout.NORTH);
 		top.setBackground(MainView.BEIGE);
 		
-		JLabel lblQuestion = new JLabel("¿Cuál es la capital de francia?");
+		JLabel lblQuestion = new JLabel("�Cual es la capital de francia?");
 		top.add(lblQuestion);
 		
 		JPanel optionsPanel = new JPanel();
@@ -63,7 +63,7 @@ public class TestView {
 		optionsPanel.add(rdbtnOpcion1);
 		rdbtnOpcion1.setBackground(MainView.BEIGE.brighter());
 		
-		JRadioButton rdbtnOpcion2 = new JRadioButton("Dublín");
+		JRadioButton rdbtnOpcion2 = new JRadioButton("Dublin");
 		optionsPanel.add(rdbtnOpcion2);
 		rdbtnOpcion2.setBackground(MainView.BEIGE.brighter());
 		
@@ -89,7 +89,7 @@ public class TestView {
 		panelHeadline.setBackground(MainView.BEIGE);
 		
 		JLabel labelSeal = new JLabel("");
-		labelSeal.setIcon(new ImageIcon("/home/maria/Escritorio/PDS/ProyectoPDS/src/main/resources/seal_looking_right.png"));
+		labelSeal.setIcon(new ImageIcon("/imagenes/seal_looking_right.png"));
 		panelHeadline.add(labelSeal);
 		
 		JProgressBar progressBar = new JProgressBar();
