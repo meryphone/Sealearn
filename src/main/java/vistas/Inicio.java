@@ -1,18 +1,18 @@
-package GUI;
+package vistas;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
-public class LoginView extends JFrame {
+public class Inicio extends JFrame {
 
     private static final long serialVersionUID = 1L;
     
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new LoginView());
+        SwingUtilities.invokeLater(() -> new Inicio());
     }
 
-    public LoginView() {
+    public Inicio() {
         setTitle("Sealearn");
         setSize(500, 589);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -21,24 +21,24 @@ public class LoginView extends JFrame {
 
         // Panel principal con fondo MainView.BEIGE
         JPanel panel = new JPanel();
-        panel.setBackground(MainView.BEIGE);
+        panel.setBackground(Principal.BEIGE);
         panel.setBounds(0, 0, 500, 700);
         panel.setLayout(null);
         getContentPane().add(panel);
 
         // Cargar la imagen del logo (asegúrate de tener el archivo en el mismo directorio)
-        JLabel logoLabel = new JLabel(new ImageIcon(LoginView.class.getResource("/imagenes/SeaLearn-Logo.png"))); 
+        JLabel logoLabel = new JLabel(new ImageIcon(Inicio.class.getResource("/imagenes/SeaLearn-Logo.png"))); 
         logoLabel.setBounds(100, 50, 300, 300); // Ajusta tamaño y posición
         panel.add(logoLabel);
 
         // Botón "Iniciar"
-        JButton iniciarButton = new RoundButton("Comenzar", MainView.BUTTON_COLOR);
+        JButton iniciarButton = new RoundButton("Comenzar", Principal.BUTTON_COLOR);
         iniciarButton.setFont(new Font("Arial", Font.BOLD, 18));
         iniciarButton.setBounds(100, 400, 140, 60);
         panel.add(iniciarButton);
 
         // Botón "Cancelar"
-        JButton cancelarButton = new RoundButton("Cancelar", MainView.BUTTON_COLOR);
+        JButton cancelarButton = new RoundButton("Cancelar", Principal.BUTTON_COLOR);
         cancelarButton.setFont(new Font("Arial", Font.BOLD, 18));
         cancelarButton.setBounds(260, 400, 140, 60);
         panel.add(cancelarButton);
