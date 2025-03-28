@@ -36,13 +36,22 @@ public class LoginView extends JFrame {
         iniciarButton.setFont(new Font("Arial", Font.BOLD, 18));
         iniciarButton.setBounds(100, 400, 140, 60);
         panel.add(iniciarButton);
+        iniciarButton.addActionListener(e ->{
+        	MainView main = new MainView();
+        	main.getFrame().setVisible(true);
+        	dispose();  
+        });
+        
 
         // Botón "Cancelar"
         JButton cancelarButton = new RoundButton("Cancelar", MainView.BUTTON_COLOR);
         cancelarButton.setFont(new Font("Arial", Font.BOLD, 18));
         cancelarButton.setBounds(260, 400, 140, 60);
         panel.add(cancelarButton);
-
+        
+        cancelarButton.addActionListener(e -> {
+        	dispose();
+        });
         setVisible(true);
     }
 

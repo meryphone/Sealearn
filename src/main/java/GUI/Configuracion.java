@@ -92,6 +92,9 @@ public class Configuracion extends JFrame {
 
         abajo.add(Box.createRigidArea(new Dimension(10, 0)));
         abajo.add(cancelar);
+        cancelar.addActionListener(e->{
+        	dispose();
+        });
         abajo.add(Box.createHorizontalGlue());
         abajo.add(comenzar);
         abajo.add(Box.createRigidArea(new Dimension(10, 0)));

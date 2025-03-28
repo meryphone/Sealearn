@@ -24,6 +24,10 @@ public class MainView {
     public MainView() {
         initialize();
     }
+    
+    public JFrame getFrame() {
+        return frame;
+    }
 
     private void initialize() {
         frame = new JFrame();
@@ -72,6 +76,12 @@ public class MainView {
         JButton btnStats = new RoundButton("Estadisticas");
         btnStats.setPreferredSize(new Dimension(100, 40));
         panelButtons.add(btnStats);
+        btnStats.addActionListener(e->{
+        	Estadistica estadistica = new Estadistica();
+        	estadistica.setVisible(true);
+        	frame.dispose();
+        });
+        
         Component rigidArea = Box.createRigidArea(new Dimension(20, 40));
         rigidArea.setPreferredSize(new Dimension(20, 20));
         rigidArea.setMinimumSize(new Dimension(20, 20));
@@ -160,6 +170,10 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<String> {
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrar horizontalmente
         startButton.setPreferredSize(new Dimension(70,45));
         rightPanel.add(startButton);
+        startButton.addActionListener(e ->{
+        	Configuracion config = new Configuracion();
+        	config.setVisible(true);
+        });
 
         // Espacio flexible abajo para centrar el botón
         rightPanel.add(Box.createVerticalGlue());
