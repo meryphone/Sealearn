@@ -1,9 +1,9 @@
-package GUI;
+package vistas;
 
 import java.awt.*;
 import javax.swing.*;
 
-public class MainView {
+public class Principal {
 	
 	public final static Color BEIGE = new Color(211, 204, 194);
 	public final static Color BUTTON_COLOR = new Color(8, 32, 50);
@@ -13,7 +13,7 @@ public class MainView {
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-                MainView window = new MainView();
+                Principal window = new Principal();
                 window.frame.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -21,7 +21,7 @@ public class MainView {
         });
     }
 
-    public MainView() {
+    public Principal() {
         initialize();
     }
     
@@ -33,45 +33,45 @@ public class MainView {
         frame = new JFrame();
         frame.setBounds(100, 100, 892, 616);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setBackground(MainView.BEIGE);
+        frame.getContentPane().setBackground(Principal.BEIGE);
 
         JPanel top = new JPanel();
         frame.getContentPane().add(top, BorderLayout.NORTH);
         top.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-        JLabel title = new JLabel(new ImageIcon(MainView.class.getResource("/imagenes/Titulo.png")));
+        JLabel title = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/Titulo.png")));
         top.add(title);
         top.setBackground(BEIGE);
 
         JPanel left = new JPanel();
         frame.getContentPane().add(left, BorderLayout.WEST);
-        left.setBackground(MainView.BEIGE);
+        left.setBackground(Principal.BEIGE);
         left.add(Box.createRigidArea(new Dimension(150, 20)));
 
         JPanel right = new JPanel();
         frame.getContentPane().add(right, BorderLayout.EAST);
-        right.setBackground(MainView.BEIGE);
+        right.setBackground(Principal.BEIGE);
         right.add(Box.createRigidArea(new Dimension(150, 20)));
 
         JPanel down = new JPanel();
         frame.getContentPane().add(down, BorderLayout.SOUTH);
-        down.setBackground(MainView.BEIGE);
+        down.setBackground(Principal.BEIGE);
 
-        JLabel sealLeft = new JLabel(new ImageIcon(MainView.class.getResource("/imagenes/seal_looking_right.png")));
+        JLabel sealLeft = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/seal_looking_right.png")));
         down.add(sealLeft);
         down.add(Box.createRigidArea(new Dimension(550, 20)));
 
-        JLabel sealRight = new JLabel(new ImageIcon(MainView.class.getResource("/imagenes/seal.png")));
+        JLabel sealRight = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/seal.png")));
         down.add(sealRight);
 
         JPanel center0 = new JPanel();
         frame.getContentPane().add(center0, BorderLayout.CENTER);
         center0.setLayout(new BorderLayout());
-        center0.setBackground(MainView.BEIGE);
+        center0.setBackground(Principal.BEIGE);
 
         JPanel panelButtons = new JPanel();
         center0.add(panelButtons, BorderLayout.NORTH);
-        panelButtons.setBackground(MainView.BEIGE);
+        panelButtons.setBackground(Principal.BEIGE);
 
         JButton btnStats = new RoundButton("Estadisticas");
         btnStats.setPreferredSize(new Dimension(100, 40));
@@ -106,7 +106,7 @@ public class MainView {
         JPanel center1 = new JPanel();
         center0.add(center1, BorderLayout.CENTER);
         center1.setLayout(new BorderLayout());
-        center1.setBackground(MainView.BEIGE);
+        center1.setBackground(Principal.BEIGE);
 
         DefaultListModel<String> model = new DefaultListModel<>();
         model.addElement("Curso 1");
@@ -116,7 +116,7 @@ public class MainView {
         JList<String> courseList = new JList<>(model);
         courseList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         courseList.setCellRenderer(new CourseCellRenderer());
-        courseList.setBackground(MainView.BEIGE);
+        courseList.setBackground(Principal.BEIGE);
 
         JScrollPane scrollPane = new JScrollPane(courseList);
         scrollPane.setPreferredSize(new Dimension(400, 200));
@@ -137,18 +137,18 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<String> {
 
     public CourseCellRenderer() {
         setLayout(new BorderLayout(10, 10)); // Añadir espacio entre componentes
-        setBackground(MainView.BEIGE);
+        setBackground(Principal.BEIGE);
 
         // Panel izquierdo (icono) con BoxLayout
         leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS)); // Organizar verticalmente
-        leftPanel.setBackground(MainView.BEIGE);
+        leftPanel.setBackground(Principal.BEIGE);
 
         // Espacio flexible arriba para centrar el icono
         leftPanel.add(Box.createVerticalGlue());
 
         // Icono
-        iconLabel = new JLabel(new ImageIcon(MainView.class.getResource("/imagenes/gorro-graduacion.png")));
+        iconLabel = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/gorro-graduacion.png")));
         iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10)); // Márgenes
         iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrar horizontalmente
         leftPanel.add(iconLabel);
@@ -159,7 +159,7 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<String> {
         // Panel derecho (botón) con BoxLayout
         rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS)); // Organizar verticalmente
-        rightPanel.setBackground(MainView.BEIGE);
+        rightPanel.setBackground(Principal.BEIGE);
 
         // Espacio flexible arriba para centrar el botón
         rightPanel.add(Box.createVerticalGlue());
@@ -189,7 +189,7 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<String> {
         // Panel para el nombre y la descripción
         textPanel = new JPanel();
         textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS)); // Organizar verticalmente
-        textPanel.setBackground(MainView.BEIGE.brighter());
+        textPanel.setBackground(Principal.BEIGE.brighter());
 
         // Espacio flexible arriba para centrar el contenido
         textPanel.add(Box.createVerticalGlue());
@@ -220,23 +220,23 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<String> {
 
         // Cambiar el color de fondo si está seleccionado
         if (isSelected) {
-            setBackground(MainView.BEIGE.darker());
-            textPanel.setBackground(MainView.BEIGE.darker());
-            leftPanel.setBackground(MainView.BEIGE.darker());
-            rightPanel.setBackground(MainView.BEIGE.darker());
-            iconLabel.setBackground(MainView.BEIGE.darker());
-            nameLabel.setBackground(MainView.BEIGE.darker());
-            descriptionLabel.setBackground(MainView.BEIGE.darker());
-            startButton.setBackground(MainView.BEIGE.darker());
+            setBackground(Principal.BEIGE.darker());
+            textPanel.setBackground(Principal.BEIGE.darker());
+            leftPanel.setBackground(Principal.BEIGE.darker());
+            rightPanel.setBackground(Principal.BEIGE.darker());
+            iconLabel.setBackground(Principal.BEIGE.darker());
+            nameLabel.setBackground(Principal.BEIGE.darker());
+            descriptionLabel.setBackground(Principal.BEIGE.darker());
+            startButton.setBackground(Principal.BEIGE.darker());
         } else {
-            setBackground(MainView.BEIGE.brighter());
-            textPanel.setBackground(MainView.BEIGE.brighter());
-            leftPanel.setBackground(MainView.BEIGE.brighter());
-            rightPanel.setBackground(MainView.BEIGE.brighter());
-            iconLabel.setBackground(MainView.BEIGE.brighter());
-            nameLabel.setBackground(MainView.BEIGE.brighter());
-            descriptionLabel.setBackground(MainView.BEIGE.brighter());
-            startButton.setBackground(MainView.BEIGE.brighter());
+            setBackground(Principal.BEIGE.brighter());
+            textPanel.setBackground(Principal.BEIGE.brighter());
+            leftPanel.setBackground(Principal.BEIGE.brighter());
+            rightPanel.setBackground(Principal.BEIGE.brighter());
+            iconLabel.setBackground(Principal.BEIGE.brighter());
+            nameLabel.setBackground(Principal.BEIGE.brighter());
+            descriptionLabel.setBackground(Principal.BEIGE.brighter());
+            startButton.setBackground(Principal.BEIGE.brighter());
         }
 
         return this;

@@ -1,4 +1,4 @@
-package GUI;
+package vistas;
 
 import java.awt.Color;
 import java.awt.FontMetrics;
@@ -17,9 +17,9 @@ public class RoundButton extends JButton {
     public RoundButton(String label) {
         super(label);
         this.baseColor = new Color(8, 32, 50);
-        setContentAreaFilled(false); // Elimina el fondo estándar
-        setFocusPainted(false); // Elimina el borde de selección
-        setBorderPainted(false); // Elimina el borde predeterminado
+        setContentAreaFilled(false); 
+        setFocusPainted(false); 
+        setBorderPainted(false); 
     }
 
     @Override    

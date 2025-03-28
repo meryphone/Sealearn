@@ -23,7 +23,7 @@ Consiste en la aplicación de aprendizaje perfecta para aprender los conceptos b
 
 ## Modelado del dominio (entidades)
 
-![IMG_4088](https://github.com/user-attachments/assets/159370f7-904b-472b-9d82-84d787b75c68)
+![IMG_4096](https://github.com/user-attachments/assets/77f74fa6-6172-443d-bfa5-78d592bbe27c)
 
 ## Casos de uso
 
