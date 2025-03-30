@@ -9,7 +9,6 @@ public class PreguntaRespuestaCorta extends Pregunta {
 	public PreguntaRespuestaCorta(String enunciado, String respuestaCorrecta) {
 		super(enunciado, respuestaCorrecta);
 	}
-	
-	
+		
 
 }

@@ -1,23 +1,32 @@
 package dominio;
 
+import java.util.List;
+
+import controlador.Controlador;
+
 public class Pruebas {
 	
 	public static void main(String[] args) {
 		
-		System.out.println(Pruebas.class.getResource("/cursos/curso_basico_poo.yaml"));
-		
-		 Curso curso;
-		try {
-			curso = CursoUtils.importarCursoDesdeYaml(Pruebas.class.getResource("/cursos/curso_basico_poo.yaml").getPath());
-			// Mostrar el curso importado
-	        if (curso != null) {
-	            System.out.println("Curso importado:");
-	            System.out.println(curso);
-	        }
+		Controlador controlador = Controlador.getInstance();
+		System.out.println("Cargando archivo desde: " + Controlador.class.getResource("/cursos/CursoPython.yaml"));
+		List<Curso> listaCursos;
 
+		 Curso curso;
+		
+		try {
+			
+			listaCursos = CursoUtils.cargarTodosLosCursos();
+			
+			for(Curso cu : listaCursos) {
+				System.out.print(cu.toString() + "\n");
+			}
+	        
 		} catch (Exception e) {
 			e.printStackTrace();
-		}	    
+		}
+
+	    
 		
 	}
 

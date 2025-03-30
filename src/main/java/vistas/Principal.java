@@ -3,10 +3,16 @@ package vistas;
 import java.awt.*;
 import javax.swing.*;
 
+import controlador.Controlador;
+import dominio.Curso;
+import excepciones.ExcepcionCursoActualVacio;
+
 public class Principal {
 	
 	public final static Color BEIGE = new Color(211, 204, 194);
 	public final static Color BUTTON_COLOR = new Color(8, 32, 50);
+	private Controlador controlador = Controlador.getInstance();
+	private Curso cursoActual;
 
     private JFrame frame;
 
@@ -55,7 +61,22 @@ public class Principal {
 
         JLabel sealLeft = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/seal_looking_right.png")));
         down.add(sealLeft);
-        down.add(Box.createRigidArea(new Dimension(550, 20)));
+        
+        Component horizontalGlue = Box.createHorizontalGlue();
+        horizontalGlue.setPreferredSize(new Dimension(200, 0));
+        horizontalGlue.setMaximumSize(new Dimension(55, 55));
+        horizontalGlue.setMinimumSize(new Dimension(55, 0));
+        down.add(horizontalGlue);
+        
+        JButton btnIniciar = new RoundButton("Iniciar");
+        down.add(btnIniciar);
+        btnIniciar.setPreferredSize(new Dimension(85,45));
+        
+        Component horizontalGlue_1 = Box.createHorizontalGlue();
+        horizontalGlue_1.setPreferredSize(new Dimension(200, 0));
+        horizontalGlue_1.setMinimumSize(new Dimension(55, 0));
+        horizontalGlue_1.setMaximumSize(new Dimension(55, 55));
+        down.add(horizontalGlue_1);
 
         JLabel sealRight = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/seal.png")));
         down.add(sealRight);
@@ -97,30 +118,48 @@ public class Principal {
         center0.add(center1, BorderLayout.CENTER);
         center1.setLayout(new BorderLayout());
         center1.setBackground(Principal.BEIGE);
+        
+        DefaultListModel<Curso> model = new DefaultListModel<Curso>();
+        
+        // Cargar la lista de cursos
+        for(Curso curso : controlador.getListaCursos()) {
+        	model.addElement(curso);
+        }
 
-        DefaultListModel<String> model = new DefaultListModel<>();
-        model.addElement("Curso 1");
-        model.addElement("Curso 2");
-        model.addElement("Curso 3");
-
-        JList<String> courseList = new JList<>(model);
+        JList<Curso> courseList = new JList<Curso>(model);
         courseList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         courseList.setCellRenderer(new CourseCellRenderer());
         courseList.setBackground(Principal.BEIGE);
+        
+        
+        btnIniciar.addActionListener( e -> {
+            try {
+    	        if (courseList.getSelectedValue() != null) {
+    	        	cursoActual = courseList.getSelectedValue();
+    	            Configuracion ventana = new Configuracion();
+    	            ventana.setVisible(true);
+    	        } else {
+    	            throw new ExcepcionCursoActualVacio("Seleccione un curso antes de comenzar");
+    	        }
+    	    } catch (ExcepcionCursoActualVacio ex) {
+    	        JOptionPane.showMessageDialog(frame, ex.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
+    	    }
+
+        });
 
         JScrollPane scrollPane = new JScrollPane(courseList);
         scrollPane.setPreferredSize(new Dimension(400, 200));
         center1.add(scrollPane, BorderLayout.CENTER);
+        
     }
 }
 
 
-class CourseCellRenderer extends JPanel implements ListCellRenderer<String> {
+class CourseCellRenderer extends JPanel implements ListCellRenderer<Curso> {
     private static final long serialVersionUID = 1L;
     private JLabel iconLabel;
     private JLabel nameLabel;
     private JLabel descriptionLabel;
-    private JButton startButton;
     private JPanel textPanel;
     private JPanel leftPanel; // Panel para el icono
     private JPanel rightPanel; // Panel para el botón
@@ -153,13 +192,6 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<String> {
 
         // Espacio flexible arriba para centrar el botón
         rightPanel.add(Box.createVerticalGlue());
-
-        // Botón
-        startButton = new RoundButton("Iniciar"); // Botón con tamaño personalizado
-        startButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10)); // Márgenes internos
-        startButton.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrar horizontalmente
-        startButton.setPreferredSize(new Dimension(70,45));
-        rightPanel.add(startButton);
 
         // Espacio flexible abajo para centrar el botón
         rightPanel.add(Box.createVerticalGlue());
@@ -194,15 +226,16 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<String> {
 
         // Establecer un tamaño preferido más alto para cada celda
         setPreferredSize(new Dimension(300, 60)); // Ajusta el tamaño según tus necesidades
+        
     }
 
     @Override
-    public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(JList<? extends Curso> list, Curso value, int index, boolean isSelected, boolean cellHasFocus) {
         // Asignar el nombre del curso
-        nameLabel.setText(value);
+        nameLabel.setText(value.getNombre());
 
         // Asignar una descripción de ejemplo (puedes personalizarla según tus datos)
-        descriptionLabel.setText("Descripcion breve del curso " + value);
+        descriptionLabel.setText(value.getDescripcion());
 
         // Cambiar el color de fondo si está seleccionado
         if (isSelected) {
@@ -213,7 +246,6 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<String> {
             iconLabel.setBackground(Principal.BEIGE.darker());
             nameLabel.setBackground(Principal.BEIGE.darker());
             descriptionLabel.setBackground(Principal.BEIGE.darker());
-            startButton.setBackground(Principal.BEIGE.darker());
         } else {
             setBackground(Principal.BEIGE.brighter());
             textPanel.setBackground(Principal.BEIGE.brighter());
@@ -222,7 +254,6 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<String> {
             iconLabel.setBackground(Principal.BEIGE.brighter());
             nameLabel.setBackground(Principal.BEIGE.brighter());
             descriptionLabel.setBackground(Principal.BEIGE.brighter());
-            startButton.setBackground(Principal.BEIGE.brighter());
         }
 
         return this;

@@ -1,0 +1,50 @@
+nombre: "Curso de Python"
+descripcion: "Aprende los fundamentos de Python, un lenguaje simple y versátil ideal para empezar a programar."
+preguntas:
+  - !dominio.PreguntaTest
+    enunciado: "¿Qué imprime el siguiente código? print(2 * 3)"
+    respuestaCorrecta: "6"
+    listaOpciones: ["5", "6", "23"]
+
+  - !dominio.PreguntaHueco
+    enunciado: "Completa la función: def saludar(__):"
+    respuestaCorrecta: "nombre"
+    listaOpciones: ["nombre", "saludo", "self"]
+
+  - !dominio.PreguntaRespuestaCorta
+    enunciado: "¿Cómo se comenta una línea en Python?"
+    respuestaCorrecta: "#"
+
+  - !dominio.PreguntaHueco
+    enunciado: "Completa: for i in __: print(i)"
+    respuestaCorrecta: "range(5)"
+    listaOpciones: ["range(5)", "5", "lista"]
+
+  - !dominio.PreguntaTest
+    enunciado: "¿Qué tipo de dato es el resultado de 3 / 2?"
+    respuestaCorrecta: "float"
+    listaOpciones: ["int", "float", "str"]
+
+  - !dominio.PreguntaRespuestaCorta
+    enunciado: "¿Qué palabra clave se usa para definir una función?"
+    respuestaCorrecta: "def"
+
+  - !dominio.PreguntaTest
+    enunciado: "¿Cuál de estas estructuras representa una lista?"
+    respuestaCorrecta: "[1, 2, 3]"
+    listaOpciones: ["(1, 2, 3)", "[1, 2, 3]", "\"1,2,3\""]
+
+  - !dominio.PreguntaHueco
+    enunciado: "Rellena el operador de igualdad: a __ b"
+    respuestaCorrecta: "=="
+    listaOpciones: ["=", "==", "==="]
+
+  - !dominio.PreguntaTest
+    enunciado: "¿Qué valor tiene 'x' tras ejecutar: x = 2 + 3 * 2?"
+    respuestaCorrecta: "8"
+    listaOpciones: ["10", "12", "8"]
+
+  - !dominio.PreguntaRespuestaCorta
+    enunciado: "¿Cómo se importan módulos en Python?"
+    respuestaCorrecta: "import"
+
