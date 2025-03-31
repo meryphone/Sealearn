@@ -9,32 +9,24 @@ import java.util.Map;
 
 public class CursoUtils {
 
-	
-    // Método para importar un curso desde una ruta absoluta
-    public static Curso importarCursoDesdeYaml(String rutaArchivo) throws Exception {	// Manejar excepción en la interfaz
+    public static Curso importarCursoDesdeYaml(String rutaArchivo) throws Exception {
         Yaml yaml = new Yaml();
-        
-        InputStream inputStream = new FileInputStream(rutaArchivo);
-            // Cargar el YAML como un Map
+        try (InputStream inputStream = new FileInputStream(rutaArchivo)) {
             Map<String, Object> yamlMap = yaml.load(inputStream);
-
-            // Convertir el Map en un objeto Curso
             Curso curso = mapToCurso(yamlMap);
-            System.out.println("Curso importado correctamente desde: " + rutaArchivo);
-            return curso;        
+            return curso;
+        }
     }
 
-    // Métodos mapToCurso y mapToPregunta 
     @SuppressWarnings("unchecked")
-	private static Curso mapToCurso(Map<String, Object> map) {
+    private static Curso mapToCurso(Map<String, Object> map) {
         Curso curso = new Curso();
         curso.setNombre((String) map.get("nombre"));
         curso.setDescripcion((String) map.get("descripcion"));
-        curso.setEstrategia((String) map.get("estrategia"));
-        curso.setDificultad((String) map.get("dificultad"));
-        curso.setProgreso((int) map.get("progreso"));
 
-        // Convertir la lista de preguntas
+        // El progreso se inicia en 0 por defecto
+        curso.setProgreso(0);
+
         List<Map<String, Object>> preguntasMap = (List<Map<String, Object>>) map.get("preguntas");
         List<Pregunta> preguntas = new ArrayList<>();
         for (Map<String, Object> preguntaMap : preguntasMap) {
@@ -47,23 +39,26 @@ public class CursoUtils {
     }
 
     @SuppressWarnings("unchecked")
-	private static Pregunta mapToPregunta(Map<String, Object> map) {
-        String tipo = (String) map.get("tipo"); // Obtener el tipo de pregunta
+    private static Pregunta mapToPregunta(Map<String, Object> map) {
+        String tipo = (String) map.get("tipo");
         String enunciado = (String) map.get("enunciado");
         String respuestaCorrecta = (String) map.get("respuesta_correcta");
-        List<String> opciones = new ArrayList<String>();
-        
+        String dificultad = (String) map.get("dificultad");
+
         switch (tipo) {
             case "PreguntaTest":
-                opciones = (List<String>) map.get("opciones");
-                return new PreguntaTest(enunciado, respuestaCorrecta, opciones);
-            case "PreguntaVerdaderoFalso":
-            	opciones = (List<String>) map.get("opciones");
-                return new PreguntaHueco(enunciado, respuestaCorrecta, opciones);
-            case "PreguntaAbierta":
-                return new PreguntaRespuestaCorta(enunciado, respuestaCorrecta);
+                List<String> opcionesTest = (List<String>) map.get("opciones");
+                return new PreguntaTest(enunciado, respuestaCorrecta, opcionesTest, dificultad);
+
+            case "PreguntaHueco":
+                List<String> opcionesHueco = (List<String>) map.get("opciones");
+                return new PreguntaHueco(enunciado, respuestaCorrecta, opcionesHueco, dificultad);
+
+            case "PreguntaRespuestaCorta":
+                return new PreguntaRespuestaCorta(enunciado, respuestaCorrecta, dificultad);
+
             default:
-                throw new IllegalArgumentException("Tipo de pregunta no válido: " + tipo);
+                throw new IllegalArgumentException("Tipo de pregunta no v�lido: " + tipo);
         }
     }
 }
