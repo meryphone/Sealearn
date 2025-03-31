@@ -11,8 +11,7 @@ public class EstadisticaView extends JFrame {
 	  public static void main(String[] args) {
 	        EventQueue.invokeLater(() -> {
 	            try {
-	            	Controlador controlador = new Controlador();
-	                EstadisticaView frame = new EstadisticaView(controlador);
+	                EstadisticaView frame = new EstadisticaView();
 	                frame.setVisible(true);
 	            } catch (Exception e) {
 	                e.printStackTrace();
@@ -23,10 +22,11 @@ public class EstadisticaView extends JFrame {
 	  private static final long serialVersionUID = 1L;
 	  private static final Color BEIGE = new Color(211, 204, 194);
 	  private static final Color BUTTON_COLOR = new Color(8, 32, 50);
-	  private Controlador controlador;
+		
+	  private Controlador controlador = Controlador.getInstance();
 
-	  public EstadisticaView(Controlador controlador) {
-	      this.controlador = controlador;
+
+	  public EstadisticaView() {
 	      inicializarVista();
 	  }
 
@@ -73,7 +73,7 @@ public class EstadisticaView extends JFrame {
         bottom.add(backButton);
         add(bottom, BorderLayout.SOUTH);
         backButton.addActionListener(e ->{
-        	Principal ventana = new Principal(controlador);
+        	Principal ventana = new Principal();
         	ventana.getFrame().setVisible(true);
         	dispose();
         });

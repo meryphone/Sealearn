@@ -6,20 +6,22 @@ import javax.swing.*;
 import controlador.Controlador;
 import dominio.Curso;
 
+import excepciones.ExcepcionCursoActualVacio;
+
 public class Principal {
 	
 	public final static Color BEIGE = new Color(211, 204, 194);
 	public final static Color BUTTON_COLOR = new Color(8, 32, 50);
+	private Controlador controlador = Controlador.getInstance();
+	private Curso cursoActual;
 
     private JFrame frame;
-    private Controlador controlador;
     private DefaultListModel<Curso> modeloCursos;
     
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-            	Controlador controlador = new Controlador();
-                Principal window = new Principal(controlador);
+                Principal window = new Principal();
                 window.frame.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -27,8 +29,7 @@ public class Principal {
         });
     }
 
-    public Principal(Controlador controlador) {
-        this.controlador = controlador;
+    public Principal() {
         initialize(); 
     }
     
@@ -67,7 +68,22 @@ public class Principal {
 
         JLabel sealLeft = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/seal_looking_right.png")));
         down.add(sealLeft);
-        down.add(Box.createRigidArea(new Dimension(550, 20)));
+        
+        Component horizontalGlue = Box.createHorizontalGlue();
+        horizontalGlue.setPreferredSize(new Dimension(200, 0));
+        horizontalGlue.setMaximumSize(new Dimension(55, 55));
+        horizontalGlue.setMinimumSize(new Dimension(55, 0));
+        down.add(horizontalGlue);
+        
+        JButton btnIniciar = new RoundButton("Iniciar");
+        down.add(btnIniciar);
+        btnIniciar.setPreferredSize(new Dimension(85,45));
+        
+        Component horizontalGlue_1 = Box.createHorizontalGlue();
+        horizontalGlue_1.setPreferredSize(new Dimension(200, 0));
+        horizontalGlue_1.setMinimumSize(new Dimension(55, 0));
+        horizontalGlue_1.setMaximumSize(new Dimension(55, 55));
+        down.add(horizontalGlue_1);
 
         JLabel sealRight = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/seal.png")));
         down.add(sealRight);
@@ -85,7 +101,7 @@ public class Principal {
         btnStats.setPreferredSize(new Dimension(100, 40));
         panelButtons.add(btnStats);
         btnStats.addActionListener(e->{
-        	EstadisticaView estadistica = new EstadisticaView(controlador);
+        	EstadisticaView estadistica = new EstadisticaView();
         	estadistica.setVisible(true);
         	frame.dispose();
         });
@@ -106,9 +122,6 @@ public class Principal {
         btnImport.setPreferredSize(new Dimension(100, 40));
         panelButtons.add(btnImport);
         panelButtons.add(Box.createRigidArea(new Dimension(20, 20)));
-        btnImport.addActionListener(e ->{
-        	manejarImportacionCurso();
-        });
 
         JButton btnExport = new RoundButton("Exportar");
         btnExport.setPreferredSize(new Dimension(100, 40));
@@ -118,71 +131,41 @@ public class Principal {
         center0.add(center1, BorderLayout.CENTER);
         center1.setLayout(new BorderLayout());
         center1.setBackground(Principal.BEIGE);
+        
+        DefaultListModel<Curso> model = new DefaultListModel<Curso>();
+        
+        // Cargar la lista de cursos
+        for(Curso curso : controlador.getListaCursos()) {
+        	model.addElement(curso);
+        }
 
         JList<Curso> courseList = new JList<>(modeloCursos);
 
         courseList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         courseList.setCellRenderer(new CourseCellRenderer());
         courseList.setBackground(Principal.BEIGE);
+        
+        
+        btnIniciar.addActionListener( e -> {
+            try {
+    	        if (courseList.getSelectedValue() != null) {
+    	        	cursoActual = courseList.getSelectedValue();
+    	            Configuracion ventana = new Configuracion();
+    	            ventana.setVisible(true);
+    	        } else {
+    	            throw new ExcepcionCursoActualVacio("Seleccione un curso antes de comenzar");
+    	        }
+    	    } catch (ExcepcionCursoActualVacio ex) {
+    	        JOptionPane.showMessageDialog(frame, ex.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
+    	    }
+
+        });
 
         JScrollPane scrollPane = new JScrollPane(courseList);
         scrollPane.setPreferredSize(new Dimension(400, 200));
         center1.add(scrollPane, BorderLayout.CENTER);
-        
-     // Panel debajo del listado
-        JPanel panelIniciar = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panelIniciar.setBackground(Principal.BEIGE);
-
-        JButton btnIniciarCurso = new RoundButton("Iniciar curso");
-        btnIniciarCurso.setPreferredSize(new Dimension(150, 40));
-        panelIniciar.add(btnIniciarCurso);
-
-        // AÒadir debajo del listado
-        center0.add(panelIniciar, BorderLayout.SOUTH);
-
-        // LÛgica del botÛn
-        btnIniciarCurso.addActionListener(e -> {
-            Curso seleccionado = courseList.getSelectedValue();
-            if (seleccionado == null) {
-                JOptionPane.showMessageDialog(frame, "Selecciona un curso primero.");
-                return;
-            }
-
-            controlador.setCursoActual(seleccionado); // Asigna el curso seleccionado al controlador
-            new Configuracion(controlador).setVisible(true); // Pasas el controlador a la nueva ventana
-            frame.dispose();
-        });
                                                  
-
-
     }
-    
-    private void manejarImportacionCurso() {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Selecciona un curso YAML");
-
-        int resultado = fileChooser.showOpenDialog(null);
-
-        if (resultado == JFileChooser.APPROVE_OPTION) {
-            String ruta = fileChooser.getSelectedFile().getAbsolutePath();
-
-            try {
-                controlador = new Controlador();
-                controlador.importarCurso(ruta);
-
-                Curso cursoImportado = controlador.getCursoActual(); 
-                modeloCursos.addElement(cursoImportado); 
-
-                JOptionPane.showMessageDialog(null, "Curso '" + cursoImportado.getNombre() + "' importado correctamente.");
-
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al importar el curso:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    
 }
 
 
@@ -257,6 +240,7 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<Curso> {
 
         // Establecer un tama√±o preferido m√°s alto para cada celda
         setPreferredSize(new Dimension(300, 60)); // Ajusta el tama√±o seg√∫n tus necesidades
+        
     }
 
     @Override

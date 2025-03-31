@@ -23,14 +23,13 @@ public class RellenarHuecoView extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-    private Controlador controlador;
+	private Controlador controlador = Controlador.getInstance();
     
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                	Controlador controlador = new Controlador();
-                    RellenarHuecoView frame = new RellenarHuecoView(controlador);
+                    RellenarHuecoView frame = new RellenarHuecoView();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -39,8 +38,7 @@ public class RellenarHuecoView extends JFrame {
         });
     }
     
-    public RellenarHuecoView (Controlador controlador) {
-    	this.controlador = controlador;
+    public RellenarHuecoView () {
     	inicializarVista();
     }
 
@@ -83,7 +81,6 @@ public class RellenarHuecoView extends JFrame {
             	    acierto ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE
             	);
             	dispose();
-                UtilsVista.avanzarASiguiente(controlador, this);
             });
         }
 

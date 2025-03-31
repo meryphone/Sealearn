@@ -1,0 +1,50 @@
+nombre: "Curso basico de Java"
+descripcion: "Curso básico de Java para aprender a programar con orientación a objetos y estructuras simples."
+preguntas:
+  - !dominio.PreguntaTest
+    enunciado: "¿Qué tipo de dato se usa para números enteros en Java?"
+    respuestaCorrecta: "int"
+    listaOpciones: ["float", "char", "int"]
+
+  - !dominio.PreguntaHueco
+    enunciado: "Completa: public static void ____(String[] args)"
+    respuestaCorrecta: "main"
+    listaOpciones: ["main", "start", "run"]
+
+  - !dominio.PreguntaRespuestaCorta
+    enunciado: "¿Qué palabra clave se usa para crear una clase en Java?"
+    respuestaCorrecta: "class"
+
+  - !dominio.PreguntaHueco
+    enunciado: "Completa: String nombre = __;"
+    respuestaCorrecta: "\"Juan\""
+    listaOpciones: ["\"Juan\"", "Juan", "new String()"]
+
+  - !dominio.PreguntaTest
+    enunciado: "¿Cuál es el resultado de 10 / 3 en Java?"
+    respuestaCorrecta: "3"
+    listaOpciones: ["3", "3.0", "Error"]
+
+  - !dominio.PreguntaRespuestaCorta
+    enunciado: "¿Qué palabra clave se usa para declarar constantes?"
+    respuestaCorrecta: "final"
+
+  - !dominio.PreguntaHueco
+    enunciado: "Completa: int[] numeros = new int[__];"
+    respuestaCorrecta: "5"
+    listaOpciones: ["5", "int", "new"]
+
+  - !dominio.PreguntaTest
+    enunciado: "¿Qué estructura se usa para hacer bucles?"
+    respuestaCorrecta: "for"
+    listaOpciones: ["if", "for", "switch"]
+
+  - !dominio.PreguntaTest
+    enunciado: "¿Qué palabra clave se usa para herencia?"
+    respuestaCorrecta: "extends"
+    listaOpciones: ["extends", "implements", "super"]
+
+  - !dominio.PreguntaRespuestaCorta
+    enunciado: "¿Qué símbolo se usa para comparar igualdad?"
+    respuestaCorrecta: "=="
+

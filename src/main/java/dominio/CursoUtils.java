@@ -1,64 +1,92 @@
 package dominio;
 
-import org.yaml.snakeyaml.Yaml;
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import org.yaml.snakeyaml.TypeDescription;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
+
+import controlador.Controlador;
 
 public class CursoUtils {
 
-    public static Curso importarCursoDesdeYaml(String rutaArchivo) throws Exception {
-        Yaml yaml = new Yaml();
-        try (InputStream inputStream = new FileInputStream(rutaArchivo)) {
-            Map<String, Object> yamlMap = yaml.load(inputStream);
-            Curso curso = mapToCurso(yamlMap);
-            return curso;
-        }
-    }
+	/**
+	 * Carga un curso desde un archivo YAML dentro del classpath
+	 *
+	 * @param nombreArchivo
+	 * @return Objeto Curso o null si hay error
+	 */
+	public static Curso importarCurso(String nombreArchivo) {
+		String ruta = "/cursos/" + nombreArchivo;
 
-    @SuppressWarnings("unchecked")
-    private static Curso mapToCurso(Map<String, Object> map) {
-        Curso curso = new Curso();
-        curso.setNombre((String) map.get("nombre"));
-        curso.setDescripcion((String) map.get("descripcion"));
+		try (InputStream inputStream = Controlador.class.getResourceAsStream(ruta)) {
+			if (inputStream == null) {
+				System.exit(1); // PREGUNTAR avisar al usuario?
+				return null;
+			}
 
-        // El progreso se inicia en 0 por defecto
-        curso.setProgreso(0);
+			Constructor constructor = new Constructor(Curso.class);
 
-        List<Map<String, Object>> preguntasMap = (List<Map<String, Object>>) map.get("preguntas");
-        List<Pregunta> preguntas = new ArrayList<>();
-        for (Map<String, Object> preguntaMap : preguntasMap) {
-            Pregunta pregunta = mapToPregunta(preguntaMap);
-            preguntas.add(pregunta);
-        }
-        curso.setPreguntas(preguntas);
+			TypeDescription cursoDesc = new TypeDescription(Curso.class);
+			cursoDesc.addPropertyParameters("preguntas", Pregunta.class);
+			constructor.addTypeDescription(cursoDesc);
 
-        return curso;
-    }
+			constructor.addTypeDescription(new TypeDescription(PreguntaTest.class, "!dominio.PreguntaTest"));
+			constructor.addTypeDescription(new TypeDescription(PreguntaHueco.class, "!dominio.PreguntaHueco"));
+			constructor.addTypeDescription(
+					new TypeDescription(PreguntaRespuestaCorta.class, "!dominio.PreguntaRespuestaCorta"));
 
-    @SuppressWarnings("unchecked")
-    private static Pregunta mapToPregunta(Map<String, Object> map) {
-        String tipo = (String) map.get("tipo");
-        String enunciado = (String) map.get("enunciado");
-        String respuestaCorrecta = (String) map.get("respuesta_correcta");
-        String dificultad = (String) map.get("dificultad");
+			Yaml yaml = new Yaml(constructor);
+			Curso curso = yaml.load(inputStream);
 
-        switch (tipo) {
-            case "PreguntaTest":
-                List<String> opcionesTest = (List<String>) map.get("opciones");
-                return new PreguntaTest(enunciado, respuestaCorrecta, opcionesTest, dificultad);
+			return curso;
 
-            case "PreguntaHueco":
-                List<String> opcionesHueco = (List<String>) map.get("opciones");
-                return new PreguntaHueco(enunciado, respuestaCorrecta, opcionesHueco, dificultad);
+		} catch (Exception e) {			
+			e.printStackTrace(); // quitar
+			System.exit(1);
+			return null;
+		}
+	}
 
-            case "PreguntaRespuestaCorta":
-                return new PreguntaRespuestaCorta(enunciado, respuestaCorrecta, dificultad);
+	/**
+	 * Carga todos los cursos que haya en la carpeta "resources/cursos/".
+	 * 
+	 * Busca todos los archivos .yaml dentro de esa carpeta y los convierte en objetos Curso
+	 * usando el m√©todo importarCurso(String).
+	 * 
+	 * @return una lista con todos los cursos que se han podido cargar correctamente.
+	 */
+	public static List<Curso> cargarTodosLosCursos() {
+	    List<Curso> cursos = new ArrayList<>();
 
-            default:
-                throw new IllegalArgumentException("Tipo de pregunta no v·lido: " + tipo);
-        }
-    }
+	    try {
+	        URL folderURL = Controlador.class.getResource("/cursos/");
+	        if (folderURL == null) {
+         	System.exit(1);
+	            return cursos;
+	        }
+
+	        File folder = new File(folderURL.toURI());
+	        File[] archivos = folder.listFiles((dir, name) -> name.endsWith(".yaml"));
+
+	        if (archivos != null) {
+	            for (File archivo : archivos) {
+	                Curso curso = importarCurso(archivo.getName());
+	                if (curso != null) {
+	                    cursos.add(curso);
+	                }
+	            }
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace(); // QUITAR
+	        System.exit(1);
+	    }
+
+	    return cursos;
+	}
+
 }

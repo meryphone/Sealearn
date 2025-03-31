@@ -7,8 +7,13 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controlador.Controlador;
+import dominio.Aleatoria;
 import dominio.Curso;
+import dominio.CursoEnProgreso;
+import dominio.Estrategia;
 import dominio.Pregunta;
+import dominio.RepeticionEspaciada;
+import dominio.Secuencial;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -16,6 +21,7 @@ import javax.swing.JOptionPane;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.BoxLayout;
 import javax.swing.Box;
@@ -26,12 +32,12 @@ import java.awt.Component;
 import java.util.List;
 
 
-public class Configuracion extends JFrame {
+public class Configuracion extends JDialog {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-    private Curso curso;
-    private Controlador controlador;
+	private Controlador controlador = Controlador.getInstance();
+    private String estrategia;
 
 
     public static void main(String[] args) {
@@ -47,20 +53,14 @@ public class Configuracion extends JFrame {
         });
     }
     
-    public Configuracion(Controlador controlador) {
-        this.controlador = controlador;
-        this.curso = controlador.getCursoActual();
-        inicializarVentana(); // Mueve toda la lógica a un método separado
-    }
-    
     public Configuracion() {
         inicializarVentana();
     }
 
 
     private void inicializarVentana() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 487, 322);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setBounds(100, 100, 468, 316);
         contentPane = new JPanel();
         contentPane.setBackground(Principal.BEIGE);
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -70,18 +70,21 @@ public class Configuracion extends JFrame {
         JPanel centro = new JPanel();
         centro.setBackground(Principal.BEIGE);
         contentPane.add(centro, BorderLayout.CENTER);
-        centro.setLayout(new BoxLayout(centro, BoxLayout.Y_AXIS));
-
-        JLabel labelDificultad = new JLabel("Dificultad: ");
-        labelDificultad.setFont(new Font("Dialog", Font.BOLD, 15));
-        centro.add(labelDificultad);
+        centro.setLayout(new BoxLayout(centro, BoxLayout.X_AXIS));
         centro.setLayout(new FlowLayout(FlowLayout.CENTER, 1, 5));
+        
+        JLabel lblDificultad = new JLabel("Dificultad: ");
+        lblDificultad.setFont(new Font("Dialog", Font.BOLD, 15));
+        centro.add(lblDificultad);
         
         JComboBox<String> orden = new JComboBox<String>();
         orden.setPreferredSize(new Dimension(130, 26));
         orden.setModel(new DefaultComboBoxModel<>(new String[] {"Facil", "Media", "Dificil"}));
         centro.add(orden);
         
+        Component rigidArea_1 = Box.createRigidArea(new Dimension(20, 20));
+        rigidArea_1.setPreferredSize(new Dimension(10, 20));
+        centro.add(rigidArea_1);
 
         JPanel panelOrden = new JPanel();
         panelOrden.setBackground(Principal.BEIGE);
@@ -110,7 +113,7 @@ public class Configuracion extends JFrame {
         cancelar.setMaximumSize(new Dimension(86, 40));
         cancelar.setMinimumSize(new Dimension(86, 40));
         cancelar.addActionListener(e -> {
-        	Principal ventana = new Principal(controlador);
+        	Principal ventana = new Principal();
         	ventana.getFrame().setVisible(true);
         	dispose();
         });
@@ -120,27 +123,6 @@ public class Configuracion extends JFrame {
         comenzar.setMaximumSize(new Dimension(94, 40));
         comenzar.setMinimumSize(new Dimension(94, 70));
         comenzar.setPreferredSize(new Dimension(94, 70));
-        
-        comenzar.addActionListener(e -> {
-            String estrategiaSeleccionada = (String) dificultad.getSelectedItem();
-            String dificultadSeleccionada = (String) orden.getSelectedItem();
-
-            List<Pregunta> preguntasFiltradas = controlador.dificultadCurso(dificultadSeleccionada.toLowerCase());
-
-            List<Pregunta> preguntasFinal = controlador.estrategiaCurso(estrategiaSeleccionada, preguntasFiltradas); 
-            
-            if (preguntasFinal.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "No hay preguntas disponibles para la configuración elegida.", "Aviso", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            controlador.getCursoActual().setPreguntas(preguntasFinal); // Actualiza las preguntas del curso con la estrategia aplicada
-
-            lanzarSiguienteVentana(controlador.getPreguntaActual(), controlador);
-            
-            dispose();
-        });
-
 
         abajo.add(Box.createRigidArea(new Dimension(10, 0)));
         abajo.add(cancelar);
@@ -166,7 +148,7 @@ public class Configuracion extends JFrame {
         panel.add(panelLabel);
         panelLabel.setBackground(Principal.BEIGE.brighter());
         
-        JLabel lblSeleccioneElOrden_1 = new JLabel("Seleccione el orden de las preguntas y la dificultad del curso");
+        JLabel lblSeleccioneElOrden_1 = new JLabel("Seleccione la estrategia para mostrar las preguntas");
         lblSeleccioneElOrden_1.setFont(new Font("Dialog", Font.BOLD, 14));
         panelLabel.add(lblSeleccioneElOrden_1);
         
@@ -176,26 +158,7 @@ public class Configuracion extends JFrame {
         
         Component verticalStrut_1 = Box.createVerticalStrut(20);
         espacio.add(verticalStrut_1);
-        
-        JLabel lblCurso = new JLabel("Curso: " + curso.getNombre());
-        lblCurso.setFont(new Font("Dialog", Font.BOLD, 15));
-        panelLabel.add(lblCurso);
 
-    }
-
-    private void lanzarSiguienteVentana(Pregunta pregunta, Controlador controlador) {
-    	if (pregunta instanceof dominio.PreguntaTest) {    
-    		TipoTestVIew vista = new TipoTestVIew(controlador);
-            vista.setVisible(true);
-        } else if (pregunta instanceof dominio.PreguntaHueco) {
-            RellenarHuecoView vista = new RellenarHuecoView(controlador);
-            vista.setVisible(true);
-        } else if (pregunta instanceof dominio.PreguntaRespuestaCorta) {
-            RespuestaEscritaView vista = new RespuestaEscritaView(controlador);
-            vista.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(this, "Tipo de pregunta no soportado.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
     }
     
 }

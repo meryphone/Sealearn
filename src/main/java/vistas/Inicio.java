@@ -17,7 +17,6 @@ public class Inicio extends JFrame {
     }
 
     public Inicio() {
-    	controlador = new Controlador();
         setTitle("Sealearn");
         setSize(500, 589);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,7 +41,7 @@ public class Inicio extends JFrame {
         iniciarButton.setBounds(100, 400, 140, 60);
         panel.add(iniciarButton);
         iniciarButton.addActionListener(e ->{
-        	Principal main = new Principal(controlador);
+        	Principal main = new Principal();
         	main.getFrame().setVisible(true);
         	dispose();  
         });

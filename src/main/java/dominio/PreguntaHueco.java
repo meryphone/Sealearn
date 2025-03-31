@@ -5,7 +5,7 @@ import java.util.List;
 
 public class PreguntaHueco extends Pregunta {
 	
-	private final List<String> listaOpciones;
+	private List<String> listaOpciones;
 
 	public PreguntaHueco() {
 		super();
@@ -21,5 +21,7 @@ public class PreguntaHueco extends Pregunta {
 		return listaOpciones;
 	}
 	
-
+	public void setListaOpciones(List<String> listaOpciones) {
+		this.listaOpciones = listaOpciones;
+	}
 }

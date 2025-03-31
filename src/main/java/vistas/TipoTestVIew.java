@@ -14,10 +14,10 @@ public class TipoTestVIew extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
-    private Controlador controlador;
+	private Controlador controlador = Controlador.getInstance();
 
-    public TipoTestVIew(Controlador controlador) {
-        this.controlador = controlador;
+
+    public TipoTestVIew() {
         initialize();
         setVisible(true); // Muestra esta ventana directamente
     }
@@ -107,7 +107,6 @@ public class TipoTestVIew extends JFrame {
             
             dispose();
             
-            UtilsVista.avanzarASiguiente(controlador, this);
         });
     }
 

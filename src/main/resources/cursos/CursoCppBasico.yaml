@@ -1,0 +1,50 @@
+nombre: "Curso basico de C++"
+descripcion: "Descubre los conceptos básicos de C++, un lenguaje potente para aplicaciones de alto rendimiento."
+preguntas:
+  - !dominio.PreguntaTest
+    enunciado: "¿Cuál de estas opciones imprime texto en consola en C++?"
+    respuestaCorrecta: "cout <<"
+    listaOpciones: ["print()", "System.out.println", "cout <<"]
+
+  - !dominio.PreguntaHueco
+    enunciado: "Completa el include: #include <__>"
+    respuestaCorrecta: "iostream"
+    listaOpciones: ["iostream", "stdio", "conio"]
+
+  - !dominio.PreguntaRespuestaCorta
+    enunciado: "¿Qué extensión suelen tener los archivos fuente en C++?"
+    respuestaCorrecta: ".cpp"
+
+  - !dominio.PreguntaHueco
+    enunciado: "Completa: int x = __;"
+    respuestaCorrecta: "0"
+    listaOpciones: ["0", "null", "zero"]
+
+  - !dominio.PreguntaTest
+    enunciado: "¿Qué estructura representa un bucle en C++?"
+    respuestaCorrecta: "for"
+    listaOpciones: ["if", "doIf", "for"]
+
+  - !dominio.PreguntaRespuestaCorta
+    enunciado: "¿Cómo se declara una clase en C++?"
+    respuestaCorrecta: "class"
+
+  - !dominio.PreguntaHueco
+    enunciado: "Completa: std::__ << \"Hola\";"
+    respuestaCorrecta: "cout"
+    listaOpciones: ["cout", "print", "echo"]
+
+  - !dominio.PreguntaTest
+    enunciado: "¿Cuál de estos operadores se usa para comparar igualdad en C++?"
+    respuestaCorrecta: "=="
+    listaOpciones: ["=", "==", "==="]
+
+  - !dominio.PreguntaRespuestaCorta
+    enunciado: "¿Qué palabra clave se usa para herencia pública?"
+    respuestaCorrecta: "public"
+
+  - !dominio.PreguntaHueco
+    enunciado: "Completa: for (int i = 0; i < 10; __)"
+    respuestaCorrecta: "i++"
+    listaOpciones: ["i++", "i--", "++i"]
+

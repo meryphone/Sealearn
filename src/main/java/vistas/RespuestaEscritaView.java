@@ -13,13 +13,12 @@ public class RespuestaEscritaView extends JFrame {
     private static final Font TEXT_FONT = new Font("Arial", Font.PLAIN, 14);
 
     private JTextField textField;
-    private Controlador controlador;
+	private Controlador controlador = Controlador.getInstance();
     
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-            	Controlador controlador = new Controlador();
-                RespuestaEscritaView frame = new RespuestaEscritaView(controlador);
+                RespuestaEscritaView frame = new RespuestaEscritaView();
                 frame.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -27,8 +26,7 @@ public class RespuestaEscritaView extends JFrame {
         });
     }
     
-    public RespuestaEscritaView(Controlador controlador) {
-        this.controlador = controlador;
+    public RespuestaEscritaView() {
         inicializarVista(); // mueves el contenido aquí
     }
 
@@ -91,33 +89,8 @@ public class RespuestaEscritaView extends JFrame {
         btnSiguiente.setPreferredSize(new Dimension(92, 40));
         abajo.add(btnSiguiente);
 
-        // Lógica del botón en una función aparte
-        configurarBotonSiguiente(btnSiguiente);
-
     }
-    
-    private void configurarBotonSiguiente(JButton btnSiguiente) {
-        btnSiguiente.addActionListener(e -> {
-            String respuestaUsuario = textField.getText().trim();
-
-            if (respuestaUsuario.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Debes escribir una respuesta.");
-                return;
-            }
-
-            boolean acierto = controlador.validarRespuesta(respuestaUsuario);
-            JOptionPane.showMessageDialog(this,
-                acierto ? "¡Correcto!" : "Incorrecto\nLa respuesta correcta era: " + controlador.getPreguntaActual().getRespuestaCorrecta(),
-                "Resultado",
-                acierto ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE
-            );
-
-
-            dispose();
-            
-            UtilsVista.avanzarASiguiente(controlador, this);
-        });
-    }
+ 
 
 
 }
