@@ -4,11 +4,13 @@ public abstract class Pregunta {
 	
     private String enunciado;
     private String respuestaCorrecta;
+    protected String dificultad; // "facil", "media", "dificil"
 
 
-    public Pregunta(String enunciado, String respuestaCorrecta) {
+    public Pregunta(String enunciado, String respuestaCorrecta, String dificultad) {
         this.enunciado = enunciado;
         this.respuestaCorrecta = respuestaCorrecta;
+        this.dificultad = dificultad;
     }
     
     public Pregunta() {}
@@ -19,9 +21,18 @@ public abstract class Pregunta {
 
     public String getRespuestaCorrecta() { return respuestaCorrecta; }
     public void setRespuestaCorrecta(String respuestaCorrecta) { this.respuestaCorrecta = respuestaCorrecta; }
+
+    public String getDificultad() {
+        return dificultad;
+    }
+
+    public void setDificultad(String dificultad) {
+        this.dificultad = dificultad;
+    }
+
     
     public boolean validarRespuesta(String respuestaUsuario) {
-    	return respuestaUsuario.equalsIgnoreCase(respuestaUsuario);
+    	return respuestaCorrecta.equalsIgnoreCase(respuestaUsuario);
     }
     
 }

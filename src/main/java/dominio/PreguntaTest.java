@@ -7,9 +7,9 @@ public class PreguntaTest extends Pregunta{
 	
 	private final List<String> listaOpciones;
 	
-	public PreguntaTest(String enunciado, String respuestaCorrecta, List<String> listaOpciones_ ) {
-		super(enunciado, respuestaCorrecta);
-		listaOpciones = listaOpciones_;
+	public PreguntaTest(String enunciado, String respuestaCorrecta, List<String> listaOpciones_, String dificultad) {
+		super(enunciado, respuestaCorrecta, dificultad);
+		this.listaOpciones = listaOpciones_;
 	}
 	
 	public PreguntaTest() {

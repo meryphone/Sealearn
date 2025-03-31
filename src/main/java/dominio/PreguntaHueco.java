@@ -12,8 +12,8 @@ public class PreguntaHueco extends Pregunta {
 		this.listaOpciones = new ArrayList<String>();
 	}
 
-	public PreguntaHueco(String enunciado, String respuestaCorrecta, List<String> listaOpciones_) {
-		super(enunciado, respuestaCorrecta);
+	public PreguntaHueco(String enunciado, String respuestaCorrecta, List<String> listaOpciones_, String dificultad) {
+		super(enunciado, respuestaCorrecta, dificultad);
 		listaOpciones = listaOpciones_;
 	}
 
