@@ -3,17 +3,23 @@ package vistas;
 import java.awt.*;
 import javax.swing.*;
 
+import controlador.Controlador;
+import dominio.Curso;
+
 public class Principal {
 	
 	public final static Color BEIGE = new Color(211, 204, 194);
 	public final static Color BUTTON_COLOR = new Color(8, 32, 50);
 
     private JFrame frame;
-
+    private Controlador controlador;
+    private DefaultListModel<Curso> modeloCursos;
+    
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-                Principal window = new Principal();
+            	Controlador controlador = new Controlador();
+                Principal window = new Principal(controlador);
                 window.frame.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -21,8 +27,9 @@ public class Principal {
         });
     }
 
-    public Principal() {
-        initialize();
+    public Principal(Controlador controlador) {
+        this.controlador = controlador;
+        initialize(); 
     }
     
     public JFrame getFrame() {
@@ -30,6 +37,7 @@ public class Principal {
     }
 
     private void initialize() {
+    	modeloCursos = new DefaultListModel<>();
         frame = new JFrame();
         frame.setBounds(100, 100, 892, 616);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -77,7 +85,7 @@ public class Principal {
         btnStats.setPreferredSize(new Dimension(100, 40));
         panelButtons.add(btnStats);
         btnStats.addActionListener(e->{
-        	Estadistica estadistica = new Estadistica();
+        	EstadisticaView estadistica = new EstadisticaView(controlador);
         	estadistica.setVisible(true);
         	frame.dispose();
         });
@@ -98,6 +106,9 @@ public class Principal {
         btnImport.setPreferredSize(new Dimension(100, 40));
         panelButtons.add(btnImport);
         panelButtons.add(Box.createRigidArea(new Dimension(20, 20)));
+        btnImport.addActionListener(e ->{
+        	manejarImportacionCurso();
+        });
 
         JButton btnExport = new RoundButton("Exportar");
         btnExport.setPreferredSize(new Dimension(100, 40));
@@ -108,12 +119,8 @@ public class Principal {
         center1.setLayout(new BorderLayout());
         center1.setBackground(Principal.BEIGE);
 
-        DefaultListModel<String> model = new DefaultListModel<>();
-        model.addElement("Curso 1");
-        model.addElement("Curso 2");
-        model.addElement("Curso 3");
+        JList<Curso> courseList = new JList<>(modeloCursos);
 
-        JList<String> courseList = new JList<>(model);
         courseList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         courseList.setCellRenderer(new CourseCellRenderer());
         courseList.setBackground(Principal.BEIGE);
@@ -121,16 +128,69 @@ public class Principal {
         JScrollPane scrollPane = new JScrollPane(courseList);
         scrollPane.setPreferredSize(new Dimension(400, 200));
         center1.add(scrollPane, BorderLayout.CENTER);
+        
+     // Panel debajo del listado
+        JPanel panelIniciar = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panelIniciar.setBackground(Principal.BEIGE);
+
+        JButton btnIniciarCurso = new RoundButton("Iniciar curso");
+        btnIniciarCurso.setPreferredSize(new Dimension(150, 40));
+        panelIniciar.add(btnIniciarCurso);
+
+        // A馻dir debajo del listado
+        center0.add(panelIniciar, BorderLayout.SOUTH);
+
+        // L骻ica del bot髇
+        btnIniciarCurso.addActionListener(e -> {
+            Curso seleccionado = courseList.getSelectedValue();
+            if (seleccionado == null) {
+                JOptionPane.showMessageDialog(frame, "Selecciona un curso primero.");
+                return;
+            }
+
+            controlador.setCursoActual(seleccionado); // Asigna el curso seleccionado al controlador
+            new Configuracion(controlador).setVisible(true); // Pasas el controlador a la nueva ventana
+            frame.dispose();
+        });
+                                                 
+
+
     }
+    
+    private void manejarImportacionCurso() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Selecciona un curso YAML");
+
+        int resultado = fileChooser.showOpenDialog(null);
+
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            String ruta = fileChooser.getSelectedFile().getAbsolutePath();
+
+            try {
+                controlador = new Controlador();
+                controlador.importarCurso(ruta);
+
+                Curso cursoImportado = controlador.getCursoActual(); 
+                modeloCursos.addElement(cursoImportado); 
+
+                JOptionPane.showMessageDialog(null, "Curso '" + cursoImportado.getNombre() + "' importado correctamente.");
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error al importar el curso:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    
 }
 
 
-class CourseCellRenderer extends JPanel implements ListCellRenderer<String> {
+class CourseCellRenderer extends JPanel implements ListCellRenderer<Curso> {
     private static final long serialVersionUID = 1L;
     private JLabel iconLabel;
     private JLabel nameLabel;
     private JLabel descriptionLabel;
-    private JButton startButton;
     private JPanel textPanel;
     private JPanel leftPanel; // Panel para el icono
     private JPanel rightPanel; // Panel para el bot贸n
@@ -163,17 +223,6 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<String> {
 
         // Espacio flexible arriba para centrar el bot贸n
         rightPanel.add(Box.createVerticalGlue());
-
-        // Bot贸n
-        startButton = new RoundButton("Iniciar"); // Bot贸n con tama帽o personalizado
-        startButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10)); // M谩rgenes internos
-        startButton.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrar horizontalmente
-        startButton.setPreferredSize(new Dimension(70,45));
-        rightPanel.add(startButton);
-        startButton.addActionListener(e ->{
-        	Configuracion config = new Configuracion();
-        	config.setVisible(true);
-        });
 
         // Espacio flexible abajo para centrar el bot贸n
         rightPanel.add(Box.createVerticalGlue());
@@ -211,12 +260,12 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<String> {
     }
 
     @Override
-    public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(JList<? extends Curso> list, Curso value, int index, boolean isSelected, boolean cellHasFocus) {
         // Asignar el nombre del curso
-        nameLabel.setText(value);
+        nameLabel.setText(value.getNombre());
 
         // Asignar una descripci贸n de ejemplo (puedes personalizarla seg煤n tus datos)
-        descriptionLabel.setText("Descripcion breve del curso " + value);
+        descriptionLabel.setText(value.getDescripcion());
 
         // Cambiar el color de fondo si est谩 seleccionado
         if (isSelected) {
@@ -227,7 +276,6 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<String> {
             iconLabel.setBackground(Principal.BEIGE.darker());
             nameLabel.setBackground(Principal.BEIGE.darker());
             descriptionLabel.setBackground(Principal.BEIGE.darker());
-            startButton.setBackground(Principal.BEIGE.darker());
         } else {
             setBackground(Principal.BEIGE.brighter());
             textPanel.setBackground(Principal.BEIGE.brighter());
@@ -236,9 +284,10 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<String> {
             iconLabel.setBackground(Principal.BEIGE.brighter());
             nameLabel.setBackground(Principal.BEIGE.brighter());
             descriptionLabel.setBackground(Principal.BEIGE.brighter());
-            startButton.setBackground(Principal.BEIGE.brighter());
         }
 
         return this;
     }
+
+    
 }

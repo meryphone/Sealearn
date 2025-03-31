@@ -1,109 +1,114 @@
 package vistas;
 
 import java.awt.*;
+import java.util.Collections;
 import javax.swing.*;
 
+import controlador.Controlador;
+import dominio.PreguntaTest;
 
-public class TipoTestVIew {
+public class TipoTestVIew extends JFrame {
 
-	private JFrame frame;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
+    private Controlador controlador;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TipoTestVIew window = new TipoTestVIew();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    public TipoTestVIew(Controlador controlador) {
+        this.controlador = controlador;
+        initialize();
+        setVisible(true); // Muestra esta ventana directamente
+    }
 
-	/**
-	 * Create the application.
-	 */
-	public TipoTestVIew() {
-		initialize();
-	}
+    private void initialize() {
+        setTitle("SeaLearn");
+        setBounds(100, 100, 450, 423);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        getContentPane().setBackground(Principal.BEIGE);
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		frame.setTitle("SeaLearn");
-		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 423);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-		
-		
-		JPanel panelQuestions = new JPanel();
-		frame.getContentPane().add(panelQuestions);
-		panelQuestions.setLayout(new BorderLayout(0, 0));
-		frame.setBackground(Principal.BEIGE);
-		
-		JPanel top = new JPanel();
-		panelQuestions.add(top, BorderLayout.NORTH);
-		top.setBackground(Principal.BEIGE);
-		
-		JLabel lblQuestion = new JLabel("Â¿CuÃ¡l es la capital de francia?");
-		top.add(lblQuestion);
-		
-		JPanel optionsPanel = new JPanel();
-		panelQuestions.add(optionsPanel, BorderLayout.CENTER);
-		optionsPanel.setLayout(new GridLayout(0, 1, 0, 0));
-		panelQuestions.setBackground(Principal.BEIGE);
-		
-		JRadioButton rdbtnOpcion1 = new JRadioButton("Francia");
-		optionsPanel.add(rdbtnOpcion1);
-		rdbtnOpcion1.setBackground(Principal.BEIGE.brighter());
-		
-		JRadioButton rdbtnOpcion2 = new JRadioButton("Dublin");
-		optionsPanel.add(rdbtnOpcion2);
-		rdbtnOpcion2.setBackground(Principal.BEIGE.brighter());
-		
-		JRadioButton rdbtnOpcion3 = new JRadioButton("Paris");
-		optionsPanel.add(rdbtnOpcion3);
-		rdbtnOpcion3.setBackground(Principal.BEIGE.brighter());
-		
-		buttonGroup.add(rdbtnOpcion1);
-		buttonGroup.add(rdbtnOpcion2);
-		buttonGroup.add(rdbtnOpcion3);
-		
-		Component horizontalGlue_1 = Box.createHorizontalGlue();
-		horizontalGlue_1.setPreferredSize(new Dimension(25, 0));
-		panelQuestions.add(horizontalGlue_1, BorderLayout.EAST);
-		
-		Component horizontalGlue = Box.createHorizontalGlue();
-		horizontalGlue.setPreferredSize(new Dimension(25, 0));
-		panelQuestions.add(horizontalGlue, BorderLayout.WEST);
-		
-		JPanel panelHeadline = new JPanel();
-		frame.getContentPane().add(panelHeadline);
-		panelHeadline.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		panelHeadline.setBackground(Principal.BEIGE);
-		
-		JLabel labelSeal = new JLabel("");
-		labelSeal.setIcon(new ImageIcon(TipoTestVIew.class.getResource("/imagenes/seal_looking_right.png")));
-		panelHeadline.add(labelSeal);
-		
-		JProgressBar progressBar = new JProgressBar();
-		panelHeadline.add(progressBar);
-		progressBar.setBackground(Principal.BEIGE.brighter());
-		
-		JPanel down = new JPanel();
-		frame.getContentPane().add(down);
-		down.setBackground(Principal.BEIGE);
-		
-		JButton btnSiguiente = new RoundButton("Siguiente");
-		btnSiguiente.setPreferredSize(new Dimension(92, 40));
-		down.add(btnSiguiente);
-	}
+        JPanel panelQuestions = new JPanel(new BorderLayout());
+        getContentPane().add(panelQuestions);
+        panelQuestions.setBackground(Principal.BEIGE);
+
+        JPanel top = new JPanel();
+        top.setBackground(Principal.BEIGE);
+        panelQuestions.add(top, BorderLayout.NORTH);
+
+        PreguntaTest pregunta = (PreguntaTest) controlador.getPreguntaActual();
+
+        JLabel lblQuestion = new JLabel(pregunta.getEnunciado());
+        top.add(lblQuestion);
+        
+        JPanel optionsPanel = new JPanel(new GridLayout(0, 1));
+        optionsPanel.setBackground(Principal.BEIGE);
+        panelQuestions.add(optionsPanel, BorderLayout.CENTER);
+        
+        for (String opcion : pregunta.getListaOpciones()) {
+            JRadioButton btn = new JRadioButton(opcion);
+            btn.setBackground(Principal.BEIGE.brighter());
+            buttonGroup.add(btn);
+            optionsPanel.add(btn);
+        }
+
+        panelQuestions.add(Box.createHorizontalStrut(25), BorderLayout.EAST);
+        panelQuestions.add(Box.createHorizontalStrut(25), BorderLayout.WEST);
+
+        JPanel panelHeadline = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panelHeadline.setBackground(Principal.BEIGE);
+        getContentPane().add(panelHeadline);
+
+        JLabel labelSeal = new JLabel(new ImageIcon(getClass().getResource("/imagenes/seal_looking_right.png")));
+        panelHeadline.add(labelSeal);
+
+        JProgressBar progressBar = new JProgressBar();
+        progressBar.setBackground(Principal.BEIGE.brighter());
+        panelHeadline.add(progressBar);
+
+        JPanel down = new JPanel();
+        down.setBackground(Principal.BEIGE);
+        getContentPane().add(down);
+
+        JButton btnSiguiente = new RoundButton("Siguiente");
+        btnSiguiente.setPreferredSize(new Dimension(92, 40));
+        down.add(btnSiguiente);
+        configurarBotonSiguiente(btnSiguiente);
+
+    }
+    
+    private String getRespuestaSeleccionada(ButtonGroup group) {
+        return Collections.list(group.getElements())
+                          .stream()
+                          .filter(AbstractButton::isSelected)
+                          .map(AbstractButton::getText)
+                          .findFirst()
+                          .orElse(null);
+    }
+
+    
+    private void configurarBotonSiguiente(JButton btnSiguiente) {
+        btnSiguiente.addActionListener(e -> {
+        	String respuestaSeleccionada = getRespuestaSeleccionada(buttonGroup);
+        	if (respuestaSeleccionada == null) {
+        	    JOptionPane.showMessageDialog(this, "Debes seleccionar una opción.");
+        	    return;
+        	}
+
+        	boolean acierto = controlador.validarRespuesta(respuestaSeleccionada);
+            String correcta = controlador.getPreguntaActual().getRespuestaCorrecta();
+
+            JOptionPane.showMessageDialog(this,
+                acierto ? "¡Correcto!" : "Incorrecto\nLa respuesta correcta era: " + correcta,
+                "Resultado",
+                acierto ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE
+            );
+            
+            dispose();
+            
+            UtilsVista.avanzarASiguiente(controlador, this);
+        });
+    }
 
 }

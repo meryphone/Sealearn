@@ -3,24 +3,37 @@ package vistas;
 import java.awt.*;
 import javax.swing.*;
 
-public class Estadistica extends JFrame {
+import controlador.Controlador;
+import dominio.Estadistica;
+
+public class EstadisticaView extends JFrame {
 	
 	  public static void main(String[] args) {
 	        EventQueue.invokeLater(() -> {
 	            try {
-	                Estadistica frame = new Estadistica();
+	            	Controlador controlador = new Controlador();
+	                EstadisticaView frame = new EstadisticaView(controlador);
 	                frame.setVisible(true);
 	            } catch (Exception e) {
 	                e.printStackTrace();
 	            }
 	        });
 	    }
+	  
+	  private static final long serialVersionUID = 1L;
+	  private static final Color BEIGE = new Color(211, 204, 194);
+	  private static final Color BUTTON_COLOR = new Color(8, 32, 50);
+	  private Controlador controlador;
 
-    private static final long serialVersionUID = 1L;
-    private static final Color BEIGE = new Color(211, 204, 194);
-    private static final Color BUTTON_COLOR = new Color(8, 32, 50);
-    public Estadistica() {
-        setTitle("Estadísticas");
+	  public EstadisticaView(Controlador controlador) {
+	      this.controlador = controlador;
+	      inicializarVista();
+	  }
+
+
+   
+    public void inicializarVista() {
+        setTitle("Estadisticas");
         setBounds(100, 100, 600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setBackground(BEIGE);
@@ -33,29 +46,37 @@ public class Estadistica extends JFrame {
         top.add(title);
         add(top, BorderLayout.NORTH);
 
-        // Lista de estad�sticas con CellRenderer personalizado
         DefaultListModel<StatItem> statModel = new DefaultListModel<>();
-        statModel.addElement(new StatItem("Racha de días", "72", "/imagenes/meta.png"));
-        statModel.addElement(new StatItem("Tiempo de uso", "4 horas", "/imagenes/reloj.png"));
-        statModel.addElement(new StatItem("Preguntas totales", "120", "/imagenes/preguntas.png"));
-        statModel.addElement(new StatItem("Preguntas acertadas", "90", "/imagenes/correcto.png"));
-        statModel.addElement(new StatItem("Preguntas falladas", "30", "/imagenes/fallo.png"));
+        Estadistica est = controlador.getEstadistica();
+
+        
+        statModel.addElement(new StatItem("Racha de d�as", String.valueOf(est.getRachaActual()), "/imagenes/meta.png"));
+        statModel.addElement(new StatItem("Tiempo de uso", est.getTiempoTotalEstudio().toMinutes() + " minutos", "/imagenes/reloj.png"));
+        statModel.addElement(new StatItem("Preguntas totales", String.valueOf(est.getTotalPreguntasRespondidas()), "/imagenes/preguntas.png"));
+        statModel.addElement(new StatItem("Preguntas acertadas", String.valueOf(est.getTotalAciertos()), "/imagenes/correcto.png"));
+        statModel.addElement(new StatItem("Preguntas falladas", String.valueOf(est.getTotalFallos()), "/imagenes/fallo.png"));
+
 
         JList<StatItem> statList = new JList<>(statModel);
         statList.setCellRenderer(new StatCellRenderer());
         statList.setBackground(BEIGE);
         JScrollPane scrollPane = new JScrollPane(statList);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Margen interno para separar del borde
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(scrollPane, BorderLayout.CENTER);
 
         // Panel inferior con bot�n
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.LEFT));
         bottom.setBackground(BEIGE);
-        JButton backButton = new RoundButton("Atrás");
+        JButton backButton = new RoundButton("Atras");
         backButton.setBackground(BUTTON_COLOR);
         backButton.setForeground(Color.WHITE);
         bottom.add(backButton);
         add(bottom, BorderLayout.SOUTH);
+        backButton.addActionListener(e ->{
+        	Principal ventana = new Principal(controlador);
+        	ventana.getFrame().setVisible(true);
+        	dispose();
+        });
     }
 
 }
@@ -85,8 +106,8 @@ class StatCellRenderer extends JPanel implements ListCellRenderer<StatItem> {
 
     public StatCellRenderer() {
         setLayout(new BorderLayout(10, 10));
-        setBackground(Color.WHITE); // Fondo blanco para diferenciarlo de la ventana
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Margen interno
+        setBackground(Color.WHITE);
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         iconoLabel = new JLabel();
         nombreLabel = new JLabel();

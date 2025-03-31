@@ -1,18 +1,23 @@
 package vistas;
 
 import javax.swing.*;
+
+import controlador.Controlador;
+
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
 public class Inicio extends JFrame {
 
     private static final long serialVersionUID = 1L;
+    private Controlador controlador;
     
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new Inicio());
     }
 
     public Inicio() {
+    	controlador = new Controlador();
         setTitle("Sealearn");
         setSize(500, 589);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -37,7 +42,7 @@ public class Inicio extends JFrame {
         iniciarButton.setBounds(100, 400, 140, 60);
         panel.add(iniciarButton);
         iniciarButton.addActionListener(e ->{
-        	Principal main = new Principal();
+        	Principal main = new Principal(controlador);
         	main.getFrame().setVisible(true);
         	dispose();  
         });

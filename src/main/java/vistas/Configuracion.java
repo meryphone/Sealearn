@@ -5,7 +5,14 @@ import java.awt.FlowLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import controlador.Controlador;
+import dominio.Curso;
+import dominio.Pregunta;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -16,14 +23,16 @@ import javax.swing.ImageIcon;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Component;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;  // Importa la clase Font
+import java.util.List;
 
 
 public class Configuracion extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
+    private Curso curso;
+    private Controlador controlador;
+
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -37,8 +46,19 @@ public class Configuracion extends JFrame {
             }
         });
     }
-
+    
+    public Configuracion(Controlador controlador) {
+        this.controlador = controlador;
+        this.curso = controlador.getCursoActual();
+        inicializarVentana(); // Mueve toda la lógica a un método separado
+    }
+    
     public Configuracion() {
+        inicializarVentana();
+    }
+
+
+    private void inicializarVentana() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 487, 322);
         contentPane = new JPanel();
@@ -59,7 +79,7 @@ public class Configuracion extends JFrame {
         
         JComboBox<String> orden = new JComboBox<String>();
         orden.setPreferredSize(new Dimension(130, 26));
-        orden.setModel(new DefaultComboBoxModel<>(new String[] {"Facil", "Medio", "Dificil"}));
+        orden.setModel(new DefaultComboBoxModel<>(new String[] {"Facil", "Media", "Dificil"}));
         centro.add(orden);
         
 
@@ -77,9 +97,8 @@ public class Configuracion extends JFrame {
         
         JComboBox<String> dificultad = new JComboBox<String>();
         dificultad.setPreferredSize(new Dimension(130, 26));
-        dificultad.setModel(new DefaultComboBoxModel<>(new String[] {"Secuencial", "RepeticiÃ³n espaciada", "Aleatoria"}));
+        dificultad.setModel(new DefaultComboBoxModel<>(new String[] {"Secuencial", "Repeticion espaciada", "Aleatoria"}));
         panelOrden.add(dificultad);
-
 
         JPanel abajo = new JPanel();
         abajo.setLayout(new BoxLayout(abajo, BoxLayout.X_AXIS));
@@ -90,9 +109,10 @@ public class Configuracion extends JFrame {
         JButton cancelar = new RoundButton("Cancelar");
         cancelar.setMaximumSize(new Dimension(86, 40));
         cancelar.setMinimumSize(new Dimension(86, 40));
-        cancelar.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        	}
+        cancelar.addActionListener(e -> {
+        	Principal ventana = new Principal(controlador);
+        	ventana.getFrame().setVisible(true);
+        	dispose();
         });
         cancelar.setPreferredSize(new Dimension(86, 31));
       
@@ -100,6 +120,26 @@ public class Configuracion extends JFrame {
         comenzar.setMaximumSize(new Dimension(94, 40));
         comenzar.setMinimumSize(new Dimension(94, 70));
         comenzar.setPreferredSize(new Dimension(94, 70));
+        
+        comenzar.addActionListener(e -> {
+            String estrategiaSeleccionada = (String) dificultad.getSelectedItem();
+            String dificultadSeleccionada = (String) orden.getSelectedItem();
+
+            List<Pregunta> preguntasFiltradas = controlador.dificultadCurso(dificultadSeleccionada.toLowerCase());
+
+            List<Pregunta> preguntasFinal = controlador.estrategiaCurso(estrategiaSeleccionada, preguntasFiltradas); 
+            
+            if (preguntasFinal.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No hay preguntas disponibles para la configuración elegida.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            controlador.getCursoActual().setPreguntas(preguntasFinal); // Actualiza las preguntas del curso con la estrategia aplicada
+
+            lanzarSiguienteVentana(controlador.getPreguntaActual(), controlador);
+            
+            dispose();
+        });
 
 
         abajo.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -136,6 +176,26 @@ public class Configuracion extends JFrame {
         
         Component verticalStrut_1 = Box.createVerticalStrut(20);
         espacio.add(verticalStrut_1);
+        
+        JLabel lblCurso = new JLabel("Curso: " + curso.getNombre());
+        lblCurso.setFont(new Font("Dialog", Font.BOLD, 15));
+        panelLabel.add(lblCurso);
 
     }
+
+    private void lanzarSiguienteVentana(Pregunta pregunta, Controlador controlador) {
+    	if (pregunta instanceof dominio.PreguntaTest) {    
+    		TipoTestVIew vista = new TipoTestVIew(controlador);
+            vista.setVisible(true);
+        } else if (pregunta instanceof dominio.PreguntaHueco) {
+            RellenarHuecoView vista = new RellenarHuecoView(controlador);
+            vista.setVisible(true);
+        } else if (pregunta instanceof dominio.PreguntaRespuestaCorta) {
+            RespuestaEscritaView vista = new RespuestaEscritaView(controlador);
+            vista.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Tipo de pregunta no soportado.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
 }
