@@ -83,6 +83,14 @@ public class Estadistica {
 		this.rachaActual = rachaActual;
 	}
 
+	public LocalDate getUltimoDiaEstudio() {
+		return ultimoDiaEstudio;
+	}
+
+	public void setUltimoDiaEstudio(LocalDate ultimoDiaEstudio) {
+		this.ultimoDiaEstudio = ultimoDiaEstudio;
+	}
+
 	public void registrarRespuesta(boolean acierto) {
 		totalPreguntasRespondidas++;
 			
