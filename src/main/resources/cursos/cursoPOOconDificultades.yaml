@@ -1,0 +1,52 @@
+nombre: Java Básico
+descripcion: Curso introductorio para aprender los fundamentos de Java.
+preguntas:
+  - tipo: PreguntaTest
+    enunciado: ¿Qué palabra se usa para definir una clase?
+    respuesta_correcta: class
+    dificultad: facil
+    opciones:
+      - define
+      - struct
+      - class
+      - object
+
+  - tipo: PreguntaRespuestaCorta
+    enunciado: ¿Qué palabra clave permite heredar de una clase en Java?
+    respuesta_correcta: extends
+    dificultad: media
+
+  - tipo: PreguntaHueco
+    enunciado: El método que se ejecuta al iniciar un programa en Java se llama _______.
+    respuesta_correcta: main
+    dificultad: dificil
+    opciones:
+      - start
+      - main
+      - init
+      - run
+
+  - tipo: PreguntaTest
+    enunciado: ¿Qué estructura se usa para repetir un bloque de código?
+    respuesta_correcta: bucle
+    dificultad: facil
+    opciones:
+      - condicional
+      - bucle
+      - clase
+      - import
+
+  - tipo: PreguntaHueco
+    enunciado: Para comparar dos valores se usa el operador _______.
+    respuesta_correcta: ==
+    dificultad: media
+    opciones:
+      - "="
+      - "=="
+      - "!="
+      - "&&"
+
+  - tipo: PreguntaRespuestaCorta
+    enunciado: ¿Cómo se declara un array de enteros en Java?
+    respuesta_correcta: int[]
+    dificultad: dificil
