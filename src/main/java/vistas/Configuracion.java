@@ -2,22 +2,9 @@ package vistas;
 
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import controlador.Controlador;
-import dominio.Aleatoria;
-import dominio.Curso;
-import dominio.CursoEnProgreso;
-import dominio.Estrategia;
-import dominio.Pregunta;
-import dominio.RepeticionEspaciada;
-import dominio.Secuencial;
-
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -29,15 +16,15 @@ import javax.swing.ImageIcon;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Component;
-import java.util.List;
+import java.util.ArrayList;
 
 
 public class Configuracion extends JDialog {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-	private Controlador controlador = Controlador.getInstance();
     private String estrategia;
+    private String dificultad;
 
 
     public static void main(String[] args) {
@@ -59,7 +46,7 @@ public class Configuracion extends JDialog {
 
 
     private void inicializarVentana() {
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 468, 316);
         contentPane = new JPanel();
         contentPane.setBackground(Principal.BEIGE);
@@ -77,10 +64,10 @@ public class Configuracion extends JDialog {
         lblDificultad.setFont(new Font("Dialog", Font.BOLD, 15));
         centro.add(lblDificultad);
         
-        JComboBox<String> orden = new JComboBox<String>();
-        orden.setPreferredSize(new Dimension(130, 26));
-        orden.setModel(new DefaultComboBoxModel<>(new String[] {"Facil", "Media", "Dificil"}));
-        centro.add(orden);
+        JComboBox<String> dificultadesComboBox = new JComboBox<String>();
+        dificultadesComboBox.setPreferredSize(new Dimension(130, 26));
+        dificultadesComboBox.setModel(new DefaultComboBoxModel<>(new String[] {"Facil", "Media", "Dificil"}));
+        centro.add(dificultadesComboBox);
         
         Component rigidArea_1 = Box.createRigidArea(new Dimension(20, 20));
         rigidArea_1.setPreferredSize(new Dimension(10, 20));
@@ -98,10 +85,10 @@ public class Configuracion extends JDialog {
         panelOrden.add(labelOrden);
         contentPane.add(panelOrden, BorderLayout.WEST);
         
-        JComboBox<String> dificultad = new JComboBox<String>();
-        dificultad.setPreferredSize(new Dimension(130, 26));
-        dificultad.setModel(new DefaultComboBoxModel<>(new String[] {"Secuencial", "Repeticion espaciada", "Aleatoria"}));
-        panelOrden.add(dificultad);
+        JComboBox<String> estrategiaComboBox = new JComboBox<String>();
+        estrategiaComboBox.setPreferredSize(new Dimension(130, 26));
+        estrategiaComboBox.setModel(new DefaultComboBoxModel<>(new String[] {"Secuencial", "Repeticion espaciada", "Aleatoria"}));
+        panelOrden.add(estrategiaComboBox);
 
         JPanel abajo = new JPanel();
         abajo.setLayout(new BoxLayout(abajo, BoxLayout.X_AXIS));
@@ -123,6 +110,11 @@ public class Configuracion extends JDialog {
         comenzar.setMaximumSize(new Dimension(94, 40));
         comenzar.setMinimumSize(new Dimension(94, 70));
         comenzar.setPreferredSize(new Dimension(94, 70));
+        
+        comenzar.addActionListener(e -> {
+        	estrategia = (String) estrategiaComboBox.getSelectedItem();
+        	dificultad = (String) dificultadesComboBox.getSelectedItem();
+        });
 
         abajo.add(Box.createRigidArea(new Dimension(10, 0)));
         abajo.add(cancelar);
@@ -158,7 +150,15 @@ public class Configuracion extends JDialog {
         
         Component verticalStrut_1 = Box.createVerticalStrut(20);
         espacio.add(verticalStrut_1);
-
+    }
+    
+    public static ArrayList<String> mostrarDialogo() {
+    	ArrayList<String> parametros = new ArrayList<String>();
+    	Configuracion dialog = new Configuracion();
+    	parametros.add(dialog.estrategia);
+    	parametros.add(dialog.dificultad);
+        dialog.setVisible(true);        
+        return parametros;
     }
     
 }

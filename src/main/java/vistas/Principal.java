@@ -1,6 +1,8 @@
 package vistas;
 
 import java.awt.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
 
 import controlador.Controlador;
@@ -150,8 +152,8 @@ public class Principal {
             try {
     	        if (courseList.getSelectedValue() != null) {
     	        	cursoActual = courseList.getSelectedValue();
-    	            Configuracion ventana = new Configuracion();
-    	            ventana.setVisible(true);
+    	            ArrayList<String> parametros = Configuracion.mostrarDialogo();
+    	            controlador.iniciarCurso(cursoActual,parametros.get(0), parametros.get(1));
     	        } else {
     	            throw new ExcepcionCursoActualVacio("Seleccione un curso antes de comenzar");
     	        }
