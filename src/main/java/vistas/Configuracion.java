@@ -4,7 +4,14 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import controlador.Controlador;
+import dominio.Curso;
+import dominio.Pregunta;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -100,10 +107,11 @@ public class Configuracion extends JDialog {
         cancelar.setMaximumSize(new Dimension(86, 40));
         cancelar.setMinimumSize(new Dimension(86, 40));
         cancelar.addActionListener(e -> {
-        	Principal ventana = new Principal();
-        	ventana.getFrame().setVisible(true);
+        	estrategia = null;
+        	dificultad = null;
         	dispose();
         });
+
         cancelar.setPreferredSize(new Dimension(86, 31));
       
         JButton comenzar = new RoundButton("Comenzar");
@@ -112,9 +120,40 @@ public class Configuracion extends JDialog {
         comenzar.setPreferredSize(new Dimension(94, 70));
         
         comenzar.addActionListener(e -> {
-        	estrategia = (String) estrategiaComboBox.getSelectedItem();
-        	dificultad = (String) dificultadesComboBox.getSelectedItem();
+            estrategia = (String) estrategiaComboBox.getSelectedItem();
+            dificultad = (String) dificultadesComboBox.getSelectedItem();
+
+            Controlador controlador = Controlador.getInstance();
+            Curso cursoSeleccionado = controlador.getCursoActual();
+
+            if (cursoSeleccionado != null) {
+                controlador.iniciarCurso(cursoSeleccionado, estrategia, dificultad);
+                Pregunta pregunta = controlador.getPreguntaActual();
+
+                if (pregunta == null) {
+                    JOptionPane.showMessageDialog(this, "No hay preguntas disponibles con esa dificultad.", "Sin preguntas", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                dispose(); // cerrar configuración
+
+                // Mostrar la vista adecuada
+                if (pregunta instanceof dominio.PreguntaTest) {
+                    new TipoTestVIew().setVisible(true);
+                } else if (pregunta instanceof dominio.PreguntaHueco) {
+                    new RellenarHuecoView().setVisible(true);
+                } else if (pregunta instanceof dominio.PreguntaRespuestaCorta) {
+                    new RespuestaEscritaView().setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Tipo de pregunta no reconocido: " + pregunta.getClass().getName(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Error: curso no seleccionado.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
+
+
+
 
         abajo.add(Box.createRigidArea(new Dimension(10, 0)));
         abajo.add(cancelar);
@@ -153,12 +192,20 @@ public class Configuracion extends JDialog {
     }
     
     public static ArrayList<String> mostrarDialogo() {
-    	ArrayList<String> parametros = new ArrayList<String>();
-    	Configuracion dialog = new Configuracion();
-    	parametros.add(dialog.estrategia);
-    	parametros.add(dialog.dificultad);
-        dialog.setVisible(true);        
+        Configuracion dialog = new Configuracion();
+        dialog.setModal(true);
+        dialog.setVisible(true);
+
+        // Si el usuario canceló, ambas serán null
+        if (dialog.estrategia == null || dialog.dificultad == null) {
+            return null;
+        }
+
+        ArrayList<String> parametros = new ArrayList<>();
+        parametros.add(dialog.estrategia);
+        parametros.add(dialog.dificultad);
         return parametros;
     }
+
     
 }
