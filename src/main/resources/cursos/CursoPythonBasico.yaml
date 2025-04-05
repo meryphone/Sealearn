@@ -1,50 +1,59 @@
 nombre: "Curso de Python"
-descripcion: "Aprende los fundamentos de Python, un lenguaje simple y versátil ideal para empezar a programar."
+descripcion: "Aprende los fundamentos de Python, un lenguaje simple y versatil ideal para empezar a programar."
 preguntas:
   - !dominio.PreguntaTest
-    enunciado: "¿Qué imprime el siguiente código? print(2 * 3)"
+    enunciado: "Que imprime el siguiente codigo? print(2 * 3)"
+    dificultad: facil
     respuestaCorrecta: "6"
     listaOpciones: ["5", "6", "23"]
 
   - !dominio.PreguntaHueco
-    enunciado: "Completa la función: def saludar(__):"
+    enunciado: "Completa la funcion: def saludar(__):"
+    dificultad: facil
     respuestaCorrecta: "nombre"
     listaOpciones: ["nombre", "saludo", "self"]
 
   - !dominio.PreguntaRespuestaCorta
-    enunciado: "¿Cómo se comenta una línea en Python?"
+    enunciado: "Como se comenta una linea en Python?"
+    dificultad: facil
     respuestaCorrecta: "#"
 
   - !dominio.PreguntaHueco
     enunciado: "Completa: for i in __: print(i)"
+    dificultad: facil
     respuestaCorrecta: "range(5)"
     listaOpciones: ["range(5)", "5", "lista"]
 
   - !dominio.PreguntaTest
-    enunciado: "¿Qué tipo de dato es el resultado de 3 / 2?"
+    enunciado: "Que tipo de dato es el resultado de 3 / 2?"
+    dificultad: facil
     respuestaCorrecta: "float"
     listaOpciones: ["int", "float", "str"]
 
   - !dominio.PreguntaRespuestaCorta
-    enunciado: "¿Qué palabra clave se usa para definir una función?"
+    enunciado: "Que palabra clave se usa para definir una funcion?"
+    dificultad: facil
     respuestaCorrecta: "def"
 
   - !dominio.PreguntaTest
-    enunciado: "¿Cuál de estas estructuras representa una lista?"
+    enunciado: "Cual de estas estructuras representa una lista?"
+    dificultad: facil
     respuestaCorrecta: "[1, 2, 3]"
     listaOpciones: ["(1, 2, 3)", "[1, 2, 3]", "\"1,2,3\""]
 
   - !dominio.PreguntaHueco
     enunciado: "Rellena el operador de igualdad: a __ b"
+    dificultad: facil
     respuestaCorrecta: "=="
     listaOpciones: ["=", "==", "==="]
 
   - !dominio.PreguntaTest
-    enunciado: "¿Qué valor tiene 'x' tras ejecutar: x = 2 + 3 * 2?"
+    enunciado: "Que valor tiene 'x' tras ejecutar: x = 2 + 3 * 2?"
+    dificultad: facil
     respuestaCorrecta: "8"
     listaOpciones: ["10", "12", "8"]
 
   - !dominio.PreguntaRespuestaCorta
-    enunciado: "¿Cómo se importan módulos en Python?"
+    enunciado: "Como se importan modulos en Python?"
+    dificultad: facil
     respuestaCorrecta: "import"
-

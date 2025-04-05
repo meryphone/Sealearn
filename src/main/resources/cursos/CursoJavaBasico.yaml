@@ -1,50 +1,59 @@
 nombre: "Curso basico de Java"
-descripcion: "Curso básico de Java para aprender a programar con orientación a objetos y estructuras simples."
+descripcion: "Curso basico de Java para aprender a programar con orientacion a objetos y estructuras simples."
 preguntas:
   - !dominio.PreguntaTest
-    enunciado: "¿Qué tipo de dato se usa para números enteros en Java?"
+    enunciado: "Que tipo de dato se usa para numeros enteros en Java?"
+    dificultad: facil
     respuestaCorrecta: "int"
     listaOpciones: ["float", "char", "int"]
 
   - !dominio.PreguntaHueco
     enunciado: "Completa: public static void ____(String[] args)"
+    dificultad: facil
     respuestaCorrecta: "main"
     listaOpciones: ["main", "start", "run"]
 
   - !dominio.PreguntaRespuestaCorta
-    enunciado: "¿Qué palabra clave se usa para crear una clase en Java?"
+    enunciado: "Que palabra clave se usa para crear una clase en Java?"
+    dificultad: facil
     respuestaCorrecta: "class"
 
   - !dominio.PreguntaHueco
     enunciado: "Completa: String nombre = __;"
+    dificultad: facil
     respuestaCorrecta: "\"Juan\""
     listaOpciones: ["\"Juan\"", "Juan", "new String()"]
 
   - !dominio.PreguntaTest
-    enunciado: "¿Cuál es el resultado de 10 / 3 en Java?"
+    enunciado: "Cual es el resultado de 10 / 3 en Java?"
+    dificultad: facil
     respuestaCorrecta: "3"
     listaOpciones: ["3", "3.0", "Error"]
 
   - !dominio.PreguntaRespuestaCorta
-    enunciado: "¿Qué palabra clave se usa para declarar constantes?"
+    enunciado: "Que palabra clave se usa para declarar constantes?"
+    dificultad: facil
     respuestaCorrecta: "final"
 
   - !dominio.PreguntaHueco
     enunciado: "Completa: int[] numeros = new int[__];"
+    dificultad: facil
     respuestaCorrecta: "5"
     listaOpciones: ["5", "int", "new"]
 
   - !dominio.PreguntaTest
-    enunciado: "¿Qué estructura se usa para hacer bucles?"
+    enunciado: "Que estructura se usa para hacer bucles?"
+    dificultad: facil
     respuestaCorrecta: "for"
     listaOpciones: ["if", "for", "switch"]
 
   - !dominio.PreguntaTest
-    enunciado: "¿Qué palabra clave se usa para herencia?"
+    enunciado: "Que palabra clave se usa para herencia?"
+    dificultad: facil
     respuestaCorrecta: "extends"
     listaOpciones: ["extends", "implements", "super"]
 
   - !dominio.PreguntaRespuestaCorta
-    enunciado: "¿Qué símbolo se usa para comparar igualdad?"
+    enunciado: "Que simbolo se usa para comparar igualdad?"
+    dificultad: facil
     respuestaCorrecta: "=="
-
