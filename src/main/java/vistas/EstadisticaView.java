@@ -73,8 +73,6 @@ public class EstadisticaView extends JFrame {
         bottom.add(backButton);
         add(bottom, BorderLayout.SOUTH);
         backButton.addActionListener(e ->{
-        	Principal ventana = new Principal();
-        	ventana.getFrame().setVisible(true);
         	dispose();
         });
     }

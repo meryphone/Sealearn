@@ -4,7 +4,10 @@ import java.awt.*;
 import javax.swing.*;
 
 import controlador.Controlador;
+import dominio.Pregunta;
+import dominio.PreguntaHueco;
 import dominio.PreguntaRespuestaCorta;
+import dominio.PreguntaTest;
 
 public class RespuestaEscritaView extends JFrame {
 
@@ -88,6 +91,41 @@ public class RespuestaEscritaView extends JFrame {
         JButton btnSiguiente = new RoundButton("Siguiente");
         btnSiguiente.setPreferredSize(new Dimension(92, 40));
         abajo.add(btnSiguiente);
+        btnSiguiente.addActionListener(e -> {
+        	String respuestaUsuario = textField.getText().trim();
+        	if (respuestaUsuario.isEmpty()) {
+        	    JOptionPane.showMessageDialog(this, "Debes introducir una respuesta.");
+        	    return;
+        	}
+
+        	boolean acierto = controlador.validarRespuesta(respuestaUsuario);
+        	String correcta = controlador.getPreguntaActual().getRespuestaCorrecta();
+
+        	JOptionPane.showMessageDialog(this,
+        	    acierto ? "¡Correcto!" : "Incorrecto\nLa respuesta correcta era: " + correcta,
+        	    "Resultado",
+        	    acierto ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE
+        	);
+
+        	if (controlador.hayMasPreguntas()) {
+        		controlador.avanzarPregunta();
+        		Pregunta siguiente = controlador.getPreguntaActual();
+
+        		if (siguiente instanceof PreguntaTest) {
+        			new TipoTestVIew();
+        		} else if (siguiente instanceof PreguntaHueco) {
+        			new RellenarHuecoView();
+        		} else if (siguiente instanceof PreguntaRespuestaCorta) {
+        			new RespuestaEscritaView();
+        		}
+        	} else {
+        		controlador.finalizarSesion();
+        		JOptionPane.showMessageDialog(this, "¡Has completado el curso!", "Fin", JOptionPane.INFORMATION_MESSAGE);
+        	}
+        	dispose();
+
+        });
+
 
     }
  

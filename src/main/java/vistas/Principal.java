@@ -1,8 +1,6 @@
 package vistas;
 
 import java.awt.*;
-import java.util.ArrayList;
-
 import javax.swing.*;
 
 import controlador.Controlador;
@@ -105,7 +103,6 @@ public class Principal {
         btnStats.addActionListener(e->{
         	EstadisticaView estadistica = new EstadisticaView();
         	estadistica.setVisible(true);
-        	frame.dispose();
         });
         
         Component rigidArea = Box.createRigidArea(new Dimension(20, 40));
@@ -116,18 +113,33 @@ public class Principal {
         JButton btnExportStats = new RoundButton("Exportar estadisticas");
         btnExportStats.setPreferredSize(new Dimension(150, 40));
         panelButtons.add(btnExportStats);
+        btnExportStats.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Guardar estadísticas");
+            int userSelection = fileChooser.showSaveDialog(frame);
+
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                String ruta = fileChooser.getSelectedFile().getAbsolutePath();
+                controlador.exportarEstadisticas(ruta);
+                JOptionPane.showMessageDialog(frame, "Estadísticas exportadas con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
         Component rigidArea_1 = Box.createRigidArea(new Dimension(20, 20));
         rigidArea_1.setPreferredSize(new Dimension(20, 60));
         panelButtons.add(rigidArea_1);
 
-        JButton btnImport = new RoundButton("Importar");
-        btnImport.setPreferredSize(new Dimension(100, 40));
+        JButton btnImport = new RoundButton("Importar curso");
+        btnImport.setPreferredSize(new Dimension(130, 40));
         panelButtons.add(btnImport);
-        panelButtons.add(Box.createRigidArea(new Dimension(20, 20)));
+        btnImport.addActionListener(e -> {
+            controlador.recargarCursos();
+            modeloCursos.clear();         
+            for (Curso curso : controlador.getListaCursos()) {
+                modeloCursos.addElement(curso);
+            }
+            JOptionPane.showMessageDialog(frame, "Cursos importados correctamente", "Importación", JOptionPane.INFORMATION_MESSAGE);
+        });
 
-        JButton btnExport = new RoundButton("Exportar");
-        btnExport.setPreferredSize(new Dimension(100, 40));
-        panelButtons.add(btnExport);
 
         JPanel center1 = new JPanel();
         center0.add(center1, BorderLayout.CENTER);
@@ -136,7 +148,6 @@ public class Principal {
         
         DefaultListModel<Curso> model = new DefaultListModel<Curso>();
         
-        // Cargar la lista de cursos
         for(Curso curso : controlador.getListaCursos()) {
         	model.addElement(curso);
         }
@@ -148,19 +159,18 @@ public class Principal {
         courseList.setBackground(Principal.BEIGE);
         
         
-        btnIniciar.addActionListener( e -> {
+        btnIniciar.addActionListener(e -> {
             try {
-    	        if (courseList.getSelectedValue() != null) {
-    	        	cursoActual = courseList.getSelectedValue();
-    	            ArrayList<String> parametros = Configuracion.mostrarDialogo();
-    	            controlador.iniciarCurso(cursoActual,parametros.get(0), parametros.get(1));
-    	        } else {
-    	            throw new ExcepcionCursoActualVacio("Seleccione un curso antes de comenzar");
-    	        }
-    	    } catch (ExcepcionCursoActualVacio ex) {
-    	        JOptionPane.showMessageDialog(frame, ex.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
-    	    }
-
+                if (courseList.getSelectedValue() != null) {
+                    cursoActual = courseList.getSelectedValue();
+                    controlador.setCursoActual(cursoActual); // Solo lo guardamos
+                    Configuracion.mostrarDialogo(); // La config ya hará el resto
+                } else {
+                    throw new ExcepcionCursoActualVacio("Seleccione un curso antes de comenzar");
+                }
+            } catch (ExcepcionCursoActualVacio ex) {
+                JOptionPane.showMessageDialog(frame, ex.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
+            }
         });
 
         JScrollPane scrollPane = new JScrollPane(courseList);

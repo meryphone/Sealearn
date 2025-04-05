@@ -5,6 +5,9 @@ import java.util.Collections;
 import javax.swing.*;
 
 import controlador.Controlador;
+import dominio.Pregunta;
+import dominio.PreguntaHueco;
+import dominio.PreguntaRespuestaCorta;
 import dominio.PreguntaTest;
 
 public class TipoTestVIew extends JFrame {
@@ -105,6 +108,21 @@ public class TipoTestVIew extends JFrame {
                 acierto ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE
             );
             
+            if (controlador.hayMasPreguntas()) {
+            	controlador.avanzarPregunta();
+            	Pregunta siguiente = controlador.getPreguntaActual();
+
+            	if (siguiente instanceof PreguntaTest) {
+            		new TipoTestVIew();
+            	} else if (siguiente instanceof PreguntaHueco) {
+            		new RellenarHuecoView();
+            	} else if (siguiente instanceof PreguntaRespuestaCorta) {
+            		new RespuestaEscritaView();
+            	}
+            } else {
+            	controlador.finalizarSesion();
+            	JOptionPane.showMessageDialog(this, "¡Has completado el curso!", "Fin", JOptionPane.INFORMATION_MESSAGE);
+            }
             dispose();
             
         });

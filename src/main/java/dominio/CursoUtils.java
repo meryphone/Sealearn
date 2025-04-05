@@ -2,6 +2,7 @@ package dominio;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,17 +40,19 @@ public class CursoUtils {
 			constructor.addTypeDescription(
 					new TypeDescription(PreguntaRespuestaCorta.class, "!dominio.PreguntaRespuestaCorta"));
 
-			Yaml yaml = new Yaml(constructor);
-			Curso curso = yaml.load(inputStream);
+			try (InputStreamReader reader = new InputStreamReader(inputStream, java.nio.charset.StandardCharsets.UTF_8)) {
+				Yaml yaml = new Yaml(constructor);
+				Curso curso = yaml.load(reader);
+				return curso;
+			}
 
-			return curso;
-
-		} catch (Exception e) {			
+		} catch (Exception e) {
 			e.printStackTrace(); // quitar
 			System.exit(1);
 			return null;
 		}
 	}
+
 
 	/**
 	 * Carga todos los cursos que haya en la carpeta "resources/cursos/".

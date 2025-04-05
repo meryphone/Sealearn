@@ -6,7 +6,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controlador.Controlador;
+import dominio.Pregunta;
 import dominio.PreguntaHueco;
+import dominio.PreguntaRespuestaCorta;
+import dominio.PreguntaTest;
 
 import javax.swing.JProgressBar;
 import java.awt.BorderLayout;
@@ -80,7 +83,23 @@ public class RellenarHuecoView extends JFrame {
             	    "Resultado",
             	    acierto ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE
             	);
+            	if (controlador.hayMasPreguntas()) {
+            		controlador.avanzarPregunta();
+            		Pregunta siguiente = controlador.getPreguntaActual();
+
+            		if (siguiente instanceof PreguntaTest) {
+            			new TipoTestVIew();
+            		} else if (siguiente instanceof PreguntaHueco) {
+            			new RellenarHuecoView();
+            		} else if (siguiente instanceof PreguntaRespuestaCorta) {
+            			new RespuestaEscritaView();
+            		}
+            	} else {
+            		controlador.finalizarSesion();
+            		JOptionPane.showMessageDialog(this, "¡Has completado el curso!", "Fin", JOptionPane.INFORMATION_MESSAGE);
+            	}
             	dispose();
+
             });
         }
 
