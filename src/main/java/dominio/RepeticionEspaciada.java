@@ -27,6 +27,7 @@ public class RepeticionEspaciada extends Estrategia {
 		int repetirIndex = 0;
 		List<Integer> preguntasMostradas = new ArrayList<>();
 
+
 		for (int i = 0; i < this.totalPreguntas; i++) {
 			ordenPreguntas.add(i);
 			preguntasMostradas.add(i);
@@ -72,3 +73,4 @@ public class RepeticionEspaciada extends Estrategia {
 		}
 	}
 }
+

@@ -57,6 +57,9 @@ public class RellenarHuecoView extends JDialog {
 
         PreguntaRellenarHueco preguntaHueco = (PreguntaRellenarHueco) controlador.getPreguntaActual();
         JLabel lblNewLabel = new JLabel(preguntaHueco.getEnunciado());
+
+        PreguntaRellenarHueco preguntaHueco = (PreguntaRellenarHueco) controlador.getPreguntaActual();
+        JLabel lblNewLabel = new JLabel(preguntaHueco.getEnunciado());
         lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         JPanel pregunta = new JPanel();
         pregunta.add(lblNewLabel);

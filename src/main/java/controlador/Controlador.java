@@ -7,6 +7,7 @@ import dominio.*;
 import utils.CursoUtils;
 import vistas.Estadistica;
 
+
 public class Controlador {
 
 	private static Controlador controlador;
@@ -44,12 +45,12 @@ public class Controlador {
 	        Estrategia estrategiaSeleccionada = crearEstrategia(estrategia_);
 	        estrategiaSeleccionada.setTotalPreguntas(preguntasFiltradas.size());
 	        
-	         cursoEnProgreso = new CursoEnProgreso(
+	        cursoEnProgreso = new CursoEnProgreso(
 	            estrategiaSeleccionada,
 	            preguntasFiltradas
 	        );
 
-	        //estadistica.registrarEstudioHoy();
+	        estadistica.registrarEstudioHoy();
 	        
 	        return cursoEnProgreso;
 
@@ -72,7 +73,8 @@ public class Controlador {
 	public boolean corregir(String respuesta) {
 		Pregunta actual = cursoEnProgreso.getPreguntaActual();
 		boolean acierto = actual.validarRespuesta(respuesta);
-	//	estadistica.registrarRespuesta(acierto);
+		estadistica.registrarRespuesta(acierto);
+
 		return acierto;
 	}
 	

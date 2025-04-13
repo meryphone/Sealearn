@@ -14,7 +14,6 @@ public class RespuestaCortaView extends JDialog {
     private JTextField textField;
 	private Controlador controlador = Controlador.getInstance();
 	private Pregunta pregunta;
-	private JFrame frame;
 
     
     public static void main(String[] args) {

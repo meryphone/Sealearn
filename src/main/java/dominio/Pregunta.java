@@ -2,18 +2,22 @@ package dominio;
 
 public abstract class Pregunta {
 
+
 	private String enunciado;
 	private String respuestaCorrecta;
 	private String dificultad;
-
-	public Pregunta(String enunciado, String respuestaCorrecta, String dificultad) {
-		this.enunciado = enunciado;
-		this.respuestaCorrecta = respuestaCorrecta;
-		this.dificultad = dificultad;
-	}
-
+	
+    public Pregunta(String enunciado, String respuestaCorrecta, String dificultad) {
+        this.enunciado = enunciado;
+        this.respuestaCorrecta = respuestaCorrecta;
+        this.dificultad = dificultad;
+    }
+    
 	public Pregunta() {
 	}
+
+    
+    // Getters y Setters
 
 	public boolean validarRespuesta(String respuestaUsuario) {
 		return respuestaCorrecta.equalsIgnoreCase(respuestaUsuario);

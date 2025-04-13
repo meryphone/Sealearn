@@ -16,5 +16,6 @@ public class Secuencial extends Estrategia {
 	public int mostrarPregunta(int nPregunta) {
 		return nPregunta < totalPreguntas ? nPregunta : -1;
 	}
+
 }
 

@@ -9,13 +9,6 @@ public class CursoEnProgreso {
 	private List<Pregunta> preguntas;
 	
 	public static final int PROGRESO_INICIAL = 0;
-
-	public CursoEnProgreso(int progreso, Estrategia estrategia, List<Pregunta> preguntas) {
-		super();
-		this.progreso = progreso;
-		this.estrategia = estrategia;
-		this.preguntas = preguntas;
-	}
 	
 	public CursoEnProgreso(Estrategia estrategia, List<Pregunta> preguntas) {
 		super();
@@ -23,8 +16,7 @@ public class CursoEnProgreso {
 		this.estrategia = estrategia;
 		this.preguntas = preguntas;
 	}
-	
-	
+		
 	public Pregunta getPreguntaActual() {
 		return preguntas.get(estrategia.mostrarPregunta(progreso));
 	}
@@ -32,7 +24,6 @@ public class CursoEnProgreso {
 	public void avanzarProgreso() {
 		progreso++;
 	}
-	
 	
 	
 	
