@@ -4,8 +4,6 @@ Eva María López Medina
 
 María Capilla Zapata
 
-María Mercader Sánchez
-
 Profesor: Jesús Sánchez Cuadrado
 
 # SeaLearn
