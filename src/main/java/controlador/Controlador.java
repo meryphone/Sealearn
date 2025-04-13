@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import dominio.*;
 import utils.CursoUtils;
-import vistas.Estadistica;
 
 
 public class Controlador {
@@ -16,7 +15,7 @@ public class Controlador {
 	private  CursoEnProgreso cursoEnProgreso;
 
 	private Controlador() {
-		//listaCursos = CursoUtils.cargarTodosLosCursos();
+		listaCursos = CursoUtils.cargarTodosLosCursos();
 		estadistica = new Estadistica();
 	}
 
@@ -35,9 +34,13 @@ public class Controlador {
 
 	public CursoEnProgreso iniciarCurso(Curso cursoSeleccionado, String estrategia_, String dificultad) throws RuntimeException{
 	    try {
-
+	    	
+	    	System.out.println(dificultad);
 	    
 	        List<Pregunta> preguntasFiltradas = filtrarPorDificultad(cursoSeleccionado.getPreguntas(), dificultad);
+	        
+	        System.out.println(preguntasFiltradas.size());
+	        
 	        if (preguntasFiltradas == null || preguntasFiltradas.isEmpty()) {
 	            throw new IllegalStateException("No hay preguntas disponibles para la dificultad: " + dificultad);
 	        }
@@ -49,6 +52,8 @@ public class Controlador {
 	            estrategiaSeleccionada,
 	            preguntasFiltradas
 	        );
+	        
+	     // Aquí hacer cosas de persistencia
 
 	        estadistica.registrarEstudioHoy();
 	        
@@ -77,10 +82,6 @@ public class Controlador {
 
 		return acierto;
 	}
-	
-	public void avanzarCurso() {
-		cursoEnProgreso.avanzarProgreso();
-	}
 
 	public int getProgreso() {
 		return cursoEnProgreso != null ? cursoEnProgreso.getProgreso() : 0;
@@ -91,7 +92,12 @@ public class Controlador {
 	}
 
 	public void finalizarSesion() {
-		//estadistica.finalizarSesion();
+		estadistica.finalizarSesion();
+	}
+	
+	public void finalizarCurso() {
+		// Aquí hacer cosas de persistencia
+		cursoEnProgreso = null;
 	}
 
 	// Funciones Auxiliares
@@ -99,8 +105,9 @@ public class Controlador {
 	private Estrategia crearEstrategia(String nombreEstrategia) {
 		nombreEstrategia = nombreEstrategia.replace(" ", "");
 		try {
-			return (Estrategia) Class.forName(nombreEstrategia).getDeclaredConstructor().newInstance();
+			return (Estrategia) Class.forName("dominio." + nombreEstrategia).getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.exit(1);
 		}
 		return null;

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -19,80 +20,83 @@ import dominio.PreguntaTest;
 public class CursoUtils {
 
 	/**
-	 * Carga un curso desde un archivo YAML dentro del classpath
-	 *
-	 * @param nombreArchivo
-	 * @return Objeto Curso o null si hay error
+	 * Carga un curso desde un archivo YAML ubicado en /resources/cursos/.
+	 * 
+	 * @param nombreArchivo nombre del archivo YAML
+	 * @return el objeto Curso cargado o null si falla
 	 */
 	public static Curso importarCurso(String nombreArchivo) {
 		String ruta = "/cursos/" + nombreArchivo;
 
 		try (InputStream inputStream = Controlador.class.getResourceAsStream(ruta)) {
 			if (inputStream == null) {
-				System.exit(1); // PREGUNTAR avisar al usuario?
+				System.err.println("Archivo no encontrado: " + ruta);
 				return null;
 			}
 
+			// Crear constructor principal para Curso
 			Constructor constructor = new Constructor(Curso.class);
 
-			TypeDescription cursoDesc = new TypeDescription(Curso.class);
-			cursoDesc.addPropertyParameters("preguntas", Pregunta.class);
-			constructor.addTypeDescription(cursoDesc);
+			// Declarar que la propiedad "preguntas" contiene elementos polimórficos
+			TypeDescription cursoDescription = new TypeDescription(Curso.class);
+			cursoDescription.addPropertyParameters("preguntas", Pregunta.class);
+			constructor.addTypeDescription(cursoDescription);
 
-			constructor.addTypeDescription(new TypeDescription(PreguntaTest.class, "!dominio.PreguntaTest"));
-			constructor.addTypeDescription(new TypeDescription(PreguntaRellenarHueco.class, "!dominio.PreguntaHueco"));
+			// Añadir tipos concretos para deserialización polimórfica
+			constructor.addTypeDescription(new TypeDescription(PreguntaTest.class, TagName("PreguntaTest")));
 			constructor.addTypeDescription(
-					new TypeDescription(PreguntaRespuestaCorta.class, "!dominio.PreguntaRespuestaCorta"));
+					new TypeDescription(PreguntaRellenarHueco.class, TagName("PreguntaRellenarHueco")));
+			constructor.addTypeDescription(
+					new TypeDescription(PreguntaRespuestaCorta.class, TagName("PreguntaRespuestaCorta")));
 
+			// Crear YAML con el constructor configurado
 			Yaml yaml = new Yaml(constructor);
-			Curso curso = yaml.load(inputStream);
+			return yaml.load(inputStream);
 
-			return curso;
-
-		} catch (Exception e) {			
-			e.printStackTrace(); // quitar
-			System.exit(1);
+		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
 
 	/**
-	 * Carga todos los cursos que haya en la carpeta "resources/cursos/".
+	 * Carga todos los cursos desde la carpeta /resources/cursos/
 	 * 
-	 * Busca todos los archivos .yaml dentro de esa carpeta y los convierte en objetos Curso
-	 * usando el método importarCurso(String).
-	 * 
-	 * @return una lista con todos los cursos que se han podido cargar correctamente.
+	 * @return lista de cursos cargados correctamente
 	 */
 	public static List<Curso> cargarTodosLosCursos() {
-	    List<Curso> cursos = new ArrayList<>();
+		List<Curso> cursos = new ArrayList<>();
 
-	    try {
-	        URL folderURL = Controlador.class.getResource("/cursos/");
-	        if (folderURL == null) {
-	        	System.exit(1);
-	            return cursos;
-	        }
+		try {
+			URL folderURL = Controlador.class.getResource("/cursos/");
+			if (folderURL == null) {
+				System.err.println("Carpeta /cursos/ no encontrada.");
+				return cursos;
+			}
 
-	        File folder = new File(folderURL.toURI());
-	        File[] archivos = folder.listFiles((dir, name) -> name.endsWith(".yaml"));
+			File folder = new File(folderURL.toURI());
+			File[] archivos = folder.listFiles((dir, name) -> name.endsWith(".yaml"));
 
-	        if (archivos != null) {
-	            for (File archivo : archivos) {
-	                Curso curso = importarCurso(archivo.getName());
-	                if (curso != null) {
-	                    cursos.add(curso);
-	                }
-	            }
-	        }
+			if (archivos != null) {
+				for (File archivo : archivos) {
+					Curso curso = importarCurso(archivo.getName());
+					if (curso != null) {
+						cursos.add(curso);
+					}
+				}
+			}
 
-	    } catch (Exception e) {
-	        e.printStackTrace(); // QUITAR
-	        System.exit(1);
-	    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-	    return cursos;
+		return cursos;
 	}
 
-
+	/**
+	 * Utilidad para crear tags simples para las clases hijas
+	 */
+	private static String TagName(String name) {
+		return "!" + name;
+	}
 }

@@ -1,12 +1,16 @@
 package vistas;
 
 import java.awt.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
 
 import controlador.Controlador;
 import dominio.Curso;
 import dominio.CursoEnProgreso;
 import dominio.Pregunta;
+import dominio.PreguntaRellenarHueco;
+import dominio.PreguntaRespuestaCorta;
 import dominio.PreguntaTest;
 import excepciones.ExcepcionCursoActualVacio;
 import utils.MensajeError;
@@ -141,7 +145,7 @@ public class Principal {
             	Curso cursoSeleccionado = courseList.getSelectedValue();
     	        if (cursoSeleccionado != null) {
     	        	
-    	            ArrayList<String> parametros = Configuracion.mostrarDialogo();
+    	            ArrayList<String> parametros = Configuracion.mostrarDialogo(frame);
     	            try {
     	            	cursoActual = controlador.iniciarCurso(cursoSeleccionado,parametros.get(0), parametros.get(1));
     	            	realizarCurso();
@@ -164,19 +168,28 @@ public class Principal {
         
     }
 
-	private void realizarCurso() {
-		
-		Pregunta preguntaActual = cursoActual.getPreguntaActual();
-		
-		while(preguntaActual != null) {
-			
-			if(preguntaActual instanceof PreguntaTest) {
-				TestView testView = new TestView(frame,(PreguntaTest) preguntaActual);
-				testView.setVisible(true);
-			}
-		
-		}
-	}
+    private void realizarCurso() {
+    	
+        while (true) {
+            Pregunta preguntaActual = cursoActual.getPreguntaActual();
+
+            if (preguntaActual == null) {
+               MensajeError.mostrarConfirmacion(frame, "¡Curso completado!");
+                break;
+            }
+
+            if (preguntaActual instanceof PreguntaTest) {
+                new TestView(frame, (PreguntaTest) preguntaActual).setVisible(true);
+            } else if (preguntaActual instanceof PreguntaRellenarHueco) {
+                new RellenarHuecoView(frame, (PreguntaRellenarHueco) preguntaActual).setVisible(true);
+            } else if (preguntaActual instanceof PreguntaRespuestaCorta) {
+                new RespuestaCortaView(frame, (PreguntaRespuestaCorta) preguntaActual).setVisible(true);
+            }
+
+            cursoActual.avanzarProgreso();
+        }
+    }
+
 }
 
 

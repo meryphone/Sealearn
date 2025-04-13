@@ -1,105 +1,88 @@
 package vistas;
 
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import javax.swing.*;
+import java.util.List;
 import controlador.Controlador;
 import dominio.PreguntaRellenarHueco;
-import javax.swing.JProgressBar;
-import java.awt.BorderLayout;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.GridLayout;
-import java.awt.Font;
-import javax.swing.ImageIcon;
+import utils.MensajeError;
 
 public class RellenarHuecoView extends JDialog {
 
-    private static final long serialVersionUID = 1L;
-    private JPanel contentPane;
-	private JFrame frame;
-	private Controlador controlador = Controlador.getInstance();
+	private static final long serialVersionUID = 1L;
 
+	private final Controlador controlador = Controlador.getInstance();
+	private final PreguntaRellenarHueco pregunta;
+	
+	public static void main(String[] args) {
+		EventQueue.invokeLater(() -> {
+			PreguntaRellenarHueco ejemplo = new PreguntaRellenarHueco(
+				"I ___ happy", "am",
+				List.of("am", "is", "are"), "fácil"
+			);
+			RellenarHuecoView vista = new RellenarHuecoView(null, ejemplo);
+			vista.setVisible(true);
+		});
+	}
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    RellenarHuecoView frame = new RellenarHuecoView();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+	public RellenarHuecoView(JFrame owner, PreguntaRellenarHueco pregunta) {
+		super(owner, "Pregunta de Rellenar Hueco", true);
+		this.pregunta = pregunta;
+		inicializarVista();
+		pack();
+		setLocationRelativeTo(owner);
+	}
 
-    public RellenarHuecoView() {
-    	frame.setTitle("SeaLearn");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setBounds(100, 100, 536, 431);
-        contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-        frame.setContentPane(contentPane);
-        contentPane.setLayout(new BorderLayout(0, 10));
-        contentPane.setBackground(Principal.BEIGE);
+	private void inicializarVista() {
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setPreferredSize(new Dimension(500, 400));
+		getContentPane().setBackground(Principal.BEIGE);
+		getContentPane().setLayout(new BorderLayout(10, 10));
 
-        JPanel centro = new JPanel();
-        centro.setLayout(new BoxLayout(centro, BoxLayout.Y_AXIS));
-        centro.setBackground(Principal.BEIGE);
-        contentPane.add(centro, BorderLayout.CENTER);
+		// ---------- Panel superior con mascota ----------
+		JPanel panelSuperior = new JPanel();
+		panelSuperior.setBackground(Principal.BEIGE);
+		panelSuperior.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		panelSuperior.add(new JLabel(new ImageIcon(getClass().getResource("/imagenes/seal_looking_right.png"))));
+		getContentPane().add(panelSuperior, BorderLayout.NORTH);
 
+		// ---------- Panel central con pregunta y botones ----------
+		JPanel panelCentro = new JPanel();
+		panelCentro.setLayout(new BoxLayout(panelCentro, BoxLayout.Y_AXIS));
+		panelCentro.setBackground(Principal.BEIGE);
+		getContentPane().add(panelCentro, BorderLayout.CENTER);
+		
+		JPanel panelPregunta = new JPanel();
+		panelPregunta.setBackground(Principal.BEIGE);
+		panelCentro.add(panelPregunta);
+		
 
-        PreguntaRellenarHueco preguntaHueco = (PreguntaRellenarHueco) controlador.getPreguntaActual();
-        JLabel lblNewLabel = new JLabel(preguntaHueco.getEnunciado());
+		// Enunciado
+		JLabel labelPregunta = new JLabel(pregunta.getEnunciado());
+		panelPregunta.add(labelPregunta);
+		labelPregunta.setFont(new Font("Arial", Font.BOLD, 16));
+		labelPregunta.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        PreguntaRellenarHueco preguntaHueco = (PreguntaRellenarHueco) controlador.getPreguntaActual();
-        JLabel lblNewLabel = new JLabel(preguntaHueco.getEnunciado());
-        lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        JPanel pregunta = new JPanel();
-        pregunta.add(lblNewLabel);
-        pregunta.setBackground(Principal.BEIGE);
-        centro.add(pregunta);
+		// Opciones como botones
+		JPanel panelOpciones = new JPanel(new GridLayout(3, 1, 10, 10));
+		panelOpciones.setBackground(Principal.BEIGE);
+		for (String opcion : pregunta.getListaOpciones()) {
+			JButton btn = new RoundButton(opcion);
+			btn.addActionListener(e -> validarRespuesta(opcion));
+			panelOpciones.add(btn);
+		}
+		panelCentro.add(panelOpciones);
+	}
 
-        JPanel respuestas = new JPanel(new GridLayout(3, 1, 10, 10));
-        respuestas.setBackground(Principal.BEIGE);
-        centro.add(respuestas);
+	private void validarRespuesta(String respuestaSeleccionada) {
+		boolean acierto = controlador.corregir(respuestaSeleccionada);
 
-        for (String opcion : preguntaHueco.getListaOpciones()) {
-            JButton btn = new RoundButton(opcion);
-            respuestas.add(btn);
-            btn.addActionListener(e -> {
-            	boolean acierto = controlador.validarRespuesta(opcion);
-            	JOptionPane.showMessageDialog(this,
-            	    acierto ? "�Correcto!" : "Incorrecto\nLa respuesta correcta era: " + controlador.getPreguntaActual().getRespuestaCorrecta(),
-            	    "Resultado",
-            	    acierto ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE
-            	);
-            	dispose();
-            });
-        }
+		if (acierto) {
+			MensajeError.mostrarConfirmacion(this, "¡Correcto!");
+		} else {
+			MensajeError.mostrarError(this, "Incorrecto. La respuesta correcta era: " + pregunta.getRespuestaCorrecta());
+		}
 
-        JButton opcionB = new RoundButton("at");
-        respuestas.add(opcionB);
-
-        JButton opcionC = new RoundButton("an");
-        respuestas.add(opcionC);
-
-        JPanel arriba = new JPanel();
-        contentPane.add(arriba, BorderLayout.NORTH);
-        
-        JLabel lblNewLabel_1 = new JLabel("");
-        lblNewLabel_1.setIcon(new ImageIcon(getClass().getResource("/imagenes/seal_looking_right.png")));
-        arriba.add(lblNewLabel_1);
-        arriba.setBackground(Principal.BEIGE);
-        
-        JProgressBar progressBar = new JProgressBar();
-        arriba.add(progressBar);
-    }
-
+		dispose();
+	}
 }

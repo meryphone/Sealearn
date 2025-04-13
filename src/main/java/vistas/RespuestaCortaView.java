@@ -2,98 +2,107 @@ package vistas;
 
 import java.awt.*;
 import javax.swing.*;
+
 import controlador.Controlador;
-import dominio.*;
+import dominio.PreguntaRespuestaCorta;
+import utils.MensajeError;
 
 public class RespuestaCortaView extends JDialog {
 
-    private static final long serialVersionUID = 1L;
-    private static final Font LABEL_FONT = new Font("Arial", Font.BOLD, 16);
-    private static final Font TEXT_FONT = new Font("Arial", Font.PLAIN, 14);
+	private static final long serialVersionUID = 1L;
 
-    private JTextField textField;
-	private Controlador controlador = Controlador.getInstance();
-	private Pregunta pregunta;
+	private final Controlador controlador = Controlador.getInstance();
+	private final PreguntaRespuestaCorta pregunta;
+	private JTextField textField;
 
-    
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                RespuestaCortaView frame = new RespuestaCortaView(null, null);
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
+	// Estilos comunes
+	private static final Font LABEL_FONT = new Font("Arial", Font.BOLD, 16);
+	private static final Font TEXT_FONT = new Font("Arial", Font.PLAIN, 14);
 
-    
-    public RespuestaCortaView(JFrame owner, PreguntaRespuestaCorta pregunta) {
-        super(owner, "Respuesta Corta", true); 
-        this.pregunta = pregunta;
-        inicializarVista();
-        pack();
-        setLocationRelativeTo(owner);
-    }
+	public static void main(String[] args) {
+		EventQueue.invokeLater(() -> {
+			PreguntaRespuestaCorta ejemplo = new PreguntaRespuestaCorta("¿Cuál es la capital de España?", "Madrid",
+					"media");
+			RespuestaCortaView vista = new RespuestaCortaView(null, ejemplo);
+			vista.setVisible(true);
+		});
+	}
 
+	public RespuestaCortaView(JFrame owner, PreguntaRespuestaCorta pregunta) {
+		super(owner, "Pregunta de Respuesta Corta", true); // Diálogo modal
+		this.pregunta = pregunta;
+		inicializarVista();
+		pack();
+		setLocationRelativeTo(owner);
+	}
 
+	private void inicializarVista() {
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		getContentPane().setBackground(Principal.BEIGE);
+		getContentPane().setLayout(new BorderLayout(10, 10));
+		setPreferredSize(new Dimension(565, 365));
 
-    private void inicializarVista() {
-        setTitle("SeaLearn");
-        setBounds(100, 100, 565, 365);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        getContentPane().setBackground(Principal.BEIGE);
-        getContentPane().setLayout(new BorderLayout(10, 10));
+		// ---------- Panel superior con sello e icono ----------
+		JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		panelSuperior.setBackground(Principal.BEIGE);
+		JLabel iconLabel = new JLabel(new ImageIcon(getClass().getResource("/imagenes/seal_looking_right.png")));
+		panelSuperior.add(iconLabel);
+		getContentPane().add(panelSuperior, BorderLayout.NORTH);
 
-        // Panel superior con imagen
-        JPanel top = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		top.setBackground(Principal.BEIGE);
-        getContentPane().add(top, BorderLayout.NORTH);
-        
-        Component verticalStrut = Box.createVerticalStrut(60);
-        top.add(verticalStrut);
+		// ---------- Panel central con enunciado y campo de texto ----------
+		JPanel panelCentral = new JPanel();
+		panelCentral.setLayout(new BoxLayout(panelCentral, BoxLayout.Y_AXIS));
+		panelCentral.setBackground(Principal.BEIGE);
+		getContentPane().add(panelCentral, BorderLayout.CENTER);
 
-        // Panel central
-        JPanel center = new JPanel();
-        center.setLayout(new BoxLayout(center, BoxLayout.Y_AXIS));
-        center.setBackground(Principal.BEIGE);
-        getContentPane().add(center, BorderLayout.CENTER);
+		// Enunciado de la pregunta
+		JLabel labelEnunciado = new JLabel(pregunta.getEnunciado());
+		labelEnunciado.setFont(LABEL_FONT);
+		labelEnunciado.setAlignmentX(Component.CENTER_ALIGNMENT);
+		JPanel panelEnunciado = new JPanel();
+		panelEnunciado.setBackground(Principal.BEIGE);
+		panelEnunciado.add(labelEnunciado);
+		panelCentral.add(panelEnunciado);
 
-        // Panel de la pregunta
-        JPanel pregunta = new JPanel();
-        pregunta.setBackground(Principal.BEIGE);
-        JLabel preguntaLabel = new JLabel("¿Cuál es la capital de España?");
-        preguntaLabel.setFont(LABEL_FONT);
-        pregunta.add(preguntaLabel);
-        center.add(pregunta);
+		// Campo de texto para respuesta
+		textField = new JTextField(15);
+		textField.setFont(TEXT_FONT);
+		JPanel panelRespuesta = new JPanel();
+		panelRespuesta.setBackground(Principal.BEIGE);
+		panelRespuesta.add(textField);
+		panelCentral.add(panelRespuesta);
 
-        // Panel de respuesta con campo de texto
-        JPanel respuesta = new JPanel();
-        respuesta.setBackground(Principal.BEIGE);
-        textField = new JTextField();
-        textField.setFont(TEXT_FONT);
-        textField.setColumns(15);
-        respuesta.add(textField);
-        center.add(respuesta);
+		// ---------- Panel inferior con botón ----------
+		JPanel panelInferior = new JPanel();
+		panelInferior.setBackground(Principal.BEIGE);
+		getContentPane().add(panelInferior, BorderLayout.SOUTH);
 
-        // Panel de barra de progreso con imagen
-        JPanel barraProgreso = new JPanel();
-        barraProgreso.setBackground(Principal.BEIGE);
-        JLabel iconLabel = new JLabel(new ImageIcon(getClass().getResource("/imagenes/seal_looking_right.png")));
-        barraProgreso.add(iconLabel);
-        JProgressBar progressBar = new JProgressBar();
-        barraProgreso.add(progressBar);
-        center.add(barraProgreso);
-        
-     // Panel inferior con el bot�n Siguiente
-        JPanel abajo = new JPanel();
-        abajo.setBackground(Principal.BEIGE);
-        getContentPane().add(abajo, BorderLayout.SOUTH);
+		JButton btnSiguiente = new RoundButton("Siguiente");
+		btnSiguiente.setPreferredSize(new Dimension(92, 40));
+		btnSiguiente.addActionListener(e -> validarRespuesta());
+		panelInferior.add(btnSiguiente);
+	}
 
-        JButton btnSiguiente = new RoundButton("Siguiente");
-        btnSiguiente.setPreferredSize(new Dimension(92, 40));
-        abajo.add(btnSiguiente);
+	/**
+	 * Valida la respuesta del usuario contra la respuesta correcta Muestra
+	 * confirmación o error, y cierra la vista.
+	 */
+	private void validarRespuesta() {
+		String respuestaUsuario = textField.getText().trim();
 
-    }
+		if (respuestaUsuario.isEmpty()) {
+			MensajeError.mostrarAdvertencia(this, "Por favor, introduce una respuesta.");
+			return;
+		}
 
+		boolean acierto = controlador.corregir(respuestaUsuario);
+		if (acierto) {
+			MensajeError.mostrarConfirmacion(this, "¡Correcto!");
+		} else {
+			MensajeError.mostrarError(this,
+					"Incorrecto. La respuesta correcta era: " + pregunta.getRespuestaCorrecta());
+		}
+
+		dispose(); // Cerrar la ventana tras responder
+	}
 }

@@ -1,137 +1,109 @@
 package vistas;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
 import javax.swing.*;
-import dominio.PreguntaTest;
 import controlador.Controlador;
-import utils.*;
+import dominio.PreguntaTest;
+import utils.MensajeError;
+import java.util.List;
 
 public class TestView extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	private JFrame frame;
+
+	private final Controlador controlador = Controlador.getInstance();
+	private final PreguntaTest pregunta;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JRadioButton[] opcionesRadio;
-	private PreguntaTest pregunta;
-	private Controlador controlador = Controlador.getInstance();
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
-			try {
-				TestView frame = new TestView(null, new PreguntaTest("¿Cuál es la capital de Francia?", "Paris", List.of("Francia", "Dublín", "París"), "facil"));
-				frame.setVisible(true);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			PreguntaTest ejemplo = new PreguntaTest(
+				"¿Cuál es la capital de Francia?", "París",
+				List.of("Francia", "Dublín", "París"), "fácil"
+			);
+			TestView vista = new TestView(null, ejemplo);
+			vista.setVisible(true);
 		});
 	}
 
 	public TestView(JFrame owner, PreguntaTest pregunta) {
-	    super(owner, "Pregunta Test", true); // 'true' => modal
-	    this.pregunta = pregunta;
-	    initialize();
-	    pack();
-	    setLocationRelativeTo(owner);
+		super(owner, "Pregunta tipo Test", true);
+		this.pregunta = pregunta;
+		inicializarVista();
+		pack();
+		setLocationRelativeTo(owner);
 	}
 
-	private void initialize() {
-		frame = new JFrame();
-		frame.setTitle("SeaLearn");
-		frame.setBounds(100, 100, 450, 423);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-		frame.getContentPane().setBackground(Principal.BEIGE);
+	private void inicializarVista() {
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setPreferredSize(new Dimension(500, 400));
+		getContentPane().setBackground(Principal.BEIGE);
+		getContentPane().setLayout(new BorderLayout(10, 10));
 
-		JPanel panelQuestions = new JPanel();
-		panelQuestions.setLayout(new BorderLayout(0, 0));
-		panelQuestions.setBackground(Principal.BEIGE);
-		frame.getContentPane().add(panelQuestions);
+		// ---------- Panel superior con imagen ----------
+		JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		panelSuperior.setBackground(Principal.BEIGE);
+		panelSuperior.add(new JLabel(new ImageIcon(getClass().getResource("/imagenes/seal_looking_right.png"))));
+		getContentPane().add(panelSuperior, BorderLayout.NORTH);
 
-		JPanel top = new JPanel();
-		top.setBackground(Principal.BEIGE);
-		panelQuestions.add(top, BorderLayout.NORTH);
+		// ---------- Panel central con pregunta y opciones ----------
+		JPanel panelCentro = new JPanel();
+		panelCentro.setLayout(new BoxLayout(panelCentro, BoxLayout.Y_AXIS));
+		panelCentro.setBackground(Principal.BEIGE);
+		getContentPane().add(panelCentro, BorderLayout.CENTER);
 
-		JLabel lblQuestion = new JLabel(pregunta.getEnunciado());
-		top.add(lblQuestion);
+		// Enunciado
+		JLabel labelPregunta = new JLabel(pregunta.getEnunciado());
+		labelPregunta.setFont(new Font("Arial", Font.BOLD, 16));
+		labelPregunta.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panelCentro.add(labelPregunta);
 
-		JPanel optionsPanel = new JPanel();
-		optionsPanel.setLayout(new GridLayout(0, 1, 0, 0));
-		optionsPanel.setBackground(Principal.BEIGE);
-		panelQuestions.add(optionsPanel, BorderLayout.CENTER);
+		// Opciones
+		JPanel panelOpciones = new JPanel(new GridLayout(0, 1, 10, 10));
+		panelOpciones.setBackground(Principal.BEIGE);
+		opcionesRadio = new JRadioButton[pregunta.getListaOpciones().size()];
 
-		List<String> opciones = pregunta.getListaOpciones();
-		opcionesRadio = new JRadioButton[opciones.size()];
-
-		for (int i = 0; i < opciones.size(); i++) {
-			JRadioButton radio = new JRadioButton(opciones.get(i));
+		for (int i = 0; i < opcionesRadio.length; i++) {
+			JRadioButton radio = new JRadioButton(pregunta.getListaOpciones().get(i));
 			radio.setBackground(Principal.BEIGE.brighter());
-			buttonGroup.add(radio);
 			opcionesRadio[i] = radio;
-			optionsPanel.add(radio);
+			buttonGroup.add(radio);
+			panelOpciones.add(radio);
 		}
+		panelCentro.add(panelOpciones);
 
-		Component horizontalGlue_1 = Box.createHorizontalGlue();
-		horizontalGlue_1.setPreferredSize(new Dimension(25, 0));
-		panelQuestions.add(horizontalGlue_1, BorderLayout.EAST);
-
-		Component horizontalGlue = Box.createHorizontalGlue();
-		horizontalGlue.setPreferredSize(new Dimension(25, 0));
-		panelQuestions.add(horizontalGlue, BorderLayout.WEST);
-
-		JPanel panelHeadline = new JPanel();
-		panelHeadline.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		panelHeadline.setBackground(Principal.BEIGE);
-		frame.getContentPane().add(panelHeadline);
-
-		JLabel labelSeal = new JLabel(new ImageIcon(TestView.class.getResource("/imagenes/seal_looking_right.png")));
-		panelHeadline.add(labelSeal);
-
-		JProgressBar progressBar = new JProgressBar();
-		progressBar.setBackground(Principal.BEIGE.brighter());
-		panelHeadline.add(progressBar);
-
-		JPanel down = new JPanel();
-		down.setBackground(Principal.BEIGE);
-		frame.getContentPane().add(down);
-
-		JButton btnSalir = new RoundButton("Salir");
-		btnSalir.setPreferredSize(new Dimension(70, 40));
-		down.add(btnSalir);
-
-		Component horizontalStrut = Box.createHorizontalStrut(20);
-		horizontalStrut.setPreferredSize(new Dimension(230, 0));
-		down.add(horizontalStrut);
+		// ---------- Panel inferior con botón ----------
+		JPanel panelInferior = new JPanel();
+		panelInferior.setBackground(Principal.BEIGE);
+		getContentPane().add(panelInferior, BorderLayout.SOUTH);
 
 		JButton btnSiguiente = new RoundButton("Siguiente");
 		btnSiguiente.setPreferredSize(new Dimension(92, 40));
-		btnSiguiente.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String seleccion = obtenerRespuestaSeleccionada();
-				if (seleccion != null) {
-					if(controlador.corregir(seleccion)) {
-						MensajeError.mostrarConfirmacion(frame, "Respuesta correcta!");
-					}else {
-						MensajeError.mostrarError(frame, "Respuesta incorrecta!");
-					}
-					controlador.avanzarCurso();	
-					dispose();
-				} else {
-					MensajeError.mostrarAdvertencia(frame, "Debe seleccionar una opción.");
-				}
-			}
-		});
-		down.add(btnSiguiente);
+		btnSiguiente.addActionListener(e -> validarRespuesta());
+		panelInferior.add(btnSiguiente);
+	}
+
+	private void validarRespuesta() {
+		String seleccion = obtenerRespuestaSeleccionada();
+
+		if (seleccion == null) {
+			MensajeError.mostrarAdvertencia(this, "Debes seleccionar una opción.");
+			return;
+		}
+
+		boolean acierto = controlador.corregir(seleccion);
+		if (acierto) {
+			MensajeError.mostrarConfirmacion(this, "¡Correcto!");
+		} else {
+			MensajeError.mostrarError(this, "Incorrecto. La respuesta correcta era: " + pregunta.getRespuestaCorrecta());
+		}
+		dispose();
 	}
 
 	private String obtenerRespuestaSeleccionada() {
 		for (JRadioButton btn : opcionesRadio) {
-			if (btn.isSelected()) {
-				return btn.getText();
-			}
+			if (btn.isSelected()) return btn.getText();
 		}
 		return null;
 	}

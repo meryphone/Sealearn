@@ -1,50 +1,81 @@
-nombre: "Curso basico de C++"
-descripcion: "Descubre los conceptos básicos de C++, un lenguaje potente para aplicaciones de alto rendimiento."
+nombre: Curso de C++
+descripcion: Aprende los fundamentos de C++ con preguntas variadas
 preguntas:
-  - !dominio.PreguntaTest
-    enunciado: "¿Cuál de estas opciones imprime texto en consola en C++?"
-    respuestaCorrecta: "cout <<"
-    listaOpciones: ["print()", "System.out.println", "cout <<"]
+  - !PreguntaRespuestaCorta
+    enunciado: ¿Qué operador se usa para acceder a un miembro a través de un puntero?
+    respuestaCorrecta: ->
+    dificultad: media
 
-  - !dominio.PreguntaHueco
-    enunciado: "Completa el include: #include <__>"
-    respuestaCorrecta: "iostream"
-    listaOpciones: ["iostream", "stdio", "conio"]
+  - !PreguntaTest
+    enunciado: ¿Cuál es el archivo de cabecera para usar `cout`?
+    respuestaCorrecta: iostream
+    dificultad: facil
+    listaOpciones:
+      - stdlib
+      - iostream
+      - string
 
-  - !dominio.PreguntaRespuestaCorta
-    enunciado: "¿Qué extensión suelen tener los archivos fuente en C++?"
-    respuestaCorrecta: ".cpp"
+  - !PreguntaRellenarHueco
+    enunciado: El tipo de dato ___ se usa para representar números enteros.
+    respuestaCorrecta: int
+    dificultad: facil
+    listaOpciones:
+      - float
+      - int
+      - char
 
-  - !dominio.PreguntaHueco
-    enunciado: "Completa: int x = __;"
-    respuestaCorrecta: "0"
-    listaOpciones: ["0", "null", "zero"]
+  - !PreguntaTest
+    enunciado: ¿Cuál de los siguientes es un bucle válido en C++?
+    respuestaCorrecta: for
+    dificultad: facil
+    listaOpciones:
+      - repeat
+      - for
+      - cycle
 
-  - !dominio.PreguntaTest
-    enunciado: "¿Qué estructura representa un bucle en C++?"
-    respuestaCorrecta: "for"
-    listaOpciones: ["if", "doIf", "for"]
+  - !PreguntaRespuestaCorta
+    enunciado: ¿Qué palabra clave se usa para declarar constantes?
+    respuestaCorrecta: const
+    dificultad: media
 
-  - !dominio.PreguntaRespuestaCorta
-    enunciado: "¿Cómo se declara una clase en C++?"
-    respuestaCorrecta: "class"
+  - !PreguntaRellenarHueco
+    enunciado: Para incluir una biblioteca se usa la directiva ___.
+    respuestaCorrecta: #include
+    dificultad: facil
+    listaOpciones:
+      - define
+      - include
+      - import
 
-  - !dominio.PreguntaHueco
-    enunciado: "Completa: std::__ << \"Hola\";"
-    respuestaCorrecta: "cout"
-    listaOpciones: ["cout", "print", "echo"]
+  - !PreguntaTest
+    enunciado: ¿Cuál es la extensión típica de un archivo C++?
+    respuestaCorrecta: .cpp
+    dificultad: facil
+    listaOpciones:
+      - .java
+      - .cpp
+      - .py
 
-  - !dominio.PreguntaTest
-    enunciado: "¿Cuál de estos operadores se usa para comparar igualdad en C++?"
-    respuestaCorrecta: "=="
-    listaOpciones: ["=", "==", "==="]
+  - !PreguntaRespuestaCorta
+    enunciado: ¿Cómo se llama el espacio de nombres estándar en C++?
+    respuestaCorrecta: std
+    dificultad: media
 
-  - !dominio.PreguntaRespuestaCorta
-    enunciado: "¿Qué palabra clave se usa para herencia pública?"
-    respuestaCorrecta: "public"
+  - !PreguntaRellenarHueco
+    enunciado: La sentencia ___ termina la ejecución de una función.
+    respuestaCorrecta: return
+    dificultad: media
+    listaOpciones:
+      - stop
+      - return
+      - break
 
-  - !dominio.PreguntaHueco
-    enunciado: "Completa: for (int i = 0; i < 10; __)"
-    respuestaCorrecta: "i++"
-    listaOpciones: ["i++", "i--", "++i"]
+  - !PreguntaTest
+    enunciado: ¿Qué estructura permite agrupar variables de distintos tipos?
+    respuestaCorrecta: struct
+    dificultad: dificil
+    listaOpciones:
+      - class
+      - struct
+      - define
 

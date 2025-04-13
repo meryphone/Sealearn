@@ -3,12 +3,12 @@ package vistas;
 import java.awt.*;
 import javax.swing.*;
 
-public class Estadistica extends JFrame {
+public class EstadisticaView extends JFrame {
 	
 	  public static void main(String[] args) {
 	        EventQueue.invokeLater(() -> {
 	            try {
-	                Estadistica frame = new Estadistica();
+	                EstadisticaView frame = new EstadisticaView();
 	                frame.setVisible(true);
 	            } catch (Exception e) {
 	                e.printStackTrace();
@@ -19,7 +19,7 @@ public class Estadistica extends JFrame {
     private static final long serialVersionUID = 1L;
     private static final Color BEIGE = new Color(211, 204, 194);
     private static final Color BUTTON_COLOR = new Color(8, 32, 50);
-    public Estadistica() {
+    public EstadisticaView() {
         setTitle("Estadísticas");
         setBounds(100, 100, 600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

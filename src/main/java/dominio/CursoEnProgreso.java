@@ -18,9 +18,14 @@ public class CursoEnProgreso {
 	}
 		
 	public Pregunta getPreguntaActual() {
-		return preguntas.get(estrategia.mostrarPregunta(progreso));
+		int indice = estrategia.mostrarPregunta(progreso);
+		System.out.println(indice);
+		if (indice >= 0 && indice < preguntas.size()) {
+			return preguntas.get(indice);
+		}
+		return null; // No hay más preguntas
 	}
-	
+
 	public void avanzarProgreso() {
 		progreso++;
 	}

@@ -12,7 +12,6 @@ public class RepeticionEspaciada extends Estrategia {
 
 	private List<Integer> ordenPreguntas; // Lista que define el orden completo de presentación de preguntas (incluyendo
 											// repeticiones)
-	private int totalPreguntas;
 
 	/**
 	 * Constructor que genera el orden de presentación de preguntas aplicando la

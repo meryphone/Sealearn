@@ -11,7 +11,6 @@ import java.util.List;
 public class Aleatoria extends Estrategia {
 
     private List<Integer> ordenPreguntas;
-    private int totalPreguntas;
 
     /**
      * Constructor que genera una lista de índices desordenada aleatoriamente.

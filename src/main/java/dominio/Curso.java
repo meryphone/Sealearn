@@ -10,16 +10,12 @@ public class Curso {
     
     public Curso() {};
 
-    public Curso(String nombre, String descripcion, String estrategia, String dificultad, List<Pregunta> preguntas, int progreso) {
+    public Curso(String nombre, String descripcion, List<Pregunta> preguntas, int progreso) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.preguntas = preguntas;
     }
-    
-    
-
-    
-
+      
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
