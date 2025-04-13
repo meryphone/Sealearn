@@ -3,6 +3,7 @@ package dominio;
 import java.util.List;
 
 import controlador.Controlador;
+import utils.CursoUtils;
 
 public class Pruebas {
 	

@@ -2,19 +2,25 @@ package vistas;
 
 import java.awt.*;
 import javax.swing.*;
+import controlador.Controlador;
+import dominio.*;
 
-public class RespuestaEscritaView extends JFrame {
+public class RespuestaCortaView extends JDialog {
 
     private static final long serialVersionUID = 1L;
     private static final Font LABEL_FONT = new Font("Arial", Font.BOLD, 16);
     private static final Font TEXT_FONT = new Font("Arial", Font.PLAIN, 14);
 
     private JTextField textField;
+	private Controlador controlador = Controlador.getInstance();
+	private Pregunta pregunta;
+	private JFrame frame;
+
     
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-                RespuestaEscritaView frame = new RespuestaEscritaView();
+                RespuestaCortaView frame = new RespuestaCortaView(null, null);
                 frame.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -22,7 +28,18 @@ public class RespuestaEscritaView extends JFrame {
         });
     }
 
-    public RespuestaEscritaView() {
+    
+    public RespuestaCortaView(JFrame owner, PreguntaRespuestaCorta pregunta) {
+        super(owner, "Respuesta Corta", true); 
+        this.pregunta = pregunta;
+        inicializarVista();
+        pack();
+        setLocationRelativeTo(owner);
+    }
+
+
+
+    private void inicializarVista() {
         setTitle("SeaLearn");
         setBounds(100, 100, 565, 365);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -68,6 +85,16 @@ public class RespuestaEscritaView extends JFrame {
         JProgressBar progressBar = new JProgressBar();
         barraProgreso.add(progressBar);
         center.add(barraProgreso);
+        
+     // Panel inferior con el bot�n Siguiente
+        JPanel abajo = new JPanel();
+        abajo.setBackground(Principal.BEIGE);
+        getContentPane().add(abajo, BorderLayout.SOUTH);
+
+        JButton btnSiguiente = new RoundButton("Siguiente");
+        btnSiguiente.setPreferredSize(new Dimension(92, 40));
+        abajo.add(btnSiguiente);
+
     }
 
 }

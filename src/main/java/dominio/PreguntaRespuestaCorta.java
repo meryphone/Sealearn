@@ -6,8 +6,8 @@ public class PreguntaRespuestaCorta extends Pregunta {
 		super();
 	}
 
-	public PreguntaRespuestaCorta(String enunciado, String respuestaCorrecta) {
-		super(enunciado, respuestaCorrecta);
+	public PreguntaRespuestaCorta(String enunciado, String respuestaCorrecta, String dificultad) {
+		super(enunciado, respuestaCorrecta, dificultad);
 	}
 		
 

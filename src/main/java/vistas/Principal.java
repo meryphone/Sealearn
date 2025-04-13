@@ -5,14 +5,18 @@ import javax.swing.*;
 
 import controlador.Controlador;
 import dominio.Curso;
+import dominio.CursoEnProgreso;
+import dominio.Pregunta;
+import dominio.PreguntaTest;
 import excepciones.ExcepcionCursoActualVacio;
+import utils.MensajeError;
 
 public class Principal {
 	
 	public final static Color BEIGE = new Color(211, 204, 194);
 	public final static Color BUTTON_COLOR = new Color(8, 32, 50);
 	private Controlador controlador = Controlador.getInstance();
-	private Curso cursoActual;
+	private CursoEnProgreso cursoActual;
 
     private JFrame frame;
 
@@ -134,15 +138,22 @@ public class Principal {
         
         btnIniciar.addActionListener( e -> {
             try {
-    	        if (courseList.getSelectedValue() != null) {
-    	        	cursoActual = courseList.getSelectedValue();
-    	            Configuracion ventana = new Configuracion();
-    	            ventana.setVisible(true);
+            	Curso cursoSeleccionado = courseList.getSelectedValue();
+    	        if (cursoSeleccionado != null) {
+    	        	
+    	            ArrayList<String> parametros = Configuracion.mostrarDialogo();
+    	            try {
+    	            	cursoActual = controlador.iniciarCurso(cursoSeleccionado,parametros.get(0), parametros.get(1));
+    	            	realizarCurso();
+					} catch (RuntimeException e2) {
+						MensajeError.mostrarError(frame, e2.getMessage());
+					}
+    	           
     	        } else {
     	            throw new ExcepcionCursoActualVacio("Seleccione un curso antes de comenzar");
     	        }
-    	    } catch (ExcepcionCursoActualVacio ex) {
-    	        JOptionPane.showMessageDialog(frame, ex.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
+    	    } catch (ExcepcionCursoActualVacio e1) {
+    	        MensajeError.mostrarAdvertencia(frame, e1.getMessage());
     	    }
 
         });
@@ -152,7 +163,23 @@ public class Principal {
         center1.add(scrollPane, BorderLayout.CENTER);
         
     }
+
+	private void realizarCurso() {
+		
+		Pregunta preguntaActual = cursoActual.getPreguntaActual();
+		
+		while(preguntaActual != null) {
+			
+			if(preguntaActual instanceof PreguntaTest) {
+				TestView testView = new TestView(frame,(PreguntaTest) preguntaActual);
+				testView.setVisible(true);
+			}
+		
+		}
+	}
 }
+
+
 
 
 class CourseCellRenderer extends JPanel implements ListCellRenderer<Curso> {

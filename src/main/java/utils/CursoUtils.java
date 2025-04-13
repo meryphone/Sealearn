@@ -1,4 +1,4 @@
-package dominio;
+package utils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -10,6 +10,11 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 import controlador.Controlador;
+import dominio.Curso;
+import dominio.Pregunta;
+import dominio.PreguntaRellenarHueco;
+import dominio.PreguntaRespuestaCorta;
+import dominio.PreguntaTest;
 
 public class CursoUtils {
 
@@ -35,7 +40,7 @@ public class CursoUtils {
 			constructor.addTypeDescription(cursoDesc);
 
 			constructor.addTypeDescription(new TypeDescription(PreguntaTest.class, "!dominio.PreguntaTest"));
-			constructor.addTypeDescription(new TypeDescription(PreguntaHueco.class, "!dominio.PreguntaHueco"));
+			constructor.addTypeDescription(new TypeDescription(PreguntaRellenarHueco.class, "!dominio.PreguntaHueco"));
 			constructor.addTypeDescription(
 					new TypeDescription(PreguntaRespuestaCorta.class, "!dominio.PreguntaRespuestaCorta"));
 

@@ -4,19 +4,27 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import controlador.Controlador;
+import dominio.PreguntaRellenarHueco;
 import javax.swing.JProgressBar;
 import java.awt.BorderLayout;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.GridLayout;
 import java.awt.Font;
 import javax.swing.ImageIcon;
 
-public class RellenarHuecoView extends JFrame {
+public class RellenarHuecoView extends JDialog {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
+	private JFrame frame;
+	private Controlador controlador = Controlador.getInstance();
+
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -32,12 +40,12 @@ public class RellenarHuecoView extends JFrame {
     }
 
     public RellenarHuecoView() {
-    	setTitle("SeaLearn");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 536, 431);
+    	frame.setTitle("SeaLearn");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setBounds(100, 100, 536, 431);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-        setContentPane(contentPane);
+        frame.setContentPane(contentPane);
         contentPane.setLayout(new BorderLayout(0, 10));
         contentPane.setBackground(Principal.BEIGE);
 
@@ -46,7 +54,9 @@ public class RellenarHuecoView extends JFrame {
         centro.setBackground(Principal.BEIGE);
         contentPane.add(centro, BorderLayout.CENTER);
 
-        JLabel lblNewLabel = new JLabel("I ___________ a teacher, too.");
+
+        PreguntaRellenarHueco preguntaHueco = (PreguntaRellenarHueco) controlador.getPreguntaActual();
+        JLabel lblNewLabel = new JLabel(preguntaHueco.getEnunciado());
         lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         JPanel pregunta = new JPanel();
         pregunta.add(lblNewLabel);
@@ -57,8 +67,19 @@ public class RellenarHuecoView extends JFrame {
         respuestas.setBackground(Principal.BEIGE);
         centro.add(respuestas);
 
-        JButton opcionA = new RoundButton("am");
-        respuestas.add(opcionA);
+        for (String opcion : preguntaHueco.getListaOpciones()) {
+            JButton btn = new RoundButton(opcion);
+            respuestas.add(btn);
+            btn.addActionListener(e -> {
+            	boolean acierto = controlador.validarRespuesta(opcion);
+            	JOptionPane.showMessageDialog(this,
+            	    acierto ? "�Correcto!" : "Incorrecto\nLa respuesta correcta era: " + controlador.getPreguntaActual().getRespuestaCorrecta(),
+            	    "Resultado",
+            	    acierto ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE
+            	);
+            	dispose();
+            });
+        }
 
         JButton opcionB = new RoundButton("at");
         respuestas.add(opcionB);
