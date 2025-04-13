@@ -120,7 +120,6 @@ public class Configuracion extends JDialog {
         Component verticalStrut_1 = Box.createVerticalStrut(20);
         espacio.add(verticalStrut_1);
 
-    }
-        
+    }    
     
 }
