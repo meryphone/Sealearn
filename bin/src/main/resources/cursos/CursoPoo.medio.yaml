@@ -1,0 +1,53 @@
+nombre: "Curso Intermedio de POO"
+descripcion: "Profundiza en los conceptos clave de la POO con ejercicios prácticos."
+descripcionExtensa: "En este curso intermedio explorarás abstracción, polimorfismo y composición. Aprenderás a diseñar sistemas más robustos y mantenibles usando POO."
+estrategia: "secuencial"
+progreso: 0
+preguntas:
+  - tipo: "PreguntaTest"
+    enunciado: "¿Cuál es la diferencia entre una clase abstracta y una interfaz en Java?"
+    opciones: ["Las interfaces pueden tener métodos sin implementar", "Las clases abstractas no pueden heredar", "Las interfaces son más rápidas que las clases abstractas"]
+    respuesta_correcta: "Las interfaces pueden tener métodos sin implementar"
+
+  - tipo: "PreguntaTest"
+    enunciado: "¿Qué palabra clave en Java se usa para heredar de una clase?"
+    opciones: ["extends", "inherits", "super"]
+    respuesta_correcta: "extends"
+
+  - tipo: "PreguntaHueco"
+    enunciado: "El polimorfismo permite que una misma función pueda tener múltiples ___."
+    respuesta_correcta: "implementaciones"
+
+  - tipo: "PreguntaTest"
+    enunciado: "¿Cuál de estos es un beneficio del uso de interfaces en Java?"
+    opciones: ["Permite múltiples herencias", "Reduce el uso de memoria", "Evita el uso de objetos"]
+    respuesta_correcta: "Permite múltiples herencias"
+
+  - tipo: "PreguntaTest"
+    enunciado: "¿Cómo se llama la técnica de ocultar detalles de implementación y mostrar solo la funcionalidad?"
+    opciones: ["Abstracción", "Herencia", "Encapsulación"]
+    respuesta_correcta: "Abstracción"
+
+  - tipo: "PreguntaTest"
+    enunciado: "¿Cuál es el modificador de acceso más restrictivo en Java?"
+    opciones: ["private", "protected", "public"]
+    respuesta_correcta: "private"
+
+  - tipo: "PreguntaHueco"
+    enunciado: "Un método declarado en una clase abstracta debe ser ___ en la subclase."
+    respuesta_correcta: "sobrescrito"
+
+  - tipo: "PreguntaTest"
+    enunciado: "¿Cómo se accede a un método de la superclase desde una subclase en Java?"
+    opciones: ["super.metodo()", "this.metodo()", "supermetodo()"]
+    respuesta_correcta: "super.metodo()"
+
+  - tipo: "PreguntaHueco"
+    enunciado: "Una ___ define qué pueden hacer las clases que la implementen sin definir cómo lo hacen."
+    respuesta_correcta: "interfaz"
+
+  - tipo: "PreguntaTest"
+    enunciado: "¿Cómo se declara una interfaz en Java?"
+    opciones: ["interface MiInterfaz {}", "public class MiInterfaz {}", "interfaz MiInterfaz {}"]
+    respuesta_correcta: "interface MiInterfaz {}"
+

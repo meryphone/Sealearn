@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
+	<persistence-unit name="ejemplo">
+		<properties>
+			<property name="jakarta.persistence.jdbc.driver"
+				value="org.sqlite.JDBC" />
+      
+      <!-- La base de datos se guardará en basedatos.db --> 
+			<property name="jakarta.persistence.jdbc.url"
+				value="jdbc:sqlite:basedatos.db" />
+			<property name="dialect" value="org.hibernate.community.dialect.SQLiteDialect" />
+			
+      <!-- Crear el esquema automáticamente -->
+      <property name="hibernate.hbm2ddl.auto" value="update" />
+			
+      <!-- Muestra información del SQL que va ejecutando -->
+      <property name="hibernate.show_sql" value="true" />
+		</properties>
+	</persistence-unit>
+</persistence>

@@ -1,8 +1,12 @@
 package dominio;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 public class Estadistica {
@@ -83,6 +87,14 @@ public class Estadistica {
 		this.rachaActual = rachaActual;
 	}
 
+	public LocalDate getUltimoDiaEstudio() {
+		return ultimoDiaEstudio;
+	}
+
+	public void setUltimoDiaEstudio(LocalDate ultimoDiaEstudio) {
+		this.ultimoDiaEstudio = ultimoDiaEstudio;
+	}
+
 	public void registrarRespuesta(boolean acierto) {
 		totalPreguntasRespondidas++;
 			
@@ -119,8 +131,29 @@ public class Estadistica {
     	 if (inicioSesion != null) {
     	        Duration duracion = Duration.between(inicioSesion, LocalDateTime.now());
     	        tiempoTotalEstudio = tiempoTotalEstudio.plus(duracion);
-    	        inicioSesion = null; // Marcar como cerrada esta sesi�n
+    	        inicioSesion = null; // Marcar como cerrada esta sesión
     	    }
+    }
+    
+    public void exportar(String rutaArchivo) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(rutaArchivo))) {
+            writer.write("Estadísticas de estudio\n\n");
+            writer.write("Total de preguntas respondidas: " + totalPreguntasRespondidas + "\n");
+            writer.write("Total de aciertos: " + totalAciertos + "\n");
+            writer.write("Total de fallos: " + totalFallos + "\n");
+
+            if (tiempoTotalEstudio != null) {
+                long minutos = tiempoTotalEstudio.toMinutes();
+                writer.write("Tiempo total de estudio: " + minutos + " minutos\n");
+            }
+
+            writer.write("Mejor racha de días estudiando: " + mejorRacha + "\n");
+            writer.write("Racha actual: " + rachaActual + "\n");
+
+            if (ultimoDiaEstudio != null) {
+                writer.write("Último día de estudio: " + ultimoDiaEstudio.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n");
+            }
+        }
     }
 
 }

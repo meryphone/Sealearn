@@ -1,0 +1,81 @@
+nombre: Curso de Java
+descripcion: Repasa conceptos esenciales de Java
+preguntas:
+  - !PreguntaTest
+    enunciado: ¿Cuál es el punto de entrada de una aplicación Java?
+    respuestaCorrecta: main
+    dificultad: media
+    listaOpciones:
+      - run
+      - start
+      - main
+
+  - !PreguntaRespuestaCorta
+    enunciado: ¿Qué palabra clave se usa para herencia?
+    respuestaCorrecta: extends
+    dificultad: media
+
+  - !PreguntaRellenarHueco
+    enunciado: Una clase que no puede ser extendida se declara como ___.
+    respuestaCorrecta: final
+    dificultad: dificil
+    listaOpciones:
+      - static
+      - abstract
+      - final
+
+  - !PreguntaTest
+    enunciado: ¿Qué modificador permite acceder solo dentro del mismo paquete?
+    respuestaCorrecta: default
+    dificultad: dificil
+    listaOpciones:
+      - public
+      - private
+      - default
+
+  - !PreguntaRespuestaCorta
+    enunciado: ¿Cómo se llama el recolector de basura en Java?
+    respuestaCorrecta: Garbage Collector
+    dificultad: dificil
+
+  - !PreguntaRellenarHueco
+    enunciado: Las interfaces se definen con la palabra clave ___.
+    respuestaCorrecta: interface
+    dificultad: media
+    listaOpciones:
+      - implements
+      - interface
+      - abstract
+
+  - !PreguntaTest
+    enunciado: ¿Cuál es el tipo de dato para números decimales?
+    respuestaCorrecta: double
+    dificultad: media
+    listaOpciones:
+      - int
+      - float
+      - double
+
+  - !PreguntaRespuestaCorta
+    enunciado: ¿Cómo se llama el operador para comparar igualdad?
+    respuestaCorrecta: ==
+    dificultad: facil
+
+  - !PreguntaRellenarHueco
+    enunciado: Las clases en Java se agrupan en ___.
+    respuestaCorrecta: paquetes
+    dificultad: facil
+    listaOpciones:
+      - paquetes
+      - carpetas
+      - módulos
+
+  - !PreguntaTest
+    enunciado: ¿Cuál es la función de `System.out.println()`?
+    respuestaCorrecta: Imprimir en consola
+    dificultad: facil
+    listaOpciones:
+      - Leer entrada
+      - Crear variables
+      - Imprimir en consola
+

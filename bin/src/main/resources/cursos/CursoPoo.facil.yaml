@@ -1,7 +1,6 @@
 nombre: "Curso Básico de POO"
 descripcion: "Introducción a los conceptos fundamentales de la Programación Orientada a Objetos."
 estrategia: "secuencial"
-dificultad: "fácil"
 progreso: 0
 preguntas:
   - tipo: "PreguntaTest"

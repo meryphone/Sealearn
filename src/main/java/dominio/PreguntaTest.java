@@ -5,11 +5,11 @@ import java.util.List;
 
 public class PreguntaTest extends Pregunta{
 	
-	private final List<String> listaOpciones;
+	private List<String> listaOpciones;
 	
-	public PreguntaTest(String enunciado, String respuestaCorrecta, List<String> listaOpciones_, String dificultad) {
+	public PreguntaTest(String enunciado, String respuestaCorrecta, List<String> listaOpciones_, String dificultad ) {
 		super(enunciado, respuestaCorrecta, dificultad);
-		this.listaOpciones = listaOpciones_;
+		listaOpciones = listaOpciones_;
 	}
 	
 	public PreguntaTest() {
@@ -21,5 +21,8 @@ public class PreguntaTest extends Pregunta{
 	public List<String> getListaOpciones() {
 		return listaOpciones;
 	}
-
+	
+	public void setListaOpciones(List<String> listaOpciones) {
+		this.listaOpciones = listaOpciones;
+	}
 }

@@ -1,0 +1,81 @@
+nombre: Curso de Python
+descripcion: Aprende Python con preguntas básicas y avanzadas
+preguntas:
+  - !PreguntaTest
+    enunciado: ¿Cómo se declara una función en Python?
+    respuestaCorrecta: def
+    dificultad: facil
+    listaOpciones:
+      - function
+      - def
+      - declare
+
+  - !PreguntaRespuestaCorta
+    enunciado: ¿Qué palabra clave se usa para definir una clase?
+    respuestaCorrecta: class
+    dificultad: media
+
+  - !PreguntaRellenarHueco
+    enunciado: Para imprimir en consola usamos la función ___().
+    respuestaCorrecta: print
+    dificultad: facil
+    listaOpciones:
+      - echo
+      - print
+      - say
+
+  - !PreguntaTest
+    enunciado: ¿Qué estructura usamos para repetir código mientras una condición sea verdadera?
+    respuestaCorrecta: while
+    dificultad: media
+    listaOpciones:
+      - until
+      - for
+      - while
+
+  - !PreguntaRespuestaCorta
+    enunciado: ¿Qué tipo de datos representa verdadero o falso?
+    respuestaCorrecta: bool
+    dificultad: facil
+
+  - !PreguntaRellenarHueco
+    enunciado: Las listas se definen con corchetes ___.
+    respuestaCorrecta: []
+    dificultad: media
+    listaOpciones:
+      - ()
+      - {}
+      - []
+
+  - !PreguntaTest
+    enunciado: ¿Cómo se hace una importación en Python?
+    respuestaCorrecta: import
+    dificultad: facil
+    listaOpciones:
+      - load
+      - use
+      - import
+
+  - !PreguntaRespuestaCorta
+    enunciado: ¿Cómo se llama la estructura que captura errores en Python?
+    respuestaCorrecta: try-except
+    dificultad: dificil
+
+  - !PreguntaRellenarHueco
+    enunciado: Una función puede devolver un valor usando ___.
+    respuestaCorrecta: return
+    dificultad: media
+    listaOpciones:
+      - end
+      - return
+      - yield
+
+  - !PreguntaTest
+    enunciado: ¿Cuál de estos es un tipo de colección mutable?
+    respuestaCorrecta: list
+    dificultad: dificil
+    listaOpciones:
+      - tuple
+      - list
+      - str
+

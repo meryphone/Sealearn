@@ -1,0 +1,81 @@
+nombre: Curso de C++
+descripcion: Aprende los fundamentos de C++ con preguntas variadas
+preguntas:
+  - !PreguntaRespuestaCorta
+    enunciado: ¿Qué operador se usa para acceder a un miembro a través de un puntero?
+    respuestaCorrecta: ->
+    dificultad: media
+
+  - !PreguntaTest
+    enunciado: ¿Cuál es el archivo de cabecera para usar `cout`?
+    respuestaCorrecta: iostream
+    dificultad: facil
+    listaOpciones:
+      - stdlib
+      - iostream
+      - string
+
+  - !PreguntaRellenarHueco
+    enunciado: El tipo de dato ___ se usa para representar números enteros.
+    respuestaCorrecta: int
+    dificultad: facil
+    listaOpciones:
+      - float
+      - int
+      - char
+
+  - !PreguntaTest
+    enunciado: ¿Cuál de los siguientes es un bucle válido en C++?
+    respuestaCorrecta: for
+    dificultad: facil
+    listaOpciones:
+      - repeat
+      - for
+      - cycle
+
+  - !PreguntaRespuestaCorta
+    enunciado: ¿Qué palabra clave se usa para declarar constantes?
+    respuestaCorrecta: const
+    dificultad: media
+
+  - !PreguntaRellenarHueco
+    enunciado: Para incluir una biblioteca se usa la directiva ___.
+    respuestaCorrecta: #include
+    dificultad: facil
+    listaOpciones:
+      - define
+      - include
+      - import
+
+  - !PreguntaTest
+    enunciado: ¿Cuál es la extensión típica de un archivo C++?
+    respuestaCorrecta: .cpp
+    dificultad: facil
+    listaOpciones:
+      - .java
+      - .cpp
+      - .py
+
+  - !PreguntaRespuestaCorta
+    enunciado: ¿Cómo se llama el espacio de nombres estándar en C++?
+    respuestaCorrecta: std
+    dificultad: media
+
+  - !PreguntaRellenarHueco
+    enunciado: La sentencia ___ termina la ejecución de una función.
+    respuestaCorrecta: return
+    dificultad: media
+    listaOpciones:
+      - stop
+      - return
+      - break
+
+  - !PreguntaTest
+    enunciado: ¿Qué estructura permite agrupar variables de distintos tipos?
+    respuestaCorrecta: struct
+    dificultad: dificil
+    listaOpciones:
+      - class
+      - struct
+      - define
+
