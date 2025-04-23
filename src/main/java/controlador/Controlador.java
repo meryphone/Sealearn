@@ -3,7 +3,12 @@ package controlador;
 
 import java.util.ArrayList;
 import java.util.List;
-import dominio.*;
+
+import dominio.Curso;
+import dominio.CursoEnProgreso;
+import dominio.Estadistica;
+import dominio.Estrategia;
+import dominio.Pregunta;
 import utils.CursoUtils;
 
 
@@ -49,7 +54,7 @@ public class Controlador {
 	        estrategiaSeleccionada.setTotalPreguntas(preguntasFiltradas.size());
 	        
 	        cursoEnProgreso = new CursoEnProgreso(
-	            estrategiaSeleccionada,
+	            cursoSeleccionado.getId(), estrategiaSeleccionada,
 	            preguntasFiltradas
 	        );
 	        

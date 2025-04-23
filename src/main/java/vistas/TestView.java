@@ -37,7 +37,7 @@ public class TestView extends JDialog {
 
 	private void inicializarVista() {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setPreferredSize(new Dimension(500, 400));
+		setPreferredSize(new Dimension(550, 500));
 		getContentPane().setBackground(Principal.BEIGE);
 		getContentPane().setLayout(new BorderLayout(10, 10));
 

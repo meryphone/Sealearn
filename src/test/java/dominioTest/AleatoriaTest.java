@@ -1,8 +1,10 @@
-package dominio;
+package dominioTest;
 
 
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
+
+import dominio.Aleatoria;
 
 public class AleatoriaTest extends TestCase {
 	

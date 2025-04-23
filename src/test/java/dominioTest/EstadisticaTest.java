@@ -1,4 +1,4 @@
-package dominio;
+package dominioTest;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -10,6 +10,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import dominio.Estadistica;
 
 
 public class EstadisticaTest extends TestCase {

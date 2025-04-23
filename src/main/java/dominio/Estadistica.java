@@ -8,30 +8,41 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import jakarta.persistence.*;
+import utils.DurationAttributeConverter;
 
+@Entity
+@Table(name = "Estadisticas")
 public class Estadistica {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+
+	@Convert(converter = DurationAttributeConverter.class)
+	private Duration tiempoTotalEstudio;
 	
 	private int totalPreguntasRespondidas;
-    private int totalAciertos;
-    private int totalFallos;
-    private LocalDateTime inicioSesion;
-    private Duration tiempoTotalEstudio;
-    private int mejorRacha; // preguntas seguidas correctas
-    private int rachaActual;
-    private LocalDate ultimoDiaEstudio;
+	private int totalAciertos;
+	private int totalFallos;
+	private int mejorRacha;
+	private int rachaActual;
 
-    public Estadistica() {
-        this.tiempoTotalEstudio = Duration.ZERO;
-        this.mejorRacha = 0;
-        this.rachaActual = 0;
-        this.totalAciertos = 0;
-        this.totalPreguntasRespondidas = 0;
-        this.totalFallos=0;
-        this.inicioSesion = LocalDateTime.now();
-        this.ultimoDiaEstudio = null;
-    }
+	private LocalDateTime inicioSesion;
+	private LocalDate ultimoDiaEstudio;
 
-    public int getTotalPreguntasRespondidas() {
+	public Estadistica() {
+		this.tiempoTotalEstudio = Duration.ZERO;
+		this.mejorRacha = 0;
+		this.rachaActual = 0;
+		this.totalAciertos = 0;
+		this.totalPreguntasRespondidas = 0;
+		this.totalFallos = 0;
+		this.inicioSesion = LocalDateTime.now();
+		this.ultimoDiaEstudio = null;
+	}
+
+	public int getTotalPreguntasRespondidas() {
 		return totalPreguntasRespondidas;
 	}
 
@@ -95,65 +106,74 @@ public class Estadistica {
 		this.ultimoDiaEstudio = ultimoDiaEstudio;
 	}
 
-	public void registrarRespuesta(boolean acierto) {
-		totalPreguntasRespondidas++;
-			
-        if (acierto) {
-            totalAciertos++;
-        } else {
-            totalFallos++;
-        }
-    }
-	
-	public void registrarEstudioHoy() {
-        LocalDate hoy = LocalDate.now();
-
-        if (ultimoDiaEstudio == null) {
-            rachaActual = 1;
-        } else {
-            long diasEntre = ChronoUnit.DAYS.between(ultimoDiaEstudio, hoy);
-
-            if (diasEntre == 1) {
-                rachaActual++;
-            } else if (diasEntre > 1) {
-                rachaActual = 1; 
-            } 
-        }
-
-        if (rachaActual > mejorRacha) {
-            mejorRacha = rachaActual;
-        }
-
-        ultimoDiaEstudio = hoy;
+	public Long getId() {
+		return id;
 	}
 
-    public void finalizarSesion() {
-    	 if (inicioSesion != null) {
-    	        Duration duracion = Duration.between(inicioSesion, LocalDateTime.now());
-    	        tiempoTotalEstudio = tiempoTotalEstudio.plus(duracion);
-    	        inicioSesion = null; // Marcar como cerrada esta sesión
-    	    }
-    }
-    
-    public void exportar(String rutaArchivo) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(rutaArchivo))) {
-            writer.write("Estadísticas de estudio\n\n");
-            writer.write("Total de preguntas respondidas: " + totalPreguntasRespondidas + "\n");
-            writer.write("Total de aciertos: " + totalAciertos + "\n");
-            writer.write("Total de fallos: " + totalFallos + "\n");
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-            if (tiempoTotalEstudio != null) {
-                long minutos = tiempoTotalEstudio.toMinutes();
-                writer.write("Tiempo total de estudio: " + minutos + " minutos\n");
-            }
+	public void registrarRespuesta(boolean acierto) {
+		totalPreguntasRespondidas++;
 
-            writer.write("Mejor racha de días estudiando: " + mejorRacha + "\n");
-            writer.write("Racha actual: " + rachaActual + "\n");
+		if (acierto) {
+			totalAciertos++;
+		} else {
+			totalFallos++;
+		}
+	}
 
-            if (ultimoDiaEstudio != null) {
-                writer.write("Último día de estudio: " + ultimoDiaEstudio.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n");
-            }
-        }
-    }
+	public void registrarEstudioHoy() {
+		LocalDate hoy = LocalDate.now();
+
+		if (ultimoDiaEstudio == null) {
+			rachaActual = 1;
+		} else {
+			long diasEntre = ChronoUnit.DAYS.between(ultimoDiaEstudio, hoy);
+
+			if (diasEntre == 1) {
+				rachaActual++;
+			} else if (diasEntre > 1) {
+				rachaActual = 1;
+			}
+		}
+
+		if (rachaActual > mejorRacha) {
+			mejorRacha = rachaActual;
+		}
+
+		ultimoDiaEstudio = hoy;
+	}
+
+	public void finalizarSesion() {
+		if (inicioSesion != null) {
+			Duration duracion = Duration.between(inicioSesion, LocalDateTime.now());
+			tiempoTotalEstudio = tiempoTotalEstudio.plus(duracion);
+			inicioSesion = null; // Marcar como cerrada esta sesión
+		}
+	}
+
+	public void exportar(String rutaArchivo) throws IOException {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(rutaArchivo))) {
+			writer.write("Estadísticas de estudio\n\n");
+			writer.write("Total de preguntas respondidas: " + totalPreguntasRespondidas + "\n");
+			writer.write("Total de aciertos: " + totalAciertos + "\n");
+			writer.write("Total de fallos: " + totalFallos + "\n");
+
+			if (tiempoTotalEstudio != null) {
+				long minutos = tiempoTotalEstudio.toMinutes();
+				writer.write("Tiempo total de estudio: " + minutos + " minutos\n");
+			}
+
+			writer.write("Mejor racha de días estudiando: " + mejorRacha + "\n");
+			writer.write("Racha actual: " + rachaActual + "\n");
+
+			if (ultimoDiaEstudio != null) {
+				writer.write("Último día de estudio: "
+						+ ultimoDiaEstudio.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n");
+			}
+		}
+	}
 
 }
