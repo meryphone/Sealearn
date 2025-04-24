@@ -15,31 +15,33 @@ public class CursoEnProgreso {
     private Long id;
 
     private UUID cursoId;
-
+    
+    private String dificultad;
+    
     private int progreso;
 
-    private String estrategiaNombre; // ← persistido
+    private String estrategiaNombre; 
 
     @Transient
-    private Estrategia estrategia; // ← no se guarda
+    private Estrategia estrategia; 
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "curso_en_progreso_id")
+    @Transient
     private List<Pregunta> preguntas;
 
     public static final int PROGRESO_INICIAL = 0;
 
     public CursoEnProgreso() {}
 
-    public CursoEnProgreso(UUID cursoId, Estrategia estrategia, List<Pregunta> preguntas) {
+    public CursoEnProgreso(UUID cursoId, Estrategia estrategia, List<Pregunta> preguntas, String dificultad) {
         this.progreso = PROGRESO_INICIAL;
         this.cursoId = cursoId;
         this.estrategia = estrategia;
-        this.estrategiaNombre = estrategia.getClass().getSimpleName(); // Ej: "Aleatoria"
+        this.estrategiaNombre = estrategia.getClass().getSimpleName(); 
         this.preguntas = preguntas;
+        this.dificultad = dificultad;
     }
 
-    public void reconstruirEstrategia() { // VER DONDE PONGO ESTE MÉTODO
+    public void reconstruirEstrategia() { 
         this.estrategia = EstrategiaFactory.crearEstrategia(estrategiaNombre, preguntas.size());
     }
 
@@ -51,7 +53,7 @@ public class CursoEnProgreso {
         return null;
     }
 
-    public void avanzarProgreso() {
+    public void avanzar() {
         progreso++;
     }
 
@@ -101,4 +103,19 @@ public class CursoEnProgreso {
     public void setPreguntas(List<Pregunta> preguntas) {
         this.preguntas = preguntas;
     }
+
+	public String getDificultad() {
+		return dificultad;
+	}
+
+	public void setDificultad(String dificultad) {
+		this.dificultad = dificultad;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+    
+    
 }

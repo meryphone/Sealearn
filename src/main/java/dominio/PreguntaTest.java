@@ -1,14 +1,10 @@
 package dominio;
 
-import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@DiscriminatorValue("TEST")
 public class PreguntaTest extends Pregunta {
 
-    @ElementCollection
     private List<String> listaOpciones;
 
     public PreguntaTest() {

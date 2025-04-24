@@ -1,17 +1,7 @@
 package dominio;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "Preguntas")
-@Inheritance( strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "tipo_pregunta",
-					 discriminatorType = DiscriminatorType.STRING)
 public abstract class Pregunta {
 
-	@Id
-	@GeneratedValue(strategy =  GenerationType.AUTO)
-	private Long id;
 	private String enunciado;
 	private String respuestaCorrecta;
 	private String dificultad;
@@ -57,13 +47,6 @@ public abstract class Pregunta {
 		this.dificultad = dificultad;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 	
 	
 

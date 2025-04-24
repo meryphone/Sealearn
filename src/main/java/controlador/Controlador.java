@@ -3,25 +3,30 @@ package controlador;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import dominio.Curso;
 import dominio.CursoEnProgreso;
 import dominio.Estadistica;
 import dominio.Estrategia;
 import dominio.Pregunta;
-import utils.CursoUtils;
+import persistencia.AdaptadorCursoEnProgresoJPA;
+import persistencia.AdaptadorEstadisticaJPA;
+import persistencia.ICursoEnProgreso;
+import persistencia.IEstadistica;
+import utils.EstrategiaFactory;
 
 
 public class Controlador {
 
 	private static Controlador controlador;
-	private List<Curso> listaCursos;
 	private Estadistica estadistica;
-	private  CursoEnProgreso cursoEnProgreso;
+	private  CursoEnProgreso cursoEnProgresoActual;
+	private ICursoEnProgreso adaptadorCursoEnProgreso;
+	private IEstadistica adaptadorEstadistica;
 
 	private Controlador() {
-		listaCursos = CursoUtils.cargarTodosLosCursos();
 		estadistica = new Estadistica();
+		adaptadorCursoEnProgreso = AdaptadorCursoEnProgresoJPA.getIntance();
+		adaptadorEstadistica = AdaptadorEstadisticaJPA.getIntance();
 	}
 
 	public static synchronized Controlador getInstance() {
@@ -29,11 +34,6 @@ public class Controlador {
 			controlador = new Controlador();
 		}
 		return controlador;
-	}
-
-
-	public List<Curso> getListaCursos() {
-		return listaCursos;
 	}	
 	
 
@@ -50,19 +50,18 @@ public class Controlador {
 	            throw new IllegalStateException("No hay preguntas disponibles para la dificultad: " + dificultad);
 	        }
 	        
-	        Estrategia estrategiaSeleccionada = crearEstrategia(estrategia_);
-	        estrategiaSeleccionada.setTotalPreguntas(preguntasFiltradas.size());
+	        Estrategia estrategiaSeleccionada = EstrategiaFactory.crearEstrategia(estrategia_, preguntasFiltradas.size());
 	        
-	        cursoEnProgreso = new CursoEnProgreso(
+	        cursoEnProgresoActual = new CursoEnProgreso(
 	            cursoSeleccionado.getId(), estrategiaSeleccionada,
-	            preguntasFiltradas
+	            preguntasFiltradas,
+	            dificultad
 	        );
 	        
-	     // Aquí hacer cosas de persistencia
-
 	        estadistica.registrarEstudioHoy();
+	        adaptadorCursoEnProgreso.guardar(cursoEnProgresoActual);
 	        
-	        return cursoEnProgreso;
+	        return cursoEnProgresoActual;
 
 	    } catch (Exception e) {
 	        throw new RuntimeException("Error al iniciar el curso: " + e.getMessage(), e);
@@ -81,40 +80,59 @@ public class Controlador {
 	}
 
 	public boolean corregir(String respuesta) {
-		Pregunta actual = cursoEnProgreso.getPreguntaActual();
+		Pregunta actual = cursoEnProgresoActual.getPreguntaActual();
 		boolean acierto = actual.validarRespuesta(respuesta);
 		estadistica.registrarRespuesta(acierto);
-
 		return acierto;
+	}
+	
+	public void avanzarProgreso() {
+		cursoEnProgresoActual.avanzar();
+		adaptadorEstadistica.actualizar(estadistica);
+		adaptadorCursoEnProgreso.actualizar(cursoEnProgresoActual);
+	}
+	
+	public CursoEnProgreso reanudarCurso(Curso cursoSeleccionado) {
+	    CursoEnProgreso cursoEnprogreso = adaptadorCursoEnProgreso.buscarPorCursoId(cursoSeleccionado.getId());
+	    if (cursoEnprogreso != null) {
+	    	cursoEnprogreso.setPreguntas(filtrarPorDificultad(cursoSeleccionado.getPreguntas(), cursoEnprogreso.getDificultad()));
+	    	cursoEnprogreso.reconstruirEstrategia();
+	        cursoEnProgresoActual = cursoEnprogreso;
+	    }
+	    return cursoEnprogreso;
 	}
 
 	public int getProgreso() {
-		return cursoEnProgreso != null ? cursoEnProgreso.getProgreso() : 0;
+		return cursoEnProgresoActual != null ? cursoEnProgresoActual.getProgreso() : 0;
+	}
+	
+	public int getTotalPreguntas() {
+		return cursoEnProgresoActual != null ? cursoEnProgresoActual.getPreguntas().size() : 0;
 	}
 
 	public Estadistica getEstadistica() {
 		return estadistica;
 	}
+	
+	public CursoEnProgreso finalizarSesionCurso() {
+	    if (cursoEnProgresoActual != null) {
+	        adaptadorCursoEnProgreso.actualizar(cursoEnProgresoActual);
+	    }
 
-	public void finalizarSesion() {
-		estadistica.finalizarSesion();
+	    if (estadistica != null) {
+	        estadistica.finalizarSesion();
+	        adaptadorEstadistica.actualizar(estadistica);
+	    }
+
+	    cursoEnProgresoActual = null;
+	    return cursoEnProgresoActual;
 	}
 	
-	public void finalizarCurso() {
-		// Aquí hacer cosas de persistencia
-		cursoEnProgreso = null;
+	public CursoEnProgreso restablecerCurso() {
+		cursoEnProgresoActual.setProgreso(CursoEnProgreso.PROGRESO_INICIAL);
+		adaptadorCursoEnProgreso.actualizar(cursoEnProgresoActual);
+		return cursoEnProgresoActual;
 	}
 
-	// Funciones Auxiliares
 
-	private Estrategia crearEstrategia(String nombreEstrategia) {
-		nombreEstrategia = nombreEstrategia.replace(" ", "");
-		try {
-			return (Estrategia) Class.forName("dominio." + nombreEstrategia).getDeclaredConstructor().newInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		return null;
-	}
 }

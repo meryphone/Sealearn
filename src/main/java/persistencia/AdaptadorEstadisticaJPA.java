@@ -6,72 +6,86 @@ import java.util.List;
 
 public class AdaptadorEstadisticaJPA implements IEstadistica {
 
-    private final EntityManager em;
-    private static AdaptadorEstadisticaJPA adaptadorEstadistica;
-    
-    public static AdaptadorEstadisticaJPA getIntance() {
-        if(adaptadorEstadistica == null) {
-        	adaptadorEstadistica = new AdaptadorEstadisticaJPA();
-        }
-        return adaptadorEstadistica  ;
-     }
+    private static AdaptadorEstadisticaJPA instancia;
+    private final EntityManagerFactory emf;
 
-    public AdaptadorEstadisticaJPA(EntityManager em) {
-        this.em = em;
+    public static AdaptadorEstadisticaJPA getIntance() {
+        if (instancia == null) {
+            instancia = new AdaptadorEstadisticaJPA();
+        }
+        return instancia;
     }
-    
-    public AdaptadorEstadisticaJPA() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("pds-unit");
-        this.em = emf.createEntityManager();
+
+    private AdaptadorEstadisticaJPA() {
+        this.emf = Persistence.createEntityManagerFactory("pds-unit");
     }
 
     @Override
-    public void guardar(Estadistica estadistica) {
+    public void guardar(Estadistica entidad) {
+        EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            em.persist(estadistica);
+            em.persist(entidad);
             tx.commit();
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
             throw new RuntimeException("Error al guardar Estadística", e);
+        } finally {
+            em.close();
         }
     }
 
     @Override
-    public void actualizar(Estadistica estadistica) {
+    public void actualizar(Estadistica entidad) {
+        EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            em.merge(estadistica);
+            em.merge(entidad);
             tx.commit();
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
             throw new RuntimeException("Error al actualizar Estadística", e);
+        } finally {
+            em.close();
         }
     }
 
     @Override
-    public void eliminar(Estadistica estadistica) {
+    public void eliminar(Estadistica entidad) {
+        EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            Estadistica adjunta = em.contains(estadistica) ? estadistica : em.merge(estadistica);
+            Estadistica adjunta = em.contains(entidad) ? entidad : em.merge(entidad);
             em.remove(adjunta);
             tx.commit();
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
             throw new RuntimeException("Error al eliminar Estadística", e);
+        } finally {
+            em.close();
         }
     }
 
     @Override
     public Estadistica buscarPorId(Long id) {
-        return em.find(Estadistica.class, id);
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.find(Estadistica.class, id);
+        } finally {
+            em.close();
+        }
     }
 
     @Override
     public List<Estadistica> buscarTodos() {
-        return em.createQuery("SELECT e FROM Estadistica e", Estadistica.class).getResultList();
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.createQuery("SELECT e FROM Estadistica e", Estadistica.class).getResultList();
+        } finally {
+            em.close();
+        }
     }
 }

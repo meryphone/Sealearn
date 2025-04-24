@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
@@ -16,6 +17,7 @@ import dominio.Pregunta;
 import dominio.PreguntaRellenarHueco;
 import dominio.PreguntaRespuestaCorta;
 import dominio.PreguntaTest;
+import excepciones.ExcepcionCursoDuplicado;
 
 public class CursoUtils {
 
@@ -25,7 +27,7 @@ public class CursoUtils {
 	 * @param nombreArchivo nombre del archivo YAML
 	 * @return el objeto Curso cargado o null si falla
 	 */
-	public static Curso importarCurso(String nombreArchivo) {
+	public static Curso importarCurso(String nombreArchivo, List<UUID> idsYaImportados) throws ExcepcionCursoDuplicado {
 		String ruta = "/cursos/" + nombreArchivo;
 
 		try (InputStream inputStream = Controlador.class.getResourceAsStream(ruta)) {
@@ -34,38 +36,42 @@ public class CursoUtils {
 				return null;
 			}
 
-			// Crear constructor principal para Curso
 			Constructor constructor = new Constructor(Curso.class);
-
-			// Declarar que la propiedad "preguntas" contiene elementos polimórficos
 			TypeDescription cursoDescription = new TypeDescription(Curso.class);
 			cursoDescription.addPropertyParameters("preguntas", Pregunta.class);
 			constructor.addTypeDescription(cursoDescription);
 
-			// Añadir tipos concretos para deserialización polimórfica
 			constructor.addTypeDescription(new TypeDescription(PreguntaTest.class, TagName("PreguntaTest")));
-			constructor.addTypeDescription(
-					new TypeDescription(PreguntaRellenarHueco.class, TagName("PreguntaRellenarHueco")));
-			constructor.addTypeDescription(
-					new TypeDescription(PreguntaRespuestaCorta.class, TagName("PreguntaRespuestaCorta")));
+			constructor.addTypeDescription(new TypeDescription(PreguntaRellenarHueco.class, TagName("PreguntaRellenarHueco")));
+			constructor.addTypeDescription(new TypeDescription(PreguntaRespuestaCorta.class, TagName("PreguntaRespuestaCorta")));
 
-			// Crear YAML con el constructor configurado
 			Yaml yaml = new Yaml(constructor);
-			return yaml.load(inputStream);
+			Curso curso = yaml.load(inputStream);
 
+			if (idsYaImportados.contains(curso.getId())) {
+				throw new ExcepcionCursoDuplicado("Curso duplicado detectado (UUID): " + curso.getId());
+			}
+
+			idsYaImportados.add(curso.getId());
+			return curso;
+
+		} catch (ExcepcionCursoDuplicado e) {
+			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
 
+
 	/**
 	 * Carga todos los cursos desde la carpeta /resources/cursos/
 	 * 
 	 * @return lista de cursos cargados correctamente
 	 */
-	public static List<Curso> cargarTodosLosCursos() {
+	public static List<Curso> cargarTodosLosCursos() throws ExcepcionCursoDuplicado {
 		List<Curso> cursos = new ArrayList<>();
+		List<UUID> idsImportados = new ArrayList<>();
 
 		try {
 			URL folderURL = Controlador.class.getResource("/cursos/");
@@ -79,13 +85,15 @@ public class CursoUtils {
 
 			if (archivos != null) {
 				for (File archivo : archivos) {
-					Curso curso = importarCurso(archivo.getName());
+					Curso curso = importarCurso(archivo.getName(), idsImportados);
 					if (curso != null) {
 						cursos.add(curso);
 					}
 				}
 			}
 
+		} catch (ExcepcionCursoDuplicado e) {
+			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

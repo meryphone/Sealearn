@@ -24,7 +24,7 @@ public class EstadisticaView extends JFrame {
         setBounds(100, 100, 600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setBackground(BEIGE);
-        setLayout(new BorderLayout(10, 10)); // A�adir margen externo
+        setLayout(new BorderLayout(10, 10)); // Anadir margen externo
         
         // Panel superior con imagen
         JPanel top = new JPanel(new FlowLayout(FlowLayout.CENTER));

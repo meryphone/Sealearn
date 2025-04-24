@@ -26,6 +26,8 @@ public abstract class Factoria {
 				else return factoria;
 	}
 	
+	protected Factoria (){}
+	
 	public abstract ICursoEnProgreso crearAdaptadorCursoEnProgreso();
 	public abstract IEstadistica crearAdaptadorEstadistica();
 
