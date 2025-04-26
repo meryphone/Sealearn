@@ -4,24 +4,43 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Aleatoria implements Estrategia {
+/**
+ * Estrategia de aprendizaje que muestra las preguntas en orden aleatorio,
+ * sin repeticiones.
+ */
+public class Aleatoria extends Estrategia {
 
     private List<Integer> ordenPreguntas;
 
+    public Aleatoria() {
+    	ordenPreguntas = new ArrayList<>();
+    }
+    
     public Aleatoria(int totalPreguntas) {
-        ordenPreguntas = new ArrayList<>();
-        for (int i = 0; i < totalPreguntas; i++) {
-            ordenPreguntas.add(i);
-        }
-        Collections.shuffle(ordenPreguntas);
+    	super(totalPreguntas);
+    	ordenPreguntas = new ArrayList<>();
     }
 
     @Override
     public int mostrarPregunta(int nPregunta) {
+        if (ordenPreguntas.isEmpty()) {
+            construirOrden();
+        }
+
         if (nPregunta < ordenPreguntas.size()) {
             return ordenPreguntas.get(nPregunta);
-        } else {
-            return -1; // fuera de rango
         }
+        return -1;
+    }
+
+    /**
+     * Genera un orden aleatorio único para las preguntas del curso.
+     */
+    private void construirOrden() {
+
+        for (int i = 0; i < totalPreguntas; i++) {
+            ordenPreguntas.add(i);
+        }
+        Collections.shuffle(ordenPreguntas);
     }
 }

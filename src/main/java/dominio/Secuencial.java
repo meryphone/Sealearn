@@ -1,14 +1,18 @@
 package dominio;
 
-public class Secuencial implements Estrategia {
-
-	private int totalPreguntas;
-
-    public Secuencial(int totalPreguntas) {
-        this.totalPreguntas = totalPreguntas;
+public class Secuencial extends Estrategia {
+	
+	public Secuencial() {
+		super();
+	}
+	
+	public Secuencial(int totalPreguntas) {
+       super(totalPreguntas);
     }
-    @Override
-    public int mostrarPregunta(int nPregunta) {
-        return nPregunta;
-    }
+
+	@Override
+	public int mostrarPregunta(int nPregunta) {
+		return nPregunta < totalPreguntas ? nPregunta : -1;
+	}
+
 }

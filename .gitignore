@@ -5,6 +5,7 @@
 # Compiled class file
 *.class
 
+.gitignore
 # Log file
 *.log
 
@@ -47,4 +48,5 @@ buildNumber.properties
 .classpath
 
 # End of https://www.toptal.com/developers/gitignore/api/maven,java
-
+basedatos.db
+/bin/

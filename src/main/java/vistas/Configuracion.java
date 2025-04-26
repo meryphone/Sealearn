@@ -1,211 +1,114 @@
 package vistas;
 
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import controlador.Controlador;
-import dominio.Curso;
-import dominio.Pregunta;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.BorderLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.BoxLayout;
-import javax.swing.Box;
-import javax.swing.ImageIcon;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Component;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 public class Configuracion extends JDialog {
 
-    private static final long serialVersionUID = 1L;
-    private JPanel contentPane;
-    private String estrategia;
-    private String dificultad;
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private String estrategia = null;
+	private String dificultad = null;
 
+	public Configuracion(JFrame owner) {
+		super(owner, "Configuraci√≥n", true);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(100, 100, 449, 309);
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    Configuracion frame = new Configuracion();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-    
-    public Configuracion() {
-        inicializarVentana();
-    }
+		contentPane = new JPanel();
+		contentPane.setBackground(Principal.BEIGE);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(new BorderLayout(0, 0));
 
+		// ---------- Panel superior con mensaje ----------
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		contentPane.add(panel, BorderLayout.NORTH);
 
-    private void inicializarVentana() {
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setBounds(100, 100, 468, 316);
-        contentPane = new JPanel();
-        contentPane.setBackground(Principal.BEIGE);
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        setContentPane(contentPane);
-        contentPane.setLayout(new BorderLayout(0, 0));
+		JPanel panelLabel = new JPanel();
+		panelLabel.setBackground(Principal.BEIGE.brighter());
+		panel.add(panelLabel);
 
-        JPanel centro = new JPanel();
-        centro.setBackground(Principal.BEIGE);
-        contentPane.add(centro, BorderLayout.CENTER);
-        centro.setLayout(new BoxLayout(centro, BoxLayout.X_AXIS));
-        centro.setLayout(new FlowLayout(FlowLayout.CENTER, 1, 5));
-        
-        JLabel lblDificultad = new JLabel("Dificultad: ");
-        lblDificultad.setFont(new Font("Dialog", Font.BOLD, 15));
-        centro.add(lblDificultad);
-        
-        JComboBox<String> dificultadesComboBox = new JComboBox<String>();
-        dificultadesComboBox.setPreferredSize(new Dimension(130, 26));
-        dificultadesComboBox.setModel(new DefaultComboBoxModel<>(new String[] {"Facil", "Media", "Dificil"}));
-        centro.add(dificultadesComboBox);
-        
-        Component rigidArea_1 = Box.createRigidArea(new Dimension(20, 20));
-        rigidArea_1.setPreferredSize(new Dimension(10, 20));
-        centro.add(rigidArea_1);
+		JLabel lblSeleccione = new JLabel("Seleccione la estrategia y dificultad para realizar el curso");
+		lblSeleccione.setFont(new Font("Dialog", Font.BOLD, 14));
+		panelLabel.add(lblSeleccione);
 
-        JPanel panelOrden = new JPanel();
-        panelOrden.setBackground(Principal.BEIGE);
-        panelOrden.setLayout(new FlowLayout(FlowLayout.CENTER));
-        
-        Component rigidArea = Box.createRigidArea(new Dimension(20, 20));
-        rigidArea.setPreferredSize(new Dimension(10, 20));
-        panelOrden.add(rigidArea);
-        JLabel labelOrden = new JLabel("Orden:");
-        labelOrden.setFont(new Font("Dialog", Font.BOLD, 15));
-        panelOrden.add(labelOrden);
-        contentPane.add(panelOrden, BorderLayout.WEST);
-        
-        JComboBox<String> estrategiaComboBox = new JComboBox<String>();
-        estrategiaComboBox.setPreferredSize(new Dimension(130, 26));
-        estrategiaComboBox.setModel(new DefaultComboBoxModel<>(new String[] {"Secuencial", "Repeticion espaciada", "Aleatoria"}));
-        panelOrden.add(estrategiaComboBox);
+		JPanel espacio = new JPanel();
+		espacio.setBackground(Principal.BEIGE);
+		panel.add(espacio);
+		espacio.add(Box.createVerticalStrut(20));
 
-        JPanel abajo = new JPanel();
-        abajo.setLayout(new BoxLayout(abajo, BoxLayout.X_AXIS));
-        abajo.setBackground(Principal.BEIGE);
-        abajo.setBorder(new EmptyBorder(10, 10, 10, 10));
-        contentPane.add(abajo, BorderLayout.SOUTH);
+		// ---------- Panel central con ComboBoxes ----------
+		JPanel centro = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+		centro.setBackground(Principal.BEIGE);
+		contentPane.add(centro, BorderLayout.CENTER);
 
-        JButton cancelar = new RoundButton("Cancelar");
-        cancelar.setMaximumSize(new Dimension(86, 40));
-        cancelar.setMinimumSize(new Dimension(86, 40));
-        cancelar.addActionListener(e -> {
-        	estrategia = null;
-        	dificultad = null;
-        	dispose();
-        });
+		JComboBox<String> posiblesEstrategias = new JComboBox<>(
+				new String[] { "Secuencial", "Repeticion Espaciada", "Aleatoria" });
+		posiblesEstrategias.setPreferredSize(new Dimension(130, 26));
+		centro.add(posiblesEstrategias);
 
-        cancelar.setPreferredSize(new Dimension(86, 31));
-      
-        JButton comenzar = new RoundButton("Comenzar");
-        comenzar.setMaximumSize(new Dimension(94, 40));
-        comenzar.setMinimumSize(new Dimension(94, 70));
-        comenzar.setPreferredSize(new Dimension(94, 70));
-        
-        comenzar.addActionListener(e -> {
-            estrategia = (String) estrategiaComboBox.getSelectedItem();
-            dificultad = (String) dificultadesComboBox.getSelectedItem();
+		JComboBox<String> posiblesDificultades = new JComboBox<>(new String[] { "Facil", "Media", "Dificil" });
+		posiblesDificultades.setPreferredSize(new Dimension(130, 26));
+		centro.add(posiblesDificultades);
 
-            Controlador controlador = Controlador.getInstance();
-            Curso cursoSeleccionado = controlador.getCursoActual();
+		// ---------- Panel inferior con botones e imagen ----------
+		JPanel abajo = new JPanel();
+		abajo.setLayout(new BoxLayout(abajo, BoxLayout.X_AXIS));
+		abajo.setBackground(Principal.BEIGE);
+		abajo.setBorder(new EmptyBorder(10, 10, 10, 10));
+		contentPane.add(abajo, BorderLayout.SOUTH);
 
-            if (cursoSeleccionado != null) {
-                controlador.iniciarCurso(cursoSeleccionado, estrategia, dificultad);
-                Pregunta pregunta = controlador.getPreguntaActual();
+		JButton cancelar = new RoundButton("Cancelar");
+		cancelar.setPreferredSize(new Dimension(95, 80));
+		cancelar.addActionListener((ActionEvent e) -> dispose()); // cerrar al cancelar
+		abajo.add(Box.createRigidArea(new Dimension(10, 0)));
+		abajo.add(cancelar);
 
-                if (pregunta == null) {
-                    JOptionPane.showMessageDialog(this, "No hay preguntas disponibles con esa dificultad.", "Sin preguntas", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
+		abajo.add(Box.createHorizontalGlue());
 
-                dispose(); // cerrar configuraciÛn
+		JLabel seal = new JLabel(new ImageIcon(getClass().getResource("/imagenes/seal_looking_right_peque.png")));
+		seal.setPreferredSize(new Dimension(113, 100));
+		abajo.add(seal);
 
-                // Mostrar la vista adecuada
-                if (pregunta instanceof dominio.PreguntaTest) {
-                    new TipoTestVIew().setVisible(true);
-                } else if (pregunta instanceof dominio.PreguntaHueco) {
-                    new RellenarHuecoView().setVisible(true);
-                } else if (pregunta instanceof dominio.PreguntaRespuestaCorta) {
-                    new RespuestaEscritaView().setVisible(true);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Tipo de pregunta no reconocido: " + pregunta.getClass().getName(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Error: curso no seleccionado.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
+		abajo.add(Box.createHorizontalGlue());
 
+		JButton comenzar = new RoundButton("Comenzar");
+		comenzar.setPreferredSize(new Dimension(95, 80));
+		comenzar.addActionListener(e -> {
+			estrategia = (String) posiblesEstrategias.getSelectedItem();
+			dificultad = (String) posiblesDificultades.getSelectedItem();
+			dispose(); // cerrar y devolver valores
+		});
+		abajo.add(comenzar);
+		abajo.add(Box.createRigidArea(new Dimension(10, 0)));
+	}
 
+	public String getEstrategia() {
+		return estrategia;
+	}
 
+	public String getDificultad() {
+		return dificultad;
+	}
 
-        abajo.add(Box.createRigidArea(new Dimension(10, 0)));
-        abajo.add(cancelar);
-        
-        Component horizontalGlue = Box.createHorizontalGlue();
-        abajo.add(horizontalGlue);
-        
-        JLabel seal = new JLabel("");
-        seal.setPreferredSize(new Dimension(113, 100));
-        seal.setIcon(new ImageIcon(Configuracion.class.getResource("/imagenes/seal_looking_right_peque.png")));
-        abajo.add(seal);
-        
-        Component horizontalGlue_1 = Box.createHorizontalGlue();
-        abajo.add(horizontalGlue_1);
-        abajo.add(comenzar);
-        abajo.add(Box.createRigidArea(new Dimension(10, 0)));
-        
-        JPanel panel = new JPanel();
-        contentPane.add(panel, BorderLayout.NORTH);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        
-        JPanel panelLabel = new JPanel();
-        panel.add(panelLabel);
-        panelLabel.setBackground(Principal.BEIGE.brighter());
-        
-        JLabel lblSeleccioneElOrden_1 = new JLabel("Seleccione la estrategia para mostrar las preguntas");
-        lblSeleccioneElOrden_1.setFont(new Font("Dialog", Font.BOLD, 14));
-        panelLabel.add(lblSeleccioneElOrden_1);
-        
-        JPanel espacio = new JPanel();
-        panel.add(espacio);
-        espacio.setBackground(Principal.BEIGE);
-        
-        Component verticalStrut_1 = Box.createVerticalStrut(20);
-        espacio.add(verticalStrut_1);
-    }
-    
-    public static ArrayList<String> mostrarDialogo() {
-        Configuracion dialog = new Configuracion();
-        dialog.setModal(true);
-        dialog.setVisible(true);
+	/**
+	 * Muestra el di√°logo de configuraci√≥n y devuelve los par√°metros seleccionados
+	 */
+	public static ArrayList<String> mostrarDialogo(JFrame owner) {
+		ArrayList<String> parametros = new ArrayList<>();
+		Configuracion config = new Configuracion(owner);
+		config.setVisible(true);
+		if (config.getEstrategia() != null && config.getDificultad() != null) {
+			parametros.add(config.getEstrategia());
+			parametros.add(config.getDificultad());
+		}
 
-        // Si el usuario cancelÛ, ambas ser·n null
-        if (dialog.estrategia == null || dialog.dificultad == null) {
-            return null;
-        }
+		return parametros;
+	}
 
-        ArrayList<String> parametros = new ArrayList<>();
-        parametros.add(dialog.estrategia);
-        parametros.add(dialog.dificultad);
-        return parametros;
-    }
-
-    
 }

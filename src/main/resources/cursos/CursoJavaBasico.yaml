@@ -1,59 +1,81 @@
-nombre: "Curso basico de Java"
-descripcion: "Curso basico de Java para aprender a programar con orientacion a objetos y estructuras simples."
+nombre: Curso de Java
+descripcion: Repasa conceptos esenciales de Java
 preguntas:
-  - !dominio.PreguntaTest
-    enunciado: "Que tipo de dato se usa para numeros enteros en Java?"
-    dificultad: facil
-    respuestaCorrecta: "int"
-    listaOpciones: ["float", "char", "int"]
+  - !PreguntaTest
+    enunciado: ¿Cuál es el punto de entrada de una aplicación Java?
+    respuestaCorrecta: main
+    dificultad: media
+    listaOpciones:
+      - run
+      - start
+      - main
 
-  - !dominio.PreguntaHueco
-    enunciado: "Completa: public static void ____(String[] args)"
-    dificultad: facil
-    respuestaCorrecta: "main"
-    listaOpciones: ["main", "start", "run"]
+  - !PreguntaRespuestaCorta
+    enunciado: ¿Qué palabra clave se usa para herencia?
+    respuestaCorrecta: extends
+    dificultad: media
 
-  - !dominio.PreguntaRespuestaCorta
-    enunciado: "Que palabra clave se usa para crear una clase en Java?"
-    dificultad: facil
-    respuestaCorrecta: "class"
+  - !PreguntaRellenarHueco
+    enunciado: Una clase que no puede ser extendida se declara como ___.
+    respuestaCorrecta: final
+    dificultad: dificil
+    listaOpciones:
+      - static
+      - abstract
+      - final
 
-  - !dominio.PreguntaHueco
-    enunciado: "Completa: String nombre = __;"
-    dificultad: facil
-    respuestaCorrecta: "\"Juan\""
-    listaOpciones: ["\"Juan\"", "Juan", "new String()"]
+  - !PreguntaTest
+    enunciado: ¿Qué modificador permite acceder solo dentro del mismo paquete?
+    respuestaCorrecta: default
+    dificultad: dificil
+    listaOpciones:
+      - public
+      - private
+      - default
 
-  - !dominio.PreguntaTest
-    enunciado: "Cual es el resultado de 10 / 3 en Java?"
-    dificultad: facil
-    respuestaCorrecta: "3"
-    listaOpciones: ["3", "3.0", "Error"]
+  - !PreguntaRespuestaCorta
+    enunciado: ¿Cómo se llama el recolector de basura en Java?
+    respuestaCorrecta: Garbage Collector
+    dificultad: dificil
 
-  - !dominio.PreguntaRespuestaCorta
-    enunciado: "Que palabra clave se usa para declarar constantes?"
-    dificultad: facil
-    respuestaCorrecta: "final"
+  - !PreguntaRellenarHueco
+    enunciado: Las interfaces se definen con la palabra clave ___.
+    respuestaCorrecta: interface
+    dificultad: media
+    listaOpciones:
+      - implements
+      - interface
+      - abstract
 
-  - !dominio.PreguntaHueco
-    enunciado: "Completa: int[] numeros = new int[__];"
-    dificultad: facil
-    respuestaCorrecta: "5"
-    listaOpciones: ["5", "int", "new"]
+  - !PreguntaTest
+    enunciado: ¿Cuál es el tipo de dato para números decimales?
+    respuestaCorrecta: double
+    dificultad: media
+    listaOpciones:
+      - int
+      - float
+      - double
 
-  - !dominio.PreguntaTest
-    enunciado: "Que estructura se usa para hacer bucles?"
+  - !PreguntaRespuestaCorta
+    enunciado: ¿Cómo se llama el operador para comparar igualdad?
+    respuestaCorrecta: ==
     dificultad: facil
-    respuestaCorrecta: "for"
-    listaOpciones: ["if", "for", "switch"]
 
-  - !dominio.PreguntaTest
-    enunciado: "Que palabra clave se usa para herencia?"
+  - !PreguntaRellenarHueco
+    enunciado: Las clases en Java se agrupan en ___.
+    respuestaCorrecta: paquetes
     dificultad: facil
-    respuestaCorrecta: "extends"
-    listaOpciones: ["extends", "implements", "super"]
+    listaOpciones:
+      - paquetes
+      - carpetas
+      - módulos
 
-  - !dominio.PreguntaRespuestaCorta
-    enunciado: "Que simbolo se usa para comparar igualdad?"
+  - !PreguntaTest
+    enunciado: ¿Cuál es la función de `System.out.println()`?
+    respuestaCorrecta: Imprimir en consola
     dificultad: facil
-    respuestaCorrecta: "=="
+    listaOpciones:
+      - Leer entrada
+      - Crear variables
+      - Imprimir en consola
+

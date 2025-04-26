@@ -1,120 +1,108 @@
 package vistas;
 
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
+import java.awt.*;
+import javax.swing.*;
 import controlador.Controlador;
-import dominio.Pregunta;
-import dominio.PreguntaHueco;
-import dominio.PreguntaRespuestaCorta;
-import dominio.PreguntaTest;
+import dominio.PreguntaRellenarHueco;
+import utils.MensajeError;
 
-import javax.swing.JProgressBar;
-import java.awt.BorderLayout;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+public class RellenarHuecoView extends JDialog {
 
-import java.awt.GridLayout;
-import java.awt.Font;
-import javax.swing.ImageIcon;
+	private static final long serialVersionUID = 1L;
 
-public class RellenarHuecoView extends JFrame {
+	private final Controlador controlador = Controlador.getInstance();
+	private final PreguntaRellenarHueco pregunta;
+	private final Runnable onCloseCallback;
 
-    private static final long serialVersionUID = 1L;
-    private JPanel contentPane;
-	private Controlador controlador = Controlador.getInstance();
-    
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    RellenarHuecoView frame = new RellenarHuecoView();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-    
-    public RellenarHuecoView () {
-    	inicializarVista();
-    }
+	public RellenarHuecoView(JFrame owner, PreguntaRellenarHueco pregunta, Runnable onCloseCallback) {
+		super(owner, "Pregunta de Rellenar Hueco", true);
+		this.pregunta = pregunta;
+		this.onCloseCallback = onCloseCallback;
 
-    public void inicializarVista() {
-    	setTitle("SeaLearn");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 536, 431);
-        contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-        setContentPane(contentPane);
-        contentPane.setLayout(new BorderLayout(0, 10));
-        contentPane.setBackground(Principal.BEIGE);
+		inicializarVista();
+		pack();
+		setLocationRelativeTo(owner);
 
-        JPanel centro = new JPanel();
-        centro.setLayout(new BoxLayout(centro, BoxLayout.Y_AXIS));
-        centro.setBackground(Principal.BEIGE);
-        contentPane.add(centro, BorderLayout.CENTER);
+		addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent e) {
+				cerrarSesion();
+			}
+		});
+	}
 
-        PreguntaHueco preguntaHueco = (PreguntaHueco) controlador.getPreguntaActual();
-        JLabel lblNewLabel = new JLabel(preguntaHueco.getEnunciado());
+	private void inicializarVista() {
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setPreferredSize(new Dimension(500, 400));
+		getContentPane().setBackground(Principal.BEIGE);
+		getContentPane().setLayout(new BorderLayout(10, 10));
 
-        lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        JPanel pregunta = new JPanel();
-        pregunta.add(lblNewLabel);
-        pregunta.setBackground(Principal.BEIGE);
-        centro.add(pregunta);
+		// ---------- Panel superior ----------
+		JPanel panelSuperior = new JPanel();
+		panelSuperior.setBackground(Principal.BEIGE);
+		panelSuperior.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-        JPanel respuestas = new JPanel(new GridLayout(3, 1, 10, 10));
-        respuestas.setBackground(Principal.BEIGE);
-        centro.add(respuestas);
+		JLabel icon = new JLabel(new ImageIcon(getClass().getResource("/imagenes/seal_looking_right.png")));
+		panelSuperior.add(icon);
 
-        for (String opcion : preguntaHueco.getListaOpciones()) {
-            JButton btn = new RoundButton(opcion);
-            respuestas.add(btn);
-            btn.addActionListener(e -> {
-            	boolean acierto = controlador.validarRespuesta(opcion);
-            	JOptionPane.showMessageDialog(this,
-            	    acierto ? "¡Correcto!" : "Incorrecto\nLa respuesta correcta era: " + controlador.getPreguntaActual().getRespuestaCorrecta(),
-            	    "Resultado",
-            	    acierto ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE
-            	);
-            	if (controlador.hayMasPreguntas()) {
-            		controlador.avanzarPregunta();
-            		Pregunta siguiente = controlador.getPreguntaActual();
+		JProgressBar progressBar = new JProgressBar();
+		int progreso = controlador.getProgreso();
+		int total = controlador.getTotalPreguntas();
+		progressBar.setValue((int) ((progreso * 100.0f) / total));
+		progressBar.setStringPainted(true);
+		panelSuperior.add(progressBar);
 
-            		if (siguiente instanceof PreguntaTest) {
-            			new TipoTestVIew();
-            		} else if (siguiente instanceof PreguntaHueco) {
-            			new RellenarHuecoView();
-            		} else if (siguiente instanceof PreguntaRespuestaCorta) {
-            			new RespuestaEscritaView();
-            		}
-            	} else {
-            		controlador.finalizarSesion();
-            		JOptionPane.showMessageDialog(this, "¡Has completado el curso!", "Fin", JOptionPane.INFORMATION_MESSAGE);
-            	}
-            	dispose();
+		getContentPane().add(panelSuperior, BorderLayout.NORTH);
 
-            });
-        }
+		// ---------- Panel central ----------
+		JPanel panelCentro = new JPanel(new BorderLayout()); // Cambiado a BorderLayout
+		panelCentro.setBackground(Principal.BEIGE);
+		getContentPane().add(panelCentro, BorderLayout.CENTER);
 
+		JPanel panelPregunta = new JPanel(new GridBagLayout()); // Usamos GridBagLayout para centrado preciso
+		panelPregunta.setBackground(Principal.BEIGE);
 
-        JPanel arriba = new JPanel();
-        contentPane.add(arriba, BorderLayout.NORTH);
-        
-        JLabel lblNewLabel_1 = new JLabel("");
-        lblNewLabel_1.setIcon(new ImageIcon(getClass().getResource("/imagenes/seal_looking_right.png")));
-        arriba.add(lblNewLabel_1);
-        arriba.setBackground(Principal.BEIGE);
-        
-        JProgressBar progressBar = new JProgressBar();
-        arriba.add(progressBar);
-    }
+		String html = "<html><div style='width: 400px; text-align: center;'>" + pregunta.getEnunciado()
+				+ "</div></html>";
+		JLabel labelPregunta = new JLabel(html);
+		labelPregunta.setFont(new Font("Arial", Font.BOLD, 16));
+		labelPregunta.setHorizontalAlignment(SwingConstants.CENTER); // Centrado horizontal
 
+		// ConfiguraciÃ³n de constraints para GridBagLayout
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(10, 10, 10, 10); // MÃ¡rgenes
+		panelPregunta.add(labelPregunta, gbc);
+
+		panelCentro.add(panelPregunta, BorderLayout.CENTER); // Centramos en el panel principal
+
+		JPanel panelOpciones = new JPanel(new GridLayout(3, 1, 10, 10));
+		panelOpciones.setBackground(Principal.BEIGE);
+		for (String opcion : pregunta.getListaOpciones()) {
+			JButton btn = new RoundButton(opcion);
+			btn.addActionListener(e -> validarRespuesta(opcion));
+			panelOpciones.add(btn);
+		}
+		panelCentro.add(panelOpciones, BorderLayout.SOUTH); // Movemos las opciones al sur
+	}
+
+	private void validarRespuesta(String respuestaSeleccionada) {
+		boolean acierto = controlador.corregir(respuestaSeleccionada);
+
+		if (acierto) {
+			MensajeError.mostrarConfirmacion(this, "Â¡Correcto!");
+		} else {
+			MensajeError.mostrarError(this,
+					"Incorrecto. La respuesta correcta era: " + pregunta.getRespuestaCorrecta());
+		}
+
+		dispose();
+	}
+
+	private void cerrarSesion() {
+		controlador.finalizarSesionCurso();
+		if (onCloseCallback != null) {
+			onCloseCallback.run();
+		}
+	}
 
 }

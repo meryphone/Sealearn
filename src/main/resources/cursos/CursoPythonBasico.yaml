@@ -1,59 +1,81 @@
-nombre: "Curso de Python"
-descripcion: "Aprende los fundamentos de Python, un lenguaje simple y versatil ideal para empezar a programar."
+nombre: Curso de Python
+descripcion: Aprende Python con preguntas básicas y avanzadas
 preguntas:
-  - !dominio.PreguntaTest
-    enunciado: "Que imprime el siguiente codigo? print(2 * 3)"
+  - !PreguntaTest
+    enunciado: ¿Cómo se declara una función en Python?
+    respuestaCorrecta: def
     dificultad: facil
-    respuestaCorrecta: "6"
-    listaOpciones: ["5", "6", "23"]
+    listaOpciones:
+      - function
+      - def
+      - declare
 
-  - !dominio.PreguntaHueco
-    enunciado: "Completa la funcion: def saludar(__):"
-    dificultad: facil
-    respuestaCorrecta: "nombre"
-    listaOpciones: ["nombre", "saludo", "self"]
+  - !PreguntaRespuestaCorta
+    enunciado: ¿Qué palabra clave se usa para definir una clase?
+    respuestaCorrecta: class
+    dificultad: media
 
-  - !dominio.PreguntaRespuestaCorta
-    enunciado: "Como se comenta una linea en Python?"
+  - !PreguntaRellenarHueco
+    enunciado: Para imprimir en consola usamos la función ___().
+    respuestaCorrecta: print
     dificultad: facil
-    respuestaCorrecta: "#"
+    listaOpciones:
+      - echo
+      - print
+      - say
 
-  - !dominio.PreguntaHueco
-    enunciado: "Completa: for i in __: print(i)"
-    dificultad: facil
-    respuestaCorrecta: "range(5)"
-    listaOpciones: ["range(5)", "5", "lista"]
+  - !PreguntaTest
+    enunciado: ¿Qué estructura usamos para repetir código mientras una condición sea verdadera?
+    respuestaCorrecta: while
+    dificultad: media
+    listaOpciones:
+      - until
+      - for
+      - while
 
-  - !dominio.PreguntaTest
-    enunciado: "Que tipo de dato es el resultado de 3 / 2?"
+  - !PreguntaRespuestaCorta
+    enunciado: ¿Qué tipo de datos representa verdadero o falso?
+    respuestaCorrecta: bool
     dificultad: facil
-    respuestaCorrecta: "float"
-    listaOpciones: ["int", "float", "str"]
 
-  - !dominio.PreguntaRespuestaCorta
-    enunciado: "Que palabra clave se usa para definir una funcion?"
-    dificultad: facil
-    respuestaCorrecta: "def"
+  - !PreguntaRellenarHueco
+    enunciado: Las listas se definen con corchetes ___.
+    respuestaCorrecta: "[]"
+    dificultad: media
+    listaOpciones:
+      - ()
+      - {}
+      - "[]"
 
-  - !dominio.PreguntaTest
-    enunciado: "Cual de estas estructuras representa una lista?"
+  - !PreguntaTest
+    enunciado: ¿Cómo se hace una importación en Python?
+    respuestaCorrecta: import
     dificultad: facil
-    respuestaCorrecta: "[1, 2, 3]"
-    listaOpciones: ["(1, 2, 3)", "[1, 2, 3]", "\"1,2,3\""]
+    listaOpciones:
+      - load
+      - use
+      - import
 
-  - !dominio.PreguntaHueco
-    enunciado: "Rellena el operador de igualdad: a __ b"
-    dificultad: facil
-    respuestaCorrecta: "=="
-    listaOpciones: ["=", "==", "==="]
+  - !PreguntaRespuestaCorta
+    enunciado: ¿Cómo se llama la estructura que captura errores en Python?
+    respuestaCorrecta: try-except
+    dificultad: dificil
 
-  - !dominio.PreguntaTest
-    enunciado: "Que valor tiene 'x' tras ejecutar: x = 2 + 3 * 2?"
-    dificultad: facil
-    respuestaCorrecta: "8"
-    listaOpciones: ["10", "12", "8"]
+  - !PreguntaRellenarHueco
+    enunciado: Una función puede devolver un valor usando ___.
+    respuestaCorrecta: return
+    dificultad: media
+    listaOpciones:
+      - end
+      - return
+      - yield
 
-  - !dominio.PreguntaRespuestaCorta
-    enunciado: "Como se importan modulos en Python?"
-    dificultad: facil
-    respuestaCorrecta: "import"
+  - !PreguntaTest
+    enunciado: ¿Cuál de estos es un tipo de colección mutable?
+    respuestaCorrecta: list
+    dificultad: dificil
+    listaOpciones:
+      - tuple
+      - list
+      - str
+
