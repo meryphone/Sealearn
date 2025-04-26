@@ -88,7 +88,7 @@ public class CursoUtils {
 		} catch (URISyntaxException e) {
 			throw new RuntimeException("Error al acceder a la carpeta /cursos/", e);
 		}catch(ExcepcionCursoDuplicado e) {
-			// No se importa y sigue importando.
+			// No se importa el duplicado y sigue importando.
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}

@@ -37,7 +37,7 @@ public class RespuestaCortaView extends JDialog {
 
 	private void inicializarVista() {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setPreferredSize(new Dimension(565, 365));
+		setPreferredSize(new Dimension(565, 400));
 		getContentPane().setBackground(Principal.BEIGE);
 		getContentPane().setLayout(new BorderLayout(10, 10));
 
