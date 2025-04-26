@@ -15,10 +15,6 @@ Consiste en la aplicación de aprendizaje perfecta para aprender los conceptos b
 
 # ProyectoPDS
 
-## Modelado del dominio
-
-![Diagrama_clases_sealify](https://github.com/user-attachments/assets/c98fcb03-696d-41f4-b362-624e2ceb719d)
-
 ## Modelado del dominio (entidades)
 
 ![IMG_4096](https://github.com/user-attachments/assets/77f74fa6-6172-443d-bfa5-78d592bbe27c)
