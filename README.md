@@ -101,7 +101,6 @@ Un mismo usuario puede actuar como **Estudiante** (cuando realiza cursos y consu
   3. El creador de cursos selecciona un archivo.
   4. El sistema valida el formato y la estructura del archivo.
   5. Si el archivo es válido, el curso se añade a la biblioteca interna.
-  6. Si el archivo no es válido, el sistema muestra un error.
 - **Postcondición**: El curso importado queda disponible en la biblioteca interna.
 - **Flujos alternativos**:
   - 4a. Si ocurre un error al validar el archivo, el sistema muestra un mensaje de error.
