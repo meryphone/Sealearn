@@ -14,15 +14,23 @@ public class TestView extends JDialog {
 	private final PreguntaTest pregunta;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JRadioButton[] opcionesRadio;
+	private final Runnable onCloseCallback;
 
-	public TestView(JFrame owner, PreguntaTest pregunta) {
+	public TestView(JFrame owner, PreguntaTest pregunta, Runnable onCloseCallback) {
 		super(owner, "Pregunta tipo Test", true);
 		this.pregunta = pregunta;
+		this.onCloseCallback = onCloseCallback;
 
 		inicializarVista();
 		pack();
 		setLocationRelativeTo(owner);
 
+		addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent e) {
+				cerrarSesion();
+			}
+		});
 	}
 
 	private void inicializarVista() {
@@ -54,7 +62,8 @@ public class TestView extends JDialog {
 		panelCentro.setBackground(Principal.BEIGE);
 		getContentPane().add(panelCentro, BorderLayout.CENTER);
 
-		JLabel labelPregunta = new JLabel(pregunta.getEnunciado());
+		String html = "<html><body style='width: 400px'>" + pregunta.getEnunciado() + "</body></html>";
+		JLabel labelPregunta = new JLabel(html);
 		labelPregunta.setFont(new Font("Arial", Font.BOLD, 16));
 		labelPregunta.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panelCentro.add(labelPregunta);
@@ -107,5 +116,12 @@ public class TestView extends JDialog {
 		}
 		return null;
 	}
-
+	
+	private void cerrarSesion() {
+		controlador.finalizarSesionCurso();
+		if (onCloseCallback != null) {
+			onCloseCallback.run();
+		}
+	}
+	
 }

@@ -12,20 +12,27 @@ public class RespuestaCortaView extends JDialog {
 
 	private final Controlador controlador = Controlador.getInstance();
 	private final PreguntaRespuestaCorta pregunta;
-
+	private final Runnable onCloseCallback;
 	private JTextField textField;
 
 	private static final Font LABEL_FONT = new Font("Arial", Font.BOLD, 16);
 	private static final Font TEXT_FONT = new Font("Arial", Font.PLAIN, 14);
 
-	public RespuestaCortaView(JFrame owner, PreguntaRespuestaCorta pregunta) {
+	public RespuestaCortaView(JFrame owner, PreguntaRespuestaCorta pregunta, Runnable onCloseCallback) {
 		super(owner, "Pregunta de Respuesta Corta", true);
 		this.pregunta = pregunta;
+		this.onCloseCallback = onCloseCallback;
 
 		inicializarVista();
 		pack();
 		setLocationRelativeTo(owner);
 
+		addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent e) {
+				cerrarSesion();
+			}
+		});
 	}
 
 	private void inicializarVista() {
@@ -57,12 +64,13 @@ public class RespuestaCortaView extends JDialog {
 		panelCentral.setBackground(Principal.BEIGE);
 		getContentPane().add(panelCentral, BorderLayout.CENTER);
 
-		JLabel labelEnunciado = new JLabel(pregunta.getEnunciado());
-		labelEnunciado.setFont(LABEL_FONT);
-		labelEnunciado.setAlignmentX(Component.CENTER_ALIGNMENT);
+		String html = "<html><body style='width: 400px'>" + pregunta.getEnunciado() + "</body></html>";
+		JLabel labelPregunta = new JLabel(html);
+		labelPregunta.setFont(LABEL_FONT);
+		labelPregunta.setAlignmentX(Component.CENTER_ALIGNMENT);
 		JPanel panelEnunciado = new JPanel();
 		panelEnunciado.setBackground(Principal.BEIGE);
-		panelEnunciado.add(labelEnunciado);
+		panelEnunciado.add(labelPregunta);
 		panelCentral.add(panelEnunciado);
 
 		textField = new JTextField(15);
@@ -100,6 +108,13 @@ public class RespuestaCortaView extends JDialog {
 		}
 
 		dispose();
+	}
+	
+	private void cerrarSesion() {
+		controlador.finalizarSesionCurso();
+		if (onCloseCallback != null) {
+			onCloseCallback.run();
+		}
 	}
 
 }

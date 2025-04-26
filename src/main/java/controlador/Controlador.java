@@ -1,6 +1,5 @@
 package controlador;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import dominio.Curso;
@@ -12,19 +11,22 @@ import persistencia.AdaptadorCursoEnProgresoJPA;
 import persistencia.AdaptadorEstadisticaJPA;
 import persistencia.ICursoEnProgreso;
 import persistencia.IEstadistica;
+import utils.CursoUtils;
 import utils.EstrategiaFactory;
-
 
 public class Controlador {
 
 	private static Controlador controlador;
 	private Estadistica estadistica;
-	private  CursoEnProgreso cursoEnProgresoActual;
+	private CursoEnProgreso cursoEnProgresoActual;
+	private List<Curso> cursosImportados;
+	
 	private ICursoEnProgreso adaptadorCursoEnProgreso;
 	private IEstadistica adaptadorEstadistica;
 
 	private Controlador() {
-		estadistica = new Estadistica();
+		estadistica = new Estadistica();	
+		cursosImportados = CursoUtils.cargarTodosLosCursos();	
 		adaptadorCursoEnProgreso = AdaptadorCursoEnProgresoJPA.getIntance();
 		adaptadorEstadistica = AdaptadorEstadisticaJPA.getIntance();
 	}
@@ -34,40 +36,33 @@ public class Controlador {
 			controlador = new Controlador();
 		}
 		return controlador;
-	}	
-	
-
-	public CursoEnProgreso iniciarCurso(Curso cursoSeleccionado, String estrategia_, String dificultad) throws RuntimeException{
-	    try {
-	    	
-	    	System.out.println(dificultad);
-	    
-	        List<Pregunta> preguntasFiltradas = filtrarPorDificultad(cursoSeleccionado.getPreguntas(), dificultad);
-	        
-	        System.out.println(preguntasFiltradas.size());
-	        
-	        if (preguntasFiltradas == null || preguntasFiltradas.isEmpty()) {
-	            throw new IllegalStateException("No hay preguntas disponibles para la dificultad: " + dificultad);
-	        }
-	        
-	        Estrategia estrategiaSeleccionada = EstrategiaFactory.crearEstrategia(estrategia_, preguntasFiltradas.size());
-	        
-	        cursoEnProgresoActual = new CursoEnProgreso(
-	            cursoSeleccionado.getId(), estrategiaSeleccionada,
-	            preguntasFiltradas,
-	            dificultad
-	        );
-	        
-	        estadistica.registrarEstudioHoy();
-	        adaptadorCursoEnProgreso.guardar(cursoEnProgresoActual);
-	        
-	        return cursoEnProgresoActual;
-
-	    } catch (Exception e) {
-	        throw new RuntimeException("Error al iniciar el curso: " + e.getMessage(), e);
-	    }
 	}
 
+	public CursoEnProgreso iniciarCurso(Curso cursoSeleccionado, String estrategia_, String dificultad)
+			throws RuntimeException {
+		try {
+
+			System.out.println(dificultad);
+
+			List<Pregunta> preguntasFiltradas = filtrarPorDificultad(cursoSeleccionado.getPreguntas(), dificultad);
+
+			System.out.println(preguntasFiltradas.size());		
+
+			Estrategia estrategiaSeleccionada = EstrategiaFactory.crearEstrategia(estrategia_,
+					preguntasFiltradas.size());
+
+			cursoEnProgresoActual = new CursoEnProgreso(cursoSeleccionado.getId(), estrategiaSeleccionada,
+					preguntasFiltradas, dificultad);
+			
+			estadistica.registrarEstudioHoy();
+			adaptadorCursoEnProgreso.guardar(cursoEnProgresoActual);
+			System.out.println("He creado el curso");
+			return cursoEnProgresoActual;
+
+		} catch (Exception e) {
+			throw new RuntimeException("Error al iniciar el curso: " + e.getMessage(), e);
+		}
+	}
 
 	public List<Pregunta> filtrarPorDificultad(List<Pregunta> preguntas, String dificultad) {
 		List<Pregunta> resultado = new ArrayList<>();
@@ -85,54 +80,60 @@ public class Controlador {
 		estadistica.registrarRespuesta(acierto);
 		return acierto;
 	}
-	
+
 	public void avanzarProgreso() {
 		cursoEnProgresoActual.avanzar();
 		adaptadorEstadistica.actualizar(estadistica);
 		adaptadorCursoEnProgreso.actualizar(cursoEnProgresoActual);
 	}
-	
+
 	public CursoEnProgreso reanudarCurso(Curso cursoSeleccionado) {
-	    CursoEnProgreso cursoEnprogreso = adaptadorCursoEnProgreso.buscarPorCursoId(cursoSeleccionado.getId());
-	    if (cursoEnprogreso != null) {
-	    	cursoEnprogreso.setPreguntas(filtrarPorDificultad(cursoSeleccionado.getPreguntas(), cursoEnprogreso.getDificultad()));
-	    	cursoEnprogreso.reconstruirEstrategia();
-	        cursoEnProgresoActual = cursoEnprogreso;
-	    }
-	    return cursoEnprogreso;
+		CursoEnProgreso cursoEnprogreso = adaptadorCursoEnProgreso.buscarPorCursoId(cursoSeleccionado.getId());
+		if (cursoEnprogreso != null) {
+			cursoEnprogreso.setPreguntas(filtrarPorDificultad(cursoSeleccionado.getPreguntas(), cursoEnprogreso.getDificultad()));
+			cursoEnprogreso.reconstruirEstrategia();
+			cursoEnProgresoActual = cursoEnprogreso;
+
+		}
+		return cursoEnprogreso;
 	}
 
 	public int getProgreso() {
 		return cursoEnProgresoActual != null ? cursoEnProgresoActual.getProgreso() : 0;
 	}
-	
+
 	public int getTotalPreguntas() {
-		return cursoEnProgresoActual != null ? cursoEnProgresoActual.getPreguntas().size() : 0;
+		return cursoEnProgresoActual != null ? cursoEnProgresoActual.getTotalPreguntas() : 0;
+	}
+	
+	public List<Curso> getCursos(){
+		return cursosImportados;
 	}
 
 	public Estadistica getEstadistica() {
 		return estadistica;
 	}
-	
+
 	public CursoEnProgreso finalizarSesionCurso() {
-	    if (cursoEnProgresoActual != null) {
-	        adaptadorCursoEnProgreso.actualizar(cursoEnProgresoActual);
-	    }
+		if (cursoEnProgresoActual != null && cursoEnProgresoActual.isCompletado()) {
+			adaptadorCursoEnProgreso.eliminar(cursoEnProgresoActual);
+		} else if (cursoEnProgresoActual != null && !cursoEnProgresoActual.isCompletado()) {
+			adaptadorCursoEnProgreso.actualizar(cursoEnProgresoActual);
+		}
 
-	    if (estadistica != null) {
-	        estadistica.finalizarSesion();
-	        adaptadorEstadistica.actualizar(estadistica);
-	    }
+		if (estadistica != null) {
+			estadistica.finalizarSesion();
+			adaptadorEstadistica.actualizar(estadistica);
+		}
 
-	    cursoEnProgresoActual = null;
-	    return cursoEnProgresoActual;
+		cursoEnProgresoActual = null;
+		return cursoEnProgresoActual;
 	}
-	
+
 	public CursoEnProgreso restablecerCurso() {
 		cursoEnProgresoActual.setProgreso(CursoEnProgreso.PROGRESO_INICIAL);
 		adaptadorCursoEnProgreso.actualizar(cursoEnProgresoActual);
 		return cursoEnProgresoActual;
 	}
-
 
 }

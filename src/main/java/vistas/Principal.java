@@ -1,6 +1,5 @@
 package vistas;
 
-
 import controlador.Controlador;
 import dominio.Curso;
 import dominio.CursoEnProgreso;
@@ -9,334 +8,331 @@ import dominio.PreguntaRellenarHueco;
 import dominio.PreguntaRespuestaCorta;
 import dominio.PreguntaTest;
 import excepciones.ExcepcionCursoActualVacio;
-import excepciones.ExcepcionCursoDuplicado;
-import utils.CursoUtils;
 import utils.MensajeError;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import javax.swing.*;
 
 public class Principal {
-	
+
 	public final static Color BEIGE = new Color(211, 204, 194);
 	public final static Color BUTTON_COLOR = new Color(8, 32, 50);
 	private Controlador controlador = Controlador.getInstance();
 	private CursoEnProgreso cursoActual;
 
-    private JFrame frame;
+	private JFrame frame;
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                Principal window = new Principal();
-                window.frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
+	public static void main(String[] args) {
+		EventQueue.invokeLater(() -> {
+			try {
+				Principal window = new Principal();
+				window.frame.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+	}
 
-    public Principal() {
-        initialize();
-    }
+	public Principal() {
+		initialize();
+	}
 
-    private void initialize() {
-        frame = new JFrame();
-        frame.setBounds(100, 100, 892, 616);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setBackground(Principal.BEIGE);
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 892, 616);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setBackground(Principal.BEIGE);
 
-        JPanel top = new JPanel();
-        frame.getContentPane().add(top, BorderLayout.NORTH);
-        top.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		JPanel top = new JPanel();
+		frame.getContentPane().add(top, BorderLayout.NORTH);
+		top.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-        JLabel title = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/Titulo.png")));
-        top.add(title);
-        top.setBackground(BEIGE);
+		JLabel title = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/Titulo.png")));
+		top.add(title);
+		top.setBackground(BEIGE);
 
-        JPanel left = new JPanel();
-        frame.getContentPane().add(left, BorderLayout.WEST);
-        left.setBackground(Principal.BEIGE);
-        left.add(Box.createRigidArea(new Dimension(150, 20)));
+		JPanel left = new JPanel();
+		frame.getContentPane().add(left, BorderLayout.WEST);
+		left.setBackground(Principal.BEIGE);
+		left.add(Box.createRigidArea(new Dimension(150, 20)));
 
-        JPanel right = new JPanel();
-        frame.getContentPane().add(right, BorderLayout.EAST);
-        right.setBackground(Principal.BEIGE);
-        right.add(Box.createRigidArea(new Dimension(150, 20)));
+		JPanel right = new JPanel();
+		frame.getContentPane().add(right, BorderLayout.EAST);
+		right.setBackground(Principal.BEIGE);
+		right.add(Box.createRigidArea(new Dimension(150, 20)));
 
-        JPanel down = new JPanel();
-        frame.getContentPane().add(down, BorderLayout.SOUTH);
-        down.setBackground(Principal.BEIGE);
+		JPanel down = new JPanel();
+		frame.getContentPane().add(down, BorderLayout.SOUTH);
+		down.setBackground(Principal.BEIGE);
 
-        JLabel sealLeft = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/seal_looking_right.png")));
-        down.add(sealLeft);
-        
-        Component horizontalGlue = Box.createHorizontalGlue();
-        horizontalGlue.setPreferredSize(new Dimension(200, 0));
-        horizontalGlue.setMaximumSize(new Dimension(55, 55));
-        horizontalGlue.setMinimumSize(new Dimension(55, 0));
-        down.add(horizontalGlue);
-        
-        JButton btnIniciar = new RoundButton("Iniciar");
-        down.add(btnIniciar);
-        btnIniciar.setPreferredSize(new Dimension(85,45));
-        
-        Component horizontalGlue_1 = Box.createHorizontalGlue();
-        horizontalGlue_1.setPreferredSize(new Dimension(200, 0));
-        horizontalGlue_1.setMinimumSize(new Dimension(55, 0));
-        horizontalGlue_1.setMaximumSize(new Dimension(55, 55));
-        down.add(horizontalGlue_1);
+		JLabel sealLeft = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/seal_looking_right.png")));
+		down.add(sealLeft);
 
-        JLabel sealRight = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/seal.png")));
-        down.add(sealRight);
+		Component horizontalGlue = Box.createHorizontalGlue();
+		horizontalGlue.setPreferredSize(new Dimension(200, 0));
+		horizontalGlue.setMaximumSize(new Dimension(55, 55));
+		horizontalGlue.setMinimumSize(new Dimension(55, 0));
+		down.add(horizontalGlue);
 
-        JPanel center0 = new JPanel();
-        frame.getContentPane().add(center0, BorderLayout.CENTER);
-        center0.setLayout(new BorderLayout());
-        center0.setBackground(Principal.BEIGE);
+		JButton btnIniciar = new RoundButton("Iniciar");
+		down.add(btnIniciar);
+		btnIniciar.setPreferredSize(new Dimension(85, 45));
 
-        JPanel panelButtons = new JPanel();
-        center0.add(panelButtons, BorderLayout.NORTH);
-        panelButtons.setBackground(Principal.BEIGE);
+		Component horizontalGlue_1 = Box.createHorizontalGlue();
+		horizontalGlue_1.setPreferredSize(new Dimension(200, 0));
+		horizontalGlue_1.setMinimumSize(new Dimension(55, 0));
+		horizontalGlue_1.setMaximumSize(new Dimension(55, 55));
+		down.add(horizontalGlue_1);
 
-        JButton btnStats = new RoundButton("Estadisticas");
-        btnStats.setPreferredSize(new Dimension(100, 40));
-        panelButtons.add(btnStats);
-        btnStats.addActionListener(e -> {
-        	EstadisticaView stats = new EstadisticaView();
-        	stats.setVisible(true);
-        });
-        
-        Component rigidArea = Box.createRigidArea(new Dimension(20, 40));
-        rigidArea.setPreferredSize(new Dimension(20, 20));
-        rigidArea.setMinimumSize(new Dimension(20, 20));
-        panelButtons.add(rigidArea);
+		JLabel sealRight = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/seal.png")));
+		down.add(sealRight);
 
-        JButton btnExportStats = new RoundButton("Exportar estadisticas");
-        btnExportStats.setPreferredSize(new Dimension(150, 40));
-        panelButtons.add(btnExportStats);
-        Component rigidArea_1 = Box.createRigidArea(new Dimension(20, 20));
-        rigidArea_1.setPreferredSize(new Dimension(20, 60));
-        panelButtons.add(rigidArea_1);
+		JPanel center0 = new JPanel();
+		frame.getContentPane().add(center0, BorderLayout.CENTER);
+		center0.setLayout(new BorderLayout());
+		center0.setBackground(Principal.BEIGE);
 
-        JButton btnImport = new RoundButton("Importar");
-        btnImport.setPreferredSize(new Dimension(100, 40));
-        panelButtons.add(btnImport);
-        panelButtons.add(Box.createRigidArea(new Dimension(20, 20)));
+		JPanel panelButtons = new JPanel();
+		center0.add(panelButtons, BorderLayout.NORTH);
+		panelButtons.setBackground(Principal.BEIGE);
 
-        JButton btnExport = new RoundButton("Exportar");
-        btnExport.setPreferredSize(new Dimension(100, 40));
-        panelButtons.add(btnExport);
+		JButton btnStats = new RoundButton("Ver estadisticas");
+		btnStats.setPreferredSize(new Dimension(120, 40));
+		panelButtons.add(btnStats);
+		btnStats.addActionListener(e -> {
+			EstadisticaView stats = new EstadisticaView();
+			stats.setVisible(true);
+		});
 
-        JPanel center1 = new JPanel();
-        center0.add(center1, BorderLayout.CENTER);
-        center1.setLayout(new BorderLayout());
-        center1.setBackground(Principal.BEIGE);
-        
-        DefaultListModel<Curso> model = new DefaultListModel<Curso>();
-        
-        // Cargar la lista de cursos
-        try {
-        	for (Curso curso : CursoUtils.cargarTodosLosCursos()) {
-        		model.addElement(curso);
-        	}
-        } catch (ExcepcionCursoDuplicado e) {
-        	MensajeError.mostrarError(frame, e.getMessage());
-        }
+		Component rigidArea = Box.createRigidArea(new Dimension(20, 40));
+		rigidArea.setPreferredSize(new Dimension(20, 20));
+		rigidArea.setMinimumSize(new Dimension(20, 20));
+		panelButtons.add(rigidArea);
 
+		JButton btnExportStats = new RoundButton("Exportar estadisticas");
+		btnExportStats.setPreferredSize(new Dimension(170, 40));
+		panelButtons.add(btnExportStats);
+		Component rigidArea_1 = Box.createRigidArea(new Dimension(20, 20));
+		rigidArea_1.setPreferredSize(new Dimension(20, 60));
+		panelButtons.add(rigidArea_1);
 
-        JList<Curso> courseList = new JList<Curso>(model);
-        courseList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        courseList.setCellRenderer(new CourseCellRenderer());
-        courseList.setBackground(Principal.BEIGE);
-        
-        frame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                controlador.finalizarSesionCurso(); 
-                cursoActual = null;
-            }
-        });
+		JButton btnImport = new RoundButton("Importar Curso");
+		btnImport.setPreferredSize(new Dimension(120, 40));
+		panelButtons.add(btnImport);
+		panelButtons.add(Box.createRigidArea(new Dimension(20, 20)));
 
-        
-        
-        btnIniciar.addActionListener(e -> {
-            try {
-                Curso cursoSeleccionado = courseList.getSelectedValue();
-                if (cursoSeleccionado != null) {
+		JPanel center1 = new JPanel();
+		center0.add(center1, BorderLayout.CENTER);
+		center1.setLayout(new BorderLayout());
+		center1.setBackground(Principal.BEIGE);
 
-                    CursoEnProgreso cursoEnProgreso = controlador.reanudarCurso(cursoSeleccionado);
+		DefaultListModel<Curso> model = new DefaultListModel<Curso>();
 
-                    if (cursoEnProgreso != null) {
-                        ReanudarCursoView dialog = new ReanudarCursoView(frame);
-                        dialog.setVisible(true);
+		// Cargar la lista de cursos
+			for (Curso curso : controlador.getCursos()) {
+				model.addElement(curso);
+			}
+	
 
-                        switch (dialog.getOpcionSeleccionada()) {
-                            case REANUDAR:
-                                cursoActual = cursoEnProgreso;
-                                realizarCurso();
-                                break;
-                            case RESTABLECER:
-                                cursoActual = controlador.restablecerCurso();
-                                realizarCurso();
-                                break;
-                            case CANCELAR:
-                                break;
-                        }
+		JList<Curso> courseList = new JList<Curso>(model);
+		courseList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		courseList.setCellRenderer(new CourseCellRenderer());
+		courseList.setBackground(Principal.BEIGE);
 
-                    } else {
-                    	ArrayList<String> parametros = Configuracion.mostrarDialogo(frame);
-                        cursoActual = controlador.iniciarCurso(cursoSeleccionado, parametros.get(0), parametros.get(1));
-                        realizarCurso();
-                    }
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				controlador.finalizarSesionCurso();
+				cursoActual = null;
+			}
+		});
 
-                } else {
-                    throw new ExcepcionCursoActualVacio("Seleccione un curso antes de comenzar");
-                }
-            } catch (ExcepcionCursoActualVacio ex) {
-                MensajeError.mostrarAdvertencia(frame, ex.getMessage());
-            } catch (RuntimeException ex) {
-                MensajeError.mostrarError(frame, ex.getMessage());
-            }
-        });
+		btnIniciar.addActionListener(e -> {
+			try {
+				Curso cursoSeleccionado = courseList.getSelectedValue();
+				if (cursoSeleccionado != null) {
 
+					CursoEnProgreso cursoEnProgreso = controlador.reanudarCurso(cursoSeleccionado);
 
-        JScrollPane scrollPane = new JScrollPane(courseList);
-        scrollPane.setPreferredSize(new Dimension(400, 200));
-        center1.add(scrollPane, BorderLayout.CENTER);
-        
-    }
+					if (cursoEnProgreso != null) {
+						ReanudarCursoView dialog = new ReanudarCursoView(frame);
+						dialog.setVisible(true);
 
-    private void realizarCurso() {
-    	
-        while (true) {
-            Pregunta preguntaActual = cursoActual.getPreguntaActual();
+						switch (dialog.getOpcionSeleccionada()) {
+						case REANUDAR:
+							cursoActual = cursoEnProgreso;
+							realizarCurso();
+							break;
+						case RESTABLECER:
+							cursoActual = controlador.restablecerCurso();
+							realizarCurso();
+							break;
+						case CANCELAR:
+							break;
+						}
 
-            if (preguntaActual == null) {
-               MensajeError.mostrarConfirmacion(frame, "¡Curso completado!");
-               cursoActual = null;
-                break;
-            }
-                                  
-            if (preguntaActual instanceof PreguntaTest) {
-            	new TestView(frame, (PreguntaTest) preguntaActual).setVisible(true);
-            } else if (preguntaActual instanceof PreguntaRellenarHueco) {
-            	new RellenarHuecoView(frame, (PreguntaRellenarHueco) preguntaActual).setVisible(true);
-            } else if (preguntaActual instanceof PreguntaRespuestaCorta) {
-            	new RespuestaCortaView(frame, (PreguntaRespuestaCorta) preguntaActual).setVisible(true);
-            }
-           
-            
-            controlador.avanzarProgreso();
-        }
-    }
+					} else {
+						ArrayList<String> parametros = Configuracion.mostrarDialogo(frame);
+						if (!parametros.isEmpty()) {
+							cursoActual = controlador.iniciarCurso(cursoSeleccionado, parametros.get(0),
+									parametros.get(1));
+							realizarCurso();
+						}
+					}
+
+				} else {
+					throw new ExcepcionCursoActualVacio("Seleccione un curso antes de comenzar");
+				}
+			} catch (ExcepcionCursoActualVacio ex) {
+				MensajeError.mostrarAdvertencia(frame, ex.getMessage());
+			} 
+		});
+
+		JScrollPane scrollPane = new JScrollPane(courseList);
+		scrollPane.setPreferredSize(new Dimension(400, 200));
+		center1.add(scrollPane, BorderLayout.CENTER);
+
+	}
+
+	private void realizarCurso() {
+		AtomicBoolean cursoCancelado = new AtomicBoolean(false);
+
+		Runnable onClose = () -> {
+			cursoActual = null;
+			cursoCancelado.set(true);
+		};
+
+		while (cursoActual != null && !cursoCancelado.get()) {
+			Pregunta preguntaActual = cursoActual.getPreguntaActual();
+
+			if (preguntaActual == null) {
+				MensajeError.mostrarConfirmacion(frame, "¡Curso completado!");
+				cursoActual = controlador.finalizarSesionCurso();
+				
+				break;
+			}
+
+			if (preguntaActual instanceof PreguntaTest) {
+				new TestView(frame, (PreguntaTest) preguntaActual, onClose).setVisible(true);
+			} else if (preguntaActual instanceof PreguntaRellenarHueco) {
+				new RellenarHuecoView(frame, (PreguntaRellenarHueco) preguntaActual, onClose).setVisible(true);
+			} else if (preguntaActual instanceof PreguntaRespuestaCorta) {
+				new RespuestaCortaView(frame, (PreguntaRespuestaCorta) preguntaActual, onClose).setVisible(true);
+			}
+
+			if (cursoCancelado.get())
+				break;
+
+			controlador.avanzarProgreso();
+		}
+	}
 
 }
 
-
-
-
 class CourseCellRenderer extends JPanel implements ListCellRenderer<Curso> {
-    private static final long serialVersionUID = 1L;
-    private JLabel iconLabel;
-    private JLabel nameLabel;
-    private JLabel descriptionLabel;
-    private JPanel textPanel;
-    private JPanel leftPanel; // Panel para el icono
-    private JPanel rightPanel; // Panel para el botón
+	private static final long serialVersionUID = 1L;
+	private JLabel iconLabel;
+	private JLabel nameLabel;
+	private JLabel descriptionLabel;
+	private JPanel textPanel;
+	private JPanel leftPanel; // Panel para el icono
+	private JPanel rightPanel; // Panel para el botón
 
-    public CourseCellRenderer() {
-        setLayout(new BorderLayout(10, 10)); // Añadir espacio entre componentes
-        setBackground(Principal.BEIGE);
+	public CourseCellRenderer() {
+		setLayout(new BorderLayout(10, 10)); // Añadir espacio entre componentes
+		setBackground(Principal.BEIGE);
 
-        // Panel izquierdo (icono) con BoxLayout
-        leftPanel = new JPanel();
-        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS)); // Organizar verticalmente
-        leftPanel.setBackground(Principal.BEIGE);
+		// Panel izquierdo (icono) con BoxLayout
+		leftPanel = new JPanel();
+		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS)); // Organizar verticalmente
+		leftPanel.setBackground(Principal.BEIGE);
 
-        // Espacio flexible arriba para centrar el icono
-        leftPanel.add(Box.createVerticalGlue());
+		// Espacio flexible arriba para centrar el icono
+		leftPanel.add(Box.createVerticalGlue());
 
-        // Icono
-        iconLabel = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/gorro-graduacion.png")));
-        iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10)); // Márgenes
-        iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrar horizontalmente
-        leftPanel.add(iconLabel);
+		// Icono
+		iconLabel = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/gorro-graduacion.png")));
+		iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10)); // Márgenes
+		iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrar horizontalmente
+		leftPanel.add(iconLabel);
 
-        // Espacio flexible abajo para centrar el icono
-        leftPanel.add(Box.createVerticalGlue());
+		// Espacio flexible abajo para centrar el icono
+		leftPanel.add(Box.createVerticalGlue());
 
-        // Panel derecho (botón) con BoxLayout
-        rightPanel = new JPanel();
-        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS)); // Organizar verticalmente
-        rightPanel.setBackground(Principal.BEIGE);
+		// Panel derecho (botón) con BoxLayout
+		rightPanel = new JPanel();
+		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS)); // Organizar verticalmente
+		rightPanel.setBackground(Principal.BEIGE);
 
-        // Espacio flexible arriba para centrar el botón
-        rightPanel.add(Box.createVerticalGlue());
+		// Espacio flexible arriba para centrar el botón
+		rightPanel.add(Box.createVerticalGlue());
 
-        // Espacio flexible abajo para centrar el botón
-        rightPanel.add(Box.createVerticalGlue());
+		// Espacio flexible abajo para centrar el botón
+		rightPanel.add(Box.createVerticalGlue());
 
-        // Nombre del curso
-        nameLabel = new JLabel();
-        nameLabel.setFont(new Font("Arial", Font.BOLD, 14)); // Fuente más grande para el nombre
+		// Nombre del curso
+		nameLabel = new JLabel();
+		nameLabel.setFont(new Font("Arial", Font.BOLD, 14)); // Fuente más grande para el nombre
 
-        // Descripción del curso
-        descriptionLabel = new JLabel();
-        descriptionLabel.setFont(new Font("Arial", Font.PLAIN, 10)); // Fuente más pequeña para la descripción
+		// Descripción del curso
+		descriptionLabel = new JLabel();
+		descriptionLabel.setFont(new Font("Arial", Font.PLAIN, 10)); // Fuente más pequeña para la descripción
 
-        // Panel para el nombre y la descripción
-        textPanel = new JPanel();
-        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS)); // Organizar verticalmente
-        textPanel.setBackground(Principal.BEIGE.brighter());
+		// Panel para el nombre y la descripción
+		textPanel = new JPanel();
+		textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS)); // Organizar verticalmente
+		textPanel.setBackground(Principal.BEIGE.brighter());
 
-        // Espacio flexible arriba para centrar el contenido
-        textPanel.add(Box.createVerticalGlue());
+		// Espacio flexible arriba para centrar el contenido
+		textPanel.add(Box.createVerticalGlue());
 
-        // Nombre y descripción
-        textPanel.add(nameLabel);
-        textPanel.add(descriptionLabel);
+		// Nombre y descripción
+		textPanel.add(nameLabel);
+		textPanel.add(descriptionLabel);
 
-        // Espacio flexible abajo para centrar el contenido
-        textPanel.add(Box.createVerticalGlue());
+		// Espacio flexible abajo para centrar el contenido
+		textPanel.add(Box.createVerticalGlue());
 
-        // Añadir componentes al panel principal
-        add(leftPanel, BorderLayout.WEST); // Panel izquierdo (icono)
-        add(textPanel, BorderLayout.CENTER); // Panel central (nombre y descripción)
-        add(rightPanel, BorderLayout.EAST); // Panel derecho (botón)
+		// Añadir componentes al panel principal
+		add(leftPanel, BorderLayout.WEST); // Panel izquierdo (icono)
+		add(textPanel, BorderLayout.CENTER); // Panel central (nombre y descripción)
+		add(rightPanel, BorderLayout.EAST); // Panel derecho (botón)
 
-        // Establecer un tamaño preferido más alto para cada celda
-        setPreferredSize(new Dimension(300, 60)); // Ajusta el tamaño según tus necesidades
-        
-    }
+		// Establecer un tamaño preferido más alto para cada celda
+		setPreferredSize(new Dimension(300, 60)); // Ajusta el tamaño según tus necesidades
 
-    @Override
-    public Component getListCellRendererComponent(JList<? extends Curso> list, Curso value, int index, boolean isSelected, boolean cellHasFocus) {
-        // Asignar el nombre del curso
-        nameLabel.setText(value.getNombre());
+	}
 
-        // Asignar una descripción de ejemplo (puedes personalizarla según tus datos)
-        descriptionLabel.setText(value.getDescripcion());
+	@Override
+	public Component getListCellRendererComponent(JList<? extends Curso> list, Curso value, int index,
+			boolean isSelected, boolean cellHasFocus) {
+		// Asignar el nombre del curso
+		nameLabel.setText(value.getNombre());
 
-        // Cambiar el color de fondo si está seleccionado
-        if (isSelected) {
-            setBackground(Principal.BEIGE.darker());
-            textPanel.setBackground(Principal.BEIGE.darker());
-            leftPanel.setBackground(Principal.BEIGE.darker());
-            rightPanel.setBackground(Principal.BEIGE.darker());
-            iconLabel.setBackground(Principal.BEIGE.darker());
-            nameLabel.setBackground(Principal.BEIGE.darker());
-            descriptionLabel.setBackground(Principal.BEIGE.darker());
-        } else {
-            setBackground(Principal.BEIGE.brighter());
-            textPanel.setBackground(Principal.BEIGE.brighter());
-            leftPanel.setBackground(Principal.BEIGE.brighter());
-            rightPanel.setBackground(Principal.BEIGE.brighter());
-            iconLabel.setBackground(Principal.BEIGE.brighter());
-            nameLabel.setBackground(Principal.BEIGE.brighter());
-            descriptionLabel.setBackground(Principal.BEIGE.brighter());
-        }
+		// Asignar una descripción de ejemplo (puedes personalizarla según tus datos)
+		descriptionLabel.setText(value.getDescripcion());
 
-        return this;
-    }
+		// Cambiar el color de fondo si está seleccionado
+		if (isSelected) {
+			setBackground(Principal.BEIGE.darker());
+			textPanel.setBackground(Principal.BEIGE.darker());
+			leftPanel.setBackground(Principal.BEIGE.darker());
+			rightPanel.setBackground(Principal.BEIGE.darker());
+			iconLabel.setBackground(Principal.BEIGE.darker());
+			nameLabel.setBackground(Principal.BEIGE.darker());
+			descriptionLabel.setBackground(Principal.BEIGE.darker());
+		} else {
+			setBackground(Principal.BEIGE.brighter());
+			textPanel.setBackground(Principal.BEIGE.brighter());
+			leftPanel.setBackground(Principal.BEIGE.brighter());
+			rightPanel.setBackground(Principal.BEIGE.brighter());
+			iconLabel.setBackground(Principal.BEIGE.brighter());
+			nameLabel.setBackground(Principal.BEIGE.brighter());
+			descriptionLabel.setBackground(Principal.BEIGE.brighter());
+		}
+
+		return this;
+	}
 }

@@ -12,15 +12,23 @@ public class RellenarHuecoView extends JDialog {
 
 	private final Controlador controlador = Controlador.getInstance();
 	private final PreguntaRellenarHueco pregunta;
-
-	public RellenarHuecoView(JFrame owner, PreguntaRellenarHueco pregunta) {
+	private final Runnable onCloseCallback;
+	
+	public RellenarHuecoView(JFrame owner, PreguntaRellenarHueco pregunta, Runnable onCloseCallback) {
 		super(owner, "Pregunta de Rellenar Hueco", true);
 		this.pregunta = pregunta;
+		this.onCloseCallback = onCloseCallback;
 
 		inicializarVista();
 		pack();
 		setLocationRelativeTo(owner);
-		
+
+		addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent e) {
+				cerrarSesion();
+			}
+		});
 	}
 
 	private void inicializarVista() {
@@ -47,26 +55,33 @@ public class RellenarHuecoView extends JDialog {
 		getContentPane().add(panelSuperior, BorderLayout.NORTH);
 
 		// ---------- Panel central ----------
-		JPanel panelCentro = new JPanel();
-		panelCentro.setLayout(new BoxLayout(panelCentro, BoxLayout.Y_AXIS));
+		JPanel panelCentro = new JPanel(new BorderLayout());  // Cambiado a BorderLayout
 		panelCentro.setBackground(Principal.BEIGE);
 		getContentPane().add(panelCentro, BorderLayout.CENTER);
 
-		JPanel panelPregunta = new JPanel();
+		JPanel panelPregunta = new JPanel(new GridBagLayout());  // Usamos GridBagLayout para centrado preciso
 		panelPregunta.setBackground(Principal.BEIGE);
-		JLabel labelPregunta = new JLabel(pregunta.getEnunciado());
+
+		String html = "<html><div style='width: 400px; text-align: center;'>" + pregunta.getEnunciado() + "</div></html>";
+		JLabel labelPregunta = new JLabel(html);
 		labelPregunta.setFont(new Font("Arial", Font.BOLD, 16));
-		panelPregunta.add(labelPregunta);
-		panelCentro.add(panelPregunta);
+		labelPregunta.setHorizontalAlignment(SwingConstants.CENTER);  // Centrado horizontal
+
+		// Configuración de constraints para GridBagLayout
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(10, 10, 10, 10);  // Márgenes
+		panelPregunta.add(labelPregunta, gbc);
+
+		panelCentro.add(panelPregunta, BorderLayout.CENTER);  // Centramos en el panel principal
 
 		JPanel panelOpciones = new JPanel(new GridLayout(3, 1, 10, 10));
 		panelOpciones.setBackground(Principal.BEIGE);
 		for (String opcion : pregunta.getListaOpciones()) {
-			JButton btn = new RoundButton(opcion);
-			btn.addActionListener(e -> validarRespuesta(opcion));
-			panelOpciones.add(btn);
+		    JButton btn = new RoundButton(opcion);
+		    btn.addActionListener(e -> validarRespuesta(opcion));
+		    panelOpciones.add(btn);
 		}
-		panelCentro.add(panelOpciones);
+		panelCentro.add(panelOpciones, BorderLayout.SOUTH);  // Movemos las opciones al sur
 	}
 
 	private void validarRespuesta(String respuestaSeleccionada) {
@@ -80,5 +95,12 @@ public class RellenarHuecoView extends JDialog {
 
 		dispose();
 	}
-
+	
+	private void cerrarSesion() {
+		controlador.finalizarSesionCurso();
+		if (onCloseCallback != null) {
+			onCloseCallback.run();
+		}
+	}
+	
 }

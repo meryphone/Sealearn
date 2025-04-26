@@ -82,6 +82,10 @@ public class CursoEnProgreso {
     public Estrategia getEstrategia() {
         return estrategia;
     }
+    
+    public int getTotalPreguntas() {
+    	return preguntas.size();
+    }
 
     public void setEstrategia(Estrategia estrategia) {
         this.estrategia = estrategia;
@@ -116,6 +120,8 @@ public class CursoEnProgreso {
 		this.id = id;
 	}
 
-    
+    public boolean isCompletado() {
+    	return progreso == getTotalPreguntas();
+    }
     
 }
