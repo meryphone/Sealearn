@@ -14,7 +14,6 @@ Profesor: Jesús Sánchez Cuadrado
 
 Consiste en la aplicación de aprendizaje perfecta para aprender los conceptos básicos de la asignatura Tecnologías y Desarrollo de Software. Dispone de distintos niveles de dificultad, estilos de aprendizaje, control de estadísticas y un alegre acompañante que te acompañará en estas lecciones.
 
-
 # ProyectoPDS
 
 ## Modelado del dominio
@@ -29,79 +28,135 @@ Consiste en la aplicación de aprendizaje perfecta para aprender los conceptos b
 
 ### Seleccionar curso
 
-- Precondición: Debe existir al menos un curso en la biblioteca interna.
-- Flujo básico:
-  - 1. El usuario accede a la pantalla de selección de cursos.
-  - 2. El sistema muestra la lista de cursos disponibles.
-  - 3. El usuario selecciona un curso de la lista.
-  - 4. El sistema muestra una breve descripción del curso.
-  - 5. El usuario selecciona una dificultad.
-  - 6. El usuario pulsa el botón para comenzar el curso.
-  - 7. El sistema carga el curso seleccionado y muestra la primera pregunta o pantalla de aprendizaje.
-- Postcondición: El curso queda cargado y listo para ser ejecutado.
+- **Actor**: Usuario
+- **Precondición**: Debe existir al menos un curso en la biblioteca interna.
+- **Flujo básico**:
+  1. El usuario accede a la pantalla de selección de cursos.
+  2. El sistema muestra la lista de cursos disponibles.
+  3. El usuario selecciona un curso de la lista.
+  4. El sistema muestra una breve descripción del curso.
+  5. El usuario selecciona una dificultad.
+  6. El usuario selecciona una estrategia de aprendizaje.
+  7. El usuario pulsa el botón para comenzar el curso.
+  8. El sistema carga el curso seleccionado y muestra la primera pregunta o pantalla de aprendizaje.
+- **Postcondición**: El curso queda cargado y listo para ser ejecutado siguiendo la estrategia de aprendizaje elegida.
+- **Flujos alternativos**:
+  - 3a. No existen cursos disponibles: el sistema informa al usuario de que debe importar o crear cursos primero.
+
+---
 
 ### Realizar curso
 
-- Flujo básico:
-  - 1. El sistema muestra una pregunta del curso.
-  - 2. El usuario responde la pregunta o interactúa con la pantalla de aprendizaje.
-  - 3. El sistema valida la respuesta y muestra retroalimentación.
-  - 4. El sistema registra el progreso del usuario.
-  - 5. Se repite el proceso hasta finalizar el curso o que el usuario decida salir.
-- Postcondición: El sistema guarda el progreso del usuario en el curso.
+- **Actor**: Usuario
+- **Precondición**: El usuario ha seleccionado previamente un curso y una estrategia de aprendizaje.
+- **Flujo básico**:
+  1. El sistema muestra una pregunta o pantalla de aprendizaje del curso.
+  2. El usuario responde la pregunta o interactúa con la pantalla.
+  3. El sistema valida la respuesta y muestra retroalimentación.
+  4. El sistema registra el progreso del usuario.
+  5. Se repite el proceso hasta finalizar el curso o que el usuario decida salir.
+- **Postcondición**: El progreso del usuario se guarda en el sistema.
+- **Flujos alternativos**:
+  - 2a. El usuario decide abandonar el curso: se guarda el progreso actual automáticamente.
 
-### Elegir estrategia de aprendizaje 
-
-- Flujo básico:
-  - 1. El usuario accede a la configuración del curso antes de iniciarlo.
-  - 2. El sistema muestra las estrategias de aprendizaje disponibles.
-  - 3. El usuario selecciona una estrategia.
-  - 4. El sistema ajusta la lógica de presentación de preguntas según la estrategia elegida.
-- Postcondición: El curso sigue la estrategia de aprendizaje seleccionada.
+---
 
 ### Reanudar curso
 
-- Precondición: Debe existir un progreso guardado de un curso previamente iniciado.
-- Flujo básico:
-  - 1. El usuario selecciona un curso.
-  - 2. El sistema muestra la opción para continuar desde el último punto guardado.
-  - 3. El usuario selecciona reanudar el curso.
-  - 4. El sistema carga el curso y muestra la última pregunta o pantalla de aprendizaje en la que se encontraba el usuario.
--Postcondición: El usuario puede continuar el curso desde donde lo dejó.
+- **Actor**: Usuario
+- **Precondición**: Debe existir un progreso guardado de un curso previamente iniciado.
+- **Flujo básico**:
+  1. El usuario accede a la pantalla de cursos y selecciona uno con progreso guardado.
+  2. El sistema ofrece la opción de reanudar el curso.
+  3. El usuario confirma reanudar.
+  4. El sistema carga el curso desde la última pregunta o pantalla guardada.
+  5. Se continúa con el caso de uso "Realizar curso".
+- **Postcondición**: El usuario continúa el curso desde el punto donde lo dejó.
 
-### Exportar feedback
+---
 
-- Precondición: El curso debe estar completado.
-- Flujo básico:
-  - 1. El usuario accede a la opción de exportar cursos.
-  - 2. El sistema muestra la lista de cursos disponibles para exportar.
-  - 3. El usuario selecciona un curso.
-  - 4. El usuario selecciona una ruta destino.
-  - 5. El sistema genera un archivo PDF con el feedback del curso en la ruta indicada.
+### Reiniciar curso
+
+- **Actor**: Usuario
+- **Precondición**: Debe existir un progreso guardado de un curso previamente iniciado.
+- **Flujo básico**:
+  1. El usuario accede a la pantalla de cursos y selecciona uno con progreso guardado.
+  2. El sistema ofrece la opción de empezar de nuevo el curso.
+  3. El usuario confirma empezar de nuevo.
+  4. El sistema carga el curso desde la primera pregunta o pantalla del curso, con la misma estrategia y dificultad elegida.
+  5. Se continúa con el caso de uso "Realizar curso".
+- **Postcondición**: El curso seleccionado se reinicia desde el principio, manteniendo la estrategia y dificultad previamente configuradas.
+
+---
 
 ### Importar curso
 
-- Flujo básico:
-  - 1. El usuario accede a la opción de importar cursos.
-  - 2. El sistema solicita al usuario seleccionar un archivo JSON/YAML con la estructura de un curso válido.
-  - 3. El usuario selecciona el archivo y el sistema lo valida. 
-  - 4. Si el archivo es correcto, el sistema lo añade a la biblioteca interna.
-  - 5. Si ha habido un errror en la importación se lanzará una excepción.
-- Postcondición: El curso importado se almacena y está disponible para su uso.
+- **Actor**: Usuario
+- **Flujo básico**:
+  1. El usuario accede a la opción de importar cursos.
+  2. El sistema solicita seleccionar un archivo JSON o YAML.
+  3. El usuario selecciona un archivo.
+  4. El sistema valida el formato y la estructura del archivo.
+  5. Si el archivo es válido, el curso se añade a la biblioteca interna.
+  6. Si el archivo no es válido, el sistema muestra un error.
+- **Postcondición**: El curso importado queda disponible en la biblioteca interna.
+- **Flujos alternativos**:
+  - 4a. Si ocurre un error al generar el PDF, el sistema muestra un mensaje de error y no crea el archivo.
 
-### Exportar curso
+---
 
-- Flujo básico:
-  - 1. El usuario accede a la opción de exportar cursos.
-  - 2. El sistema muestra los cursos de la biblioteca interna.
-  - 3. El usuario selecciona un curso a exportar.
-  - 4. El usuario indica la ruta destino de la exportación.
-  - 5. El sistema genera un archivo YAML/JSON en el directorio elegido.
+### Eliminar curso
+
+- **Actor**: Usuario
+- **Precondición**: Debe existir al menos un curso almacenado en la biblioteca interna.
+- **Flujo básico**:
+  1. El usuario accede a la sección de gestión de cursos o a la biblioteca interna.
+  2. El sistema muestra la lista de cursos disponibles.
+  3. El usuario selecciona el curso que desea eliminar.
+  4. El sistema solicita confirmación para eliminar el curso.
+  5. El usuario confirma la eliminación.
+  6. El sistema elimina el curso de la biblioteca interna.
+- **Postcondición**: El curso seleccionado es eliminado de la biblioteca interna del sistema.
+
+- **Flujos alternativos**:
+  - 5a. El usuario cancela la eliminación: el sistema mantiene el curso sin cambios.
+
+---
+
+### Exportar estadísticas
+
+- **Actor**: Usuario
+- **Precondición**: El usuario se encuentra en la ventana principal.
+- **Flujo básico**:
+  1. El usuario accede a la opción de exportar estadísticas.
+  2. El sistema muestra una ventana para seleccionar el destino del pdf por generar.
+  3. El usuario selecciona una ruta de destino.
+  4. El sistema genera un archivo PDF con las estadísticas del curso en la ruta indicada.
+- **Postcondición**: Se crea un archivo PDF con el resumen del curso.
+
+---
 
 ### Consultar estadísticas
 
-- Flujo básico:
-  - 1. El usuario accede a la sección de estadísticas.
-  - 2. El sistema muestra información como tiempo de uso, racha de días consecutivos de aprendizaje, cantidad de cursos completados, etc.
-  - 3. El usuario revisa sus estadísticas.
-  
+- **Actor**: Usuario
+- **Flujo básico**:
+  1. El usuario accede a la sección de estadísticas.
+  2. El sistema muestra datos como: tiempo de uso, racha de días consecutivos, número de cursos completados, etc.
+  3. El usuario revisa sus estadísticas.
+- **Postcondición**: El usuario visualiza su progreso y hábitos de estudio.
+
+---
+
+### Restablecer estadísticas
+
+- **Actor**: Usuario
+- **Precondición**: El usuario se encuentra en la ventana principal y tener estadísticas almacenadas.
+- **Flujo básico**:
+  1. El usuario accede a la sección de estadísticas en la ventana principal.
+  2. El usuario pulsa el botón "Restablecer estadísticas".
+  3. El sistema solicita confirmación para evitar acciones accidentales.
+  4. El usuario confirma que desea restablecer las estadísticas.
+  5. El sistema pone a cero todas las estadísticas almacenadas del usuario.
+- **Postcondición**: Las estadísticas del usuario quedan restablecidas a su valor inicial.
+- **Flujos alternativos**:
+  - 4a. El usuario cancela la operación: el sistema mantiene las estadísticas originales sin cambios.
