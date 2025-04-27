@@ -12,41 +12,35 @@ public class Aleatoria extends Estrategia {
 
     private List<Integer> ordenPreguntas;
 
-    /**
-     * Constructor que genera una lista de índices desordenada aleatoriamente.
-     *
-     * @param totalPreguntas número total de preguntas del curso
-     */
+    public Aleatoria() {
+    	ordenPreguntas = new ArrayList<>();
+    }
     
     public Aleatoria(int totalPreguntas) {
     	super(totalPreguntas);
-        ordenPreguntas = new ArrayList<>();
-        for (int i = 0; i < this.totalPreguntas; i++) {
-            ordenPreguntas.add(i); 
-        }
-        Collections.shuffle(ordenPreguntas); 
+    	ordenPreguntas = new ArrayList<>();
     }
-    
-    public Aleatoria() {
-        ordenPreguntas = new ArrayList<>();
-        for (int i = 0; i < totalPreguntas; i++) {
-            ordenPreguntas.add(i); 
+
+    @Override
+    public int mostrarPregunta(int nPregunta) {
+        if (ordenPreguntas.isEmpty()) {
+            construirOrden();
         }
-        Collections.shuffle(ordenPreguntas); 
+
+        if (nPregunta < ordenPreguntas.size()) {
+            return ordenPreguntas.get(nPregunta);
+        }
+        return -1;
     }
 
     /**
-     * Devuelve el índice de la pregunta a mostrar en una posición concreta del curso.
-     *
-     * @param nPregunta número de paso actual (0, 1, 2, ...)
-     * @return índice aleatorio de la pregunta original, o -1 si se han mostrado todas
+     * Genera un orden aleatorio único para las preguntas del curso.
      */
-    @Override
-    public int mostrarPregunta(int nPregunta) {
-        if (nPregunta < ordenPreguntas.size()) {
-            return ordenPreguntas.get(nPregunta);
-        } else {
-            return -1; // Ya no hay más preguntas disponibles
+    private void construirOrden() {
+
+        for (int i = 0; i < totalPreguntas; i++) {
+            ordenPreguntas.add(i);
         }
+        Collections.shuffle(ordenPreguntas);
     }
 }

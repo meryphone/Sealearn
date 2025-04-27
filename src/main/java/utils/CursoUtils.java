@@ -1,10 +1,11 @@
 package utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
@@ -16,64 +17,63 @@ import dominio.Pregunta;
 import dominio.PreguntaRellenarHueco;
 import dominio.PreguntaRespuestaCorta;
 import dominio.PreguntaTest;
+import excepciones.ExcepcionCursoDuplicado;
 
 public class CursoUtils {
 
+	private static final Set<UUID> cursosCargados = new HashSet<>();
+
 	/**
-	 * Carga un curso desde un archivo YAML ubicado en /resources/cursos/.
+	 * Importa un solo curso desde YAML. Detecta duplicados por UUID.
 	 * 
 	 * @param nombreArchivo nombre del archivo YAML
-	 * @return el objeto Curso cargado o null si falla
+	 * @return el objeto Curso
+	 * @throws ExcepcionCursoDuplicado si el UUID ya ha sido cargado
+	 * @throws IOException 
 	 */
-	public static Curso importarCurso(String nombreArchivo) {
+	public static Curso importarCurso(String nombreArchivo) throws ExcepcionCursoDuplicado, IOException {
 		String ruta = "/cursos/" + nombreArchivo;
 
-		try (InputStream inputStream = Controlador.class.getResourceAsStream(ruta)) {
+		    InputStream inputStream = Controlador.class.getResourceAsStream(ruta) ;
 			if (inputStream == null) {
-				System.err.println("Archivo no encontrado: " + ruta);
-				return null;
+				throw new IOException("Archivo no encontrado: " + ruta);
 			}
 
-			// Crear constructor principal para Curso
 			Constructor constructor = new Constructor(Curso.class);
-
-			// Declarar que la propiedad "preguntas" contiene elementos polimórficos
 			TypeDescription cursoDescription = new TypeDescription(Curso.class);
 			cursoDescription.addPropertyParameters("preguntas", Pregunta.class);
 			constructor.addTypeDescription(cursoDescription);
 
-			// Añadir tipos concretos para deserialización polimórfica
 			constructor.addTypeDescription(new TypeDescription(PreguntaTest.class, TagName("PreguntaTest")));
-			constructor.addTypeDescription(
-					new TypeDescription(PreguntaRellenarHueco.class, TagName("PreguntaRellenarHueco")));
-			constructor.addTypeDescription(
-					new TypeDescription(PreguntaRespuestaCorta.class, TagName("PreguntaRespuestaCorta")));
+			constructor.addTypeDescription(new TypeDescription(PreguntaRellenarHueco.class, TagName("PreguntaRellenarHueco")));
+			constructor.addTypeDescription(new TypeDescription(PreguntaRespuestaCorta.class, TagName("PreguntaRespuestaCorta")));
 
-			// Crear YAML con el constructor configurado
 			Yaml yaml = new Yaml(constructor);
-			return yaml.load(inputStream);
+			Curso curso = yaml.load(inputStream);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+			if (cursosCargados.contains(curso.getId())) {
+				throw new ExcepcionCursoDuplicado("Curso duplicado detectado con UUID: " + curso.getId());
+			}
+
+			cursosCargados.add(curso.getId());
+			return curso;
+
+		
 	}
 
 	/**
 	 * Carga todos los cursos desde la carpeta /resources/cursos/
-	 * 
-	 * @return lista de cursos cargados correctamente
+	 * Llama internamente a importarCurso() que ya detecta duplicados.
 	 */
 	public static List<Curso> cargarTodosLosCursos() {
 		List<Curso> cursos = new ArrayList<>();
 
-		try {
-			URL folderURL = Controlador.class.getResource("/cursos/");
-			if (folderURL == null) {
-				System.err.println("Carpeta /cursos/ no encontrada.");
-				return cursos;
-			}
+		URL folderURL = Controlador.class.getResource("/cursos/");
+		if (folderURL == null) {
+			throw new RuntimeException("Carpeta /cursos/ no encontrada");
+		}
 
+		try {
 			File folder = new File(folderURL.toURI());
 			File[] archivos = folder.listFiles((dir, name) -> name.endsWith(".yaml"));
 
@@ -85,17 +85,17 @@ public class CursoUtils {
 					}
 				}
 			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			throw new RuntimeException("Error al acceder a la carpeta /cursos/", e);
+		}catch(ExcepcionCursoDuplicado e) {
+			// No se importa el duplicado y sigue importando.
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage(), e);
 		}
 
 		return cursos;
 	}
 
-	/**
-	 * Utilidad para crear tags simples para las clases hijas
-	 */
 	private static String TagName(String name) {
 		return "!" + name;
 	}

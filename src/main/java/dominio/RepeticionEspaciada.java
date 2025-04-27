@@ -1,75 +1,58 @@
 package dominio;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Estrategia de repetición espaciada. Muestra todas las preguntas una vez y
- * vuelve a repetirlas cada 3 preguntas nuevas. Trabaja con los índices
- * (enteros) de las preguntas.
+ * luego las va repitiendo, asegurando que cada una se repita al menos una vez.
  */
-
 public class RepeticionEspaciada extends Estrategia {
 
-	private List<Integer> ordenPreguntas; // Lista que define el orden completo de presentación de preguntas (incluyendo
-											// repeticiones)
+	private List<Integer> ordenPreguntas;
 
-	/**
-	 * Constructor que genera el orden de presentación de preguntas aplicando la
-	 * lógica de repetición espaciada.
-	 * 
-	 * @param totalPreguntas Número total de preguntas originales (sin repetir)
-	 */
+	public RepeticionEspaciada() {
+		ordenPreguntas = new ArrayList<>();
+	}
 
 	public RepeticionEspaciada(int totalPreguntas) {
 		super(totalPreguntas);
 		ordenPreguntas = new ArrayList<>();
-		int repetirIndex = 0;
-		List<Integer> preguntasMostradas = new ArrayList<>();
-
-
-		for (int i = 0; i < this.totalPreguntas; i++) {
-			ordenPreguntas.add(i);
-			preguntasMostradas.add(i);
-
-			if ((i + 1) % 3 == 0 && repetirIndex < preguntasMostradas.size()) {
-				ordenPreguntas.add(preguntasMostradas.get(repetirIndex));
-				repetirIndex++;
-			}
-		}
 	}
 
-	public RepeticionEspaciada() {
-		ordenPreguntas = new ArrayList<>();
-		int preguntaArepetir = 0;
-		List<Integer> preguntasMostradas = new ArrayList<>(); // Registro de preguntas ya mostradas
-
-		// Recorremos cada pregunta original
-		for (int i = 0; i < totalPreguntas; i++) {
-			ordenPreguntas.add(i);
-			preguntasMostradas.add(i);
-
-			// Cada 3 preguntas, repetimos una anterior (siguiendo el orden de aparición)
-			if ((i + 1) % 3 == 0 && preguntaArepetir < preguntasMostradas.size()) {
-				ordenPreguntas.add(preguntasMostradas.get(preguntaArepetir));
-				preguntaArepetir++;
-			}
+	@Override
+	public int mostrarPregunta(int nPregunta) {
+		if (ordenPreguntas.isEmpty()) {
+			construirOrden();
 		}
+
+		if (nPregunta < ordenPreguntas.size()) {
+			return ordenPreguntas.get(nPregunta);
+		}
+		return -1;
 	}
 
 	/**
-	 * Devuelve el índice de la pregunta a mostrar en un paso concreto.
-	 * 
-	 * @param nPregunta Número de paso actual en el curso (0, 1, 2, ...)
-	 * @return Índice de la pregunta en la lista original, o -1 si ya no hay más
-	 *         preguntas
+	 * Construye la lista de orden con lógica de repetición espaciada. Cada pregunta
+	 * se repite al menos una vez.
 	 */
-	@Override
-	public int mostrarPregunta(int nPregunta) {
-		if (nPregunta < ordenPreguntas.size()) {
-			return ordenPreguntas.get(nPregunta);
-		} else {
-			return -1; // Ya no quedan preguntas por mostrar
+	private void construirOrden() {
+		List<Integer> originales = new ArrayList<>();
+		List<Integer> repetidas = new ArrayList<>();
+
+		for (int i = 0; i < totalPreguntas; i++) {
+			ordenPreguntas.add(i); // añadir pregunta nueva
+			originales.add(i); // registrar original
+
+			if ((i + 1) % 3 == 0 && !repetidas.contains(originales.get(0))) {
+				ordenPreguntas.add(originales.get(0)); // repetir la más antigua no repetida
+				repetidas.add(originales.remove(0)); // mover a repetidas
+			}
+		}
+
+		// Asegurar que todas se repiten al menos una vez
+		for (Integer faltante : originales) {
+			ordenPreguntas.add(faltante);
 		}
 	}
 }
-

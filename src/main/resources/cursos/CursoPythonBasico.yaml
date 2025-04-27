@@ -40,12 +40,12 @@ preguntas:
 
   - !PreguntaRellenarHueco
     enunciado: Las listas se definen con corchetes ___.
-    respuestaCorrecta: []
+    respuestaCorrecta: "[]"
     dificultad: media
     listaOpciones:
       - ()
       - {}
-      - []
+      - "[]"
 
   - !PreguntaTest
     enunciado: ¿Cómo se hace una importación en Python?

@@ -5,7 +5,6 @@ import javax.swing.*;
 import controlador.Controlador;
 import dominio.PreguntaTest;
 import utils.MensajeError;
-import java.util.List;
 
 public class TestView extends JDialog {
 
@@ -15,51 +14,60 @@ public class TestView extends JDialog {
 	private final PreguntaTest pregunta;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JRadioButton[] opcionesRadio;
-	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(() -> {
-			PreguntaTest ejemplo = new PreguntaTest(
-				"¿Cuál es la capital de Francia?", "París",
-				List.of("Francia", "Dublín", "París"), "fácil"
-			);
-			TestView vista = new TestView(null, ejemplo);
-			vista.setVisible(true);
-		});
-	}
+	private final Runnable onCloseCallback;
 
-	public TestView(JFrame owner, PreguntaTest pregunta) {
+	public TestView(JFrame owner, PreguntaTest pregunta, Runnable onCloseCallback) {
 		super(owner, "Pregunta tipo Test", true);
 		this.pregunta = pregunta;
+		this.onCloseCallback = onCloseCallback;
+
 		inicializarVista();
 		pack();
 		setLocationRelativeTo(owner);
+
+		addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent e) {
+				cerrarSesion();
+			}
+		});
 	}
 
 	private void inicializarVista() {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setPreferredSize(new Dimension(500, 400));
+		setPreferredSize(new Dimension(550, 500));
 		getContentPane().setBackground(Principal.BEIGE);
 		getContentPane().setLayout(new BorderLayout(10, 10));
 
-		// ---------- Panel superior con imagen ----------
-		JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		// ---------- Panel superior ----------
+		JPanel panelSuperior = new JPanel();
 		panelSuperior.setBackground(Principal.BEIGE);
-		panelSuperior.add(new JLabel(new ImageIcon(getClass().getResource("/imagenes/seal_looking_right.png"))));
+		panelSuperior.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+
+		JLabel icon = new JLabel(new ImageIcon(getClass().getResource("/imagenes/seal_looking_right.png")));
+		panelSuperior.add(icon);
+
+		JProgressBar progressBar = new JProgressBar();
+		int progreso = controlador.getProgreso();
+		int total = controlador.getTotalPreguntas();
+		progressBar.setValue((int) ((progreso * 100.0f) / total));
+		progressBar.setStringPainted(true);
+		panelSuperior.add(progressBar);
+
 		getContentPane().add(panelSuperior, BorderLayout.NORTH);
 
-		// ---------- Panel central con pregunta y opciones ----------
+		// ---------- Panel central ----------
 		JPanel panelCentro = new JPanel();
 		panelCentro.setLayout(new BoxLayout(panelCentro, BoxLayout.Y_AXIS));
 		panelCentro.setBackground(Principal.BEIGE);
 		getContentPane().add(panelCentro, BorderLayout.CENTER);
 
-		// Enunciado
-		JLabel labelPregunta = new JLabel(pregunta.getEnunciado());
+		String html = "<html><body style='width: 400px'>" + pregunta.getEnunciado() + "</body></html>";
+		JLabel labelPregunta = new JLabel(html);
 		labelPregunta.setFont(new Font("Arial", Font.BOLD, 16));
 		labelPregunta.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panelCentro.add(labelPregunta);
 
-		// Opciones
 		JPanel panelOpciones = new JPanel(new GridLayout(0, 1, 10, 10));
 		panelOpciones.setBackground(Principal.BEIGE);
 		opcionesRadio = new JRadioButton[pregunta.getListaOpciones().size()];
@@ -73,7 +81,7 @@ public class TestView extends JDialog {
 		}
 		panelCentro.add(panelOpciones);
 
-		// ---------- Panel inferior con botón ----------
+		// ---------- Panel inferior ----------
 		JPanel panelInferior = new JPanel();
 		panelInferior.setBackground(Principal.BEIGE);
 		getContentPane().add(panelInferior, BorderLayout.SOUTH);
@@ -98,6 +106,7 @@ public class TestView extends JDialog {
 		} else {
 			MensajeError.mostrarError(this, "Incorrecto. La respuesta correcta era: " + pregunta.getRespuestaCorrecta());
 		}
+
 		dispose();
 	}
 
@@ -107,4 +116,12 @@ public class TestView extends JDialog {
 		}
 		return null;
 	}
+	
+	private void cerrarSesion() {
+		controlador.finalizarSesionCurso();
+		if (onCloseCallback != null) {
+			onCloseCallback.run();
+		}
+	}
+	
 }

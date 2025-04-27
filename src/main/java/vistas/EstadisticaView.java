@@ -20,11 +20,11 @@ public class EstadisticaView extends JFrame {
     private static final Color BEIGE = new Color(211, 204, 194);
     private static final Color BUTTON_COLOR = new Color(8, 32, 50);
     public EstadisticaView() {
-        setTitle("Estadísticas");
+        setTitle("EstadÃ­sticas");
         setBounds(100, 100, 600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setBackground(BEIGE);
-        setLayout(new BorderLayout(10, 10)); // Añadir margen externo
+        setLayout(new BorderLayout(10, 10)); // Anadir margen externo
         
         // Panel superior con imagen
         JPanel top = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -33,9 +33,9 @@ public class EstadisticaView extends JFrame {
         top.add(title);
         add(top, BorderLayout.NORTH);
 
-        // Lista de estadisticas con CellRenderer personalizado
+        // Lista de estadï¿½sticas con CellRenderer personalizado
         DefaultListModel<StatItem> statModel = new DefaultListModel<>();
-        statModel.addElement(new StatItem("Racha de días", "72", "/imagenes/meta.png"));
+        statModel.addElement(new StatItem("Racha de dÃ­as", "72", "/imagenes/meta.png"));
         statModel.addElement(new StatItem("Tiempo de uso", "4 horas", "/imagenes/reloj.png"));
         statModel.addElement(new StatItem("Preguntas totales", "120", "/imagenes/preguntas.png"));
         statModel.addElement(new StatItem("Preguntas acertadas", "90", "/imagenes/correcto.png"));
@@ -48,10 +48,10 @@ public class EstadisticaView extends JFrame {
         scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Margen interno para separar del borde
         add(scrollPane, BorderLayout.CENTER);
 
-        // Panel inferior con boton
+        // Panel inferior con botï¿½n
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.LEFT));
         bottom.setBackground(BEIGE);
-        JButton backButton = new RoundButton("Atrás");
+        JButton backButton = new RoundButton("AtrÃ¡s");
         backButton.setBackground(BUTTON_COLOR);
         backButton.setForeground(Color.WHITE);
         bottom.add(backButton);
@@ -60,7 +60,7 @@ public class EstadisticaView extends JFrame {
 
 }
 
-// Clase para representar una estadísstica
+// Clase para representar una estadÃ­sstica
 class StatItem {
     String nombre;
     String valor;
@@ -73,7 +73,7 @@ class StatItem {
     }
 }
 
-// Renderer personalizado para las estadísticas
+// Renderer personalizado para las estadÃ­sticas
 class StatCellRenderer extends JPanel implements ListCellRenderer<StatItem> {
     /**
 	 * 

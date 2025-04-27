@@ -1,9 +1,10 @@
-package dominio;
+package dominioTest;
 
-import junit.framework.TestCase;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+
+import dominio.RepeticionEspaciada;
 
 class RepeticionEspaciadaTest {
 
@@ -15,7 +16,7 @@ class RepeticionEspaciadaTest {
         
         for (int i = 0; i < esperado.length; i++) {
             int obtenido = estrategia.mostrarPregunta(i);
-            assertEquals(esperado[i], obtenido, "Fallo en posición " + i);
+            assertEquals(esperado[i], obtenido, "Fallo en posiciï¿½n " + i);
         }
     }
 

@@ -40,7 +40,7 @@ preguntas:
 
   - !PreguntaRellenarHueco
     enunciado: Para incluir una biblioteca se usa la directiva ___.
-    respuestaCorrecta: #include
+    respuestaCorrecta: include
     dificultad: facil
     listaOpciones:
       - define

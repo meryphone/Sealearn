@@ -1,16 +1,22 @@
 package dominio;
 
 import java.util.List;
+import java.util.UUID;
+
 
 public class Curso {
-
+	
+	private UUID id;
     private String nombre;
     private String descripcion;
     private List<Pregunta> preguntas;
     
-    public Curso() {};
+    public Curso() {
+    	this.id = UUID.randomUUID();
+    };
 
     public Curso(String nombre, String descripcion, List<Pregunta> preguntas, int progreso) {
+    	this.id = UUID.randomUUID();
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.preguntas = preguntas;
@@ -23,19 +29,20 @@ public class Curso {
 
         Curso curso = (Curso) obj;
 
-        return nombre != null ? nombre.equals(curso.nombre) : curso.nombre == null;
+        return id != null ? id.equals(curso.id) : curso.id == null;
     }
     
     @Override
     public String toString() {
         return "Curso: " + nombre + "\n" +
                "Descripción: " + descripcion + "\n" +
-               "Número de preguntas: " + (preguntas != null ? preguntas.size() : 0);
+               "Número de preguntas: " + (preguntas != null ? preguntas.size() : 0) + "\n" +
+               "Id: " + id ;
     }   
 
     @Override
     public int hashCode() {
-        return nombre != null ? nombre.hashCode() : 0;
+        return id != null ? id.hashCode() : 0;
     }
 
 	// Getters y Setters
@@ -47,6 +54,15 @@ public class Curso {
 
     public List<Pregunta> getPreguntas() { return preguntas; }
     public void setPreguntas(List<Pregunta> preguntas) { this.preguntas = preguntas; }
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+    
     
     
 
