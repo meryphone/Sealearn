@@ -44,17 +44,42 @@ public class EstadisticaView extends JFrame {
         scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Margen interno para separar del borde
         add(scrollPane, BorderLayout.CENTER);
 
-        // Panel inferior con bot�n
-        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        // Panel inferior con botones
+        JPanel bottom = new JPanel(new BorderLayout(10, 10));
         bottom.setBackground(BEIGE);
+
+        // Botón "Atrás"
         JButton backButton = new RoundButton("Atrás");
         backButton.setBackground(BUTTON_COLOR);
         backButton.setForeground(Color.WHITE);
-        bottom.add(backButton);
+        backButton.setPreferredSize(new Dimension(70, 40)); // <-- más grande
+        bottom.add(backButton, BorderLayout.WEST);
+
+        // Botón "Restablecer estadísticas"
+        JButton resetButton = new RoundButton("Restablecer");
+        resetButton.setBackground(BUTTON_COLOR);
+        resetButton.setForeground(Color.WHITE);
+        resetButton.setPreferredSize(new Dimension(120, 40)); // <-- más grande
+        bottom.add(resetButton, BorderLayout.EAST);
+
         add(bottom, BorderLayout.SOUTH);
-        backButton.addActionListener(e ->{
-        	dispose();
+
+        // Acción del botón "Atrás"
+        backButton.addActionListener(e -> {
+            dispose();
         });
+
+        // Acción del botón "Restablecer estadísticas"
+        resetButton.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this, "¿Seguro que quieres restablecer las estadísticas?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                estadistica.reset();
+                JOptionPane.showMessageDialog(this, "¡Estadísticas restablecidas correctamente!");
+                dispose();
+            }
+        });
+
+
     }
     
     private String formatDuration(Duration duration) {

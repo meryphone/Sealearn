@@ -175,5 +175,17 @@ public class Estadistica {
 			}
 		}
 	}
+	
+	public void reset() {
+	    this.totalPreguntasRespondidas = 0;
+	    this.totalAciertos = 0;
+	    this.totalFallos = 0;
+	    this.tiempoTotalEstudio = Duration.ZERO;
+	    this.rachaActual = 0;
+	    this.mejorRacha = 0;
+	    this.ultimoDiaEstudio = null;
+	    this.inicioSesion = LocalDateTime.now();
+	}
+
 
 }
