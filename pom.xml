@@ -67,19 +67,18 @@
 			<scope>test</scope>
 		</dependency>
 
-
-		<!-- FlatLaf para UI moderna -->
+		<!-- Jackson Databind -->
 		<dependency>
-			<groupId>com.formdev</groupId>
-			<artifactId>flatlaf</artifactId>
-			<version>3.2</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.18.2</version>
 		</dependency>
 
-		<!-- SnakeYAML para carga de cursos -->
+		<!-- JacksonYAML para carga de cursos -->
 		<dependency>
-			<groupId>org.yaml</groupId>
-			<artifactId>snakeyaml</artifactId>
-			<version>1.33</version>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-yaml</artifactId>
+			<version>2.18.2</version>
 		</dependency>
 
 	</dependencies>

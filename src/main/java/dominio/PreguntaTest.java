@@ -5,14 +5,15 @@ import java.util.List;
 
 public class PreguntaTest extends Pregunta {
 
-    private List<String> listaOpciones;
+    private static final long serialVersionUID = 1L;
+	private List<String> listaOpciones;
 
     public PreguntaTest() {
         super();
         this.listaOpciones = new ArrayList<>();
     }
 
-    public PreguntaTest(String enunciado, String respuestaCorrecta, List<String> listaOpciones, String dificultad) {
+    public PreguntaTest(String enunciado, String respuestaCorrecta, List<String> listaOpciones, Dificultad dificultad) {
         super(enunciado, respuestaCorrecta, dificultad);
         this.listaOpciones = (listaOpciones != null) ? listaOpciones : new ArrayList<>();
     }

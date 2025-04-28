@@ -8,9 +8,9 @@ import dominio.PreguntaRellenarHueco;
 import dominio.PreguntaRespuestaCorta;
 import dominio.PreguntaTest;
 import excepciones.ExcepcionCursoActualVacio;
+import utils.CursoUtils;
 import utils.MensajeError;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -132,7 +132,7 @@ public class Principal {
 		DefaultListModel<Curso> model = new DefaultListModel<Curso>();
 
 		// Cargar la lista de cursos
-			for (Curso curso : controlador.getCursos()) {
+			for (Curso curso :  CursoUtils.cargarTodosLosCursos()) {
 				model.addElement(curso);
 			}
 	
@@ -141,13 +141,7 @@ public class Principal {
 		courseList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		courseList.setCellRenderer(new CourseCellRenderer());
 		courseList.setBackground(Principal.BEIGE);
-
-		frame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				controlador.finalizarSesionCurso();
-				cursoActual = null;
-			}
-		});
+		
 
 		btnIniciar.addActionListener(e -> {
 			try {

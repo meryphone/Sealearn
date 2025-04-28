@@ -2,7 +2,6 @@ package dominio;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Estrategia de aprendizaje que muestra las preguntas en orden aleatorio,
@@ -10,21 +9,15 @@ import java.util.List;
  */
 public class Aleatoria extends Estrategia {
 
-    private List<Integer> ordenPreguntas;
-
-    public Aleatoria() {
-    	ordenPreguntas = new ArrayList<>();
-    }
     
     public Aleatoria(int totalPreguntas) {
     	super(totalPreguntas);
-    	ordenPreguntas = new ArrayList<>();
     }
 
     @Override
     public int mostrarPregunta(int nPregunta) {
         if (ordenPreguntas.isEmpty()) {
-            construirOrden();
+            construirOrden();			
         }
 
         if (nPregunta < ordenPreguntas.size()) {
@@ -36,9 +29,11 @@ public class Aleatoria extends Estrategia {
     /**
      * Genera un orden aleatorio único para las preguntas del curso.
      */
-    private void construirOrden() {
+    
+    @Override
+    protected void construirOrden() {
 
-        for (int i = 0; i < totalPreguntas; i++) {
+        for (int i = 0; i < totalPreguntasCurso; i++) {
             ordenPreguntas.add(i);
         }
         Collections.shuffle(ordenPreguntas);

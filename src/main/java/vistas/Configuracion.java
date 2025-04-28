@@ -64,7 +64,7 @@ public class Configuracion extends JDialog {
 		contentPane.add(abajo, BorderLayout.SOUTH);
 
 		JButton cancelar = new RoundButton("Cancelar");
-		cancelar.setPreferredSize(new Dimension(95, 80));
+		cancelar.setPreferredSize(new Dimension(110, 35));
 		cancelar.addActionListener((ActionEvent e) -> dispose()); // cerrar al cancelar
 		abajo.add(Box.createRigidArea(new Dimension(10, 0)));
 		abajo.add(cancelar);
@@ -78,11 +78,11 @@ public class Configuracion extends JDialog {
 		abajo.add(Box.createHorizontalGlue());
 
 		JButton comenzar = new RoundButton("Comenzar");
-		comenzar.setPreferredSize(new Dimension(95, 80));
+		comenzar.setPreferredSize(new Dimension(110, 35));
 		comenzar.addActionListener(e -> {
 			estrategia = (String) posiblesEstrategias.getSelectedItem();
 			dificultad = (String) posiblesDificultades.getSelectedItem();
-			dispose(); // cerrar y devolver valores
+			dispose(); 
 		});
 		abajo.add(comenzar);
 		abajo.add(Box.createRigidArea(new Dimension(10, 0)));

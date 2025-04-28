@@ -55,7 +55,7 @@ public class EstadisticaTest extends TestCase {
 
 	    assertNotNull(estadistica.getTiempoTotalEstudio());
 	    assertTrue(estadistica.getTiempoTotalEstudio().toMillis() >= 100);
-	    assertNull(estadistica.getInicioSesion()); // debe estar cerrada
+	    assertNull(estadistica.getInicioSesion());
 	}
 
 }

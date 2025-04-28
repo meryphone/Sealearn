@@ -5,6 +5,7 @@ import java.util.List;
 
 public class PreguntaHueco extends Pregunta {
 	
+	private static final long serialVersionUID = 1L;
 	private List<String> listaOpciones;
 
 	public PreguntaHueco() {
@@ -12,7 +13,7 @@ public class PreguntaHueco extends Pregunta {
 		this.listaOpciones = new ArrayList<String>();
 	}
 
-	public PreguntaHueco(String enunciado, String respuestaCorrecta, List<String> listaOpciones_, String dificultad) {
+	public PreguntaHueco(String enunciado, String respuestaCorrecta, List<String> listaOpciones_, Dificultad dificultad) {
 		super(enunciado, respuestaCorrecta, dificultad);
 		listaOpciones = listaOpciones_;
 	}
