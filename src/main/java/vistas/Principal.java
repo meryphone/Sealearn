@@ -11,6 +11,7 @@ import excepciones.ExcepcionCursoActualVacio;
 import utils.MensajeError;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -118,6 +119,26 @@ public class Principal {
 		Component rigidArea_1 = Box.createRigidArea(new Dimension(20, 20));
 		rigidArea_1.setPreferredSize(new Dimension(20, 60));
 		panelButtons.add(rigidArea_1);
+		btnExportStats.addActionListener(e -> {
+		    JFileChooser fileChooser = new JFileChooser();
+		    fileChooser.setDialogTitle("Guardar estadísticas como TXT");
+
+		    int userSelection = fileChooser.showSaveDialog(frame);
+		    if (userSelection == JFileChooser.APPROVE_OPTION) {
+		        String rutaArchivo = fileChooser.getSelectedFile().getAbsolutePath();
+		        if (!rutaArchivo.endsWith(".txt")) {
+		            rutaArchivo += ".txt";
+		        }
+		        try {
+		            controlador.getEstadistica().exportar(rutaArchivo);
+		            JOptionPane.showMessageDialog(frame, "¡Estadísticas exportadas correctamente!");
+		        } catch (IOException ex) {
+		            ex.printStackTrace();
+		            JOptionPane.showMessageDialog(frame, "Error al exportar las estadísticas", "Error", JOptionPane.ERROR_MESSAGE);
+		        }
+		    }
+		});
+
 
 		JButton btnImport = new RoundButton("Importar Curso");
 		btnImport.setPreferredSize(new Dimension(120, 40));
