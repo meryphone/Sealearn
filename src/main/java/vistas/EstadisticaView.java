@@ -1,28 +1,24 @@
 package vistas;
 
 import java.awt.*;
+import java.time.Duration;
+
 import javax.swing.*;
 
+import dominio.Estadistica;
+
 public class EstadisticaView extends JFrame {
-	
-	  public static void main(String[] args) {
-	        EventQueue.invokeLater(() -> {
-	            try {
-	                EstadisticaView frame = new EstadisticaView();
-	                frame.setVisible(true);
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	            }
-	        });
-	    }
 
     private static final long serialVersionUID = 1L;
     private static final Color BEIGE = new Color(211, 204, 194);
     private static final Color BUTTON_COLOR = new Color(8, 32, 50);
-    public EstadisticaView() {
+    private Estadistica estadistica;
+    
+    public EstadisticaView(Estadistica estadistica) {
+    	this.estadistica = estadistica;
         setTitle("Estadísticas");
         setBounds(100, 100, 600, 500);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setBackground(BEIGE);
         setLayout(new BorderLayout(10, 10)); // Anadir margen externo
         
@@ -35,11 +31,11 @@ public class EstadisticaView extends JFrame {
 
         // Lista de estad�sticas con CellRenderer personalizado
         DefaultListModel<StatItem> statModel = new DefaultListModel<>();
-        statModel.addElement(new StatItem("Racha de días", "72", "/imagenes/meta.png"));
-        statModel.addElement(new StatItem("Tiempo de uso", "4 horas", "/imagenes/reloj.png"));
-        statModel.addElement(new StatItem("Preguntas totales", "120", "/imagenes/preguntas.png"));
-        statModel.addElement(new StatItem("Preguntas acertadas", "90", "/imagenes/correcto.png"));
-        statModel.addElement(new StatItem("Preguntas falladas", "30", "/imagenes/fallo.png"));
+        statModel.addElement(new StatItem("Racha de días", String.valueOf(estadistica.getRachaActual()), "/imagenes/meta.png"));
+        statModel.addElement(new StatItem("Tiempo de uso", formatDuration(estadistica.getTiempoTotalEstudio()), "/imagenes/reloj.png"));
+        statModel.addElement(new StatItem("Preguntas totales", String.valueOf(estadistica.getTotalPreguntasRespondidas()), "/imagenes/preguntas.png"));
+        statModel.addElement(new StatItem("Preguntas acertadas", String.valueOf(estadistica.getTotalAciertos()), "/imagenes/correcto.png"));
+        statModel.addElement(new StatItem("Preguntas falladas", String.valueOf(estadistica.getTotalFallos()), "/imagenes/fallo.png"));
 
         JList<StatItem> statList = new JList<>(statModel);
         statList.setCellRenderer(new StatCellRenderer());
@@ -56,7 +52,17 @@ public class EstadisticaView extends JFrame {
         backButton.setForeground(Color.WHITE);
         bottom.add(backButton);
         add(bottom, BorderLayout.SOUTH);
+        backButton.addActionListener(e ->{
+        	dispose();
+        });
     }
+    
+    private String formatDuration(Duration duration) {
+        long hours = duration.toHours();
+        long minutes = duration.toMinutes() % 60;
+        return String.format("%d horas %d minutos", hours, minutes);
+    }
+
 
 }
 
