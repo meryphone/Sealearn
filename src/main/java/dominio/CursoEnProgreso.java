@@ -1,5 +1,6 @@
 package dominio;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -74,17 +75,13 @@ public class CursoEnProgreso {
 		this.progreso = progreso;
 	}
 
-	public Estrategia getEstrategia() {
-		return estrategia;
-	}
-
 	public int getTotalPreguntas() {
 		return estrategia.getTotalPreguntas();
 	}
 
 
 	public List<Pregunta> getPreguntas() {
-		return preguntas;
+		return Collections.unmodifiableList(preguntas);
 	}
 
 	public void setPreguntas(List<Pregunta> preguntas) {

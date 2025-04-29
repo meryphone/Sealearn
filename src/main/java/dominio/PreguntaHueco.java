@@ -1,6 +1,7 @@
 package dominio;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PreguntaHueco extends Pregunta {
@@ -19,7 +20,7 @@ public class PreguntaHueco extends Pregunta {
 	}
 
 	public List<String> getListaOpciones() {
-		return listaOpciones;
+		return Collections.unmodifiableList(listaOpciones);
 	}
 	
 	public void setListaOpciones(List<String> listaOpciones) {
