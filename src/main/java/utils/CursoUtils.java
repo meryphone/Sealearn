@@ -25,23 +25,32 @@ public class CursoUtils {
 	 * @throws ExcepcionCursoDuplicado si el UUID ya ha sido cargado
 	 * @throws IOException             si ocurre un error de lectura
 	 */
-	public static Curso importarCurso(String nombreArchivo) throws ExcepcionCursoDuplicado, IOException {
-		String ruta = "/cursos/" + nombreArchivo;
-
-		InputStream inputStream = Controlador.class.getResourceAsStream(ruta);
-		if (inputStream == null) {
-			throw new IOException("Archivo no encontrado: " + ruta);
-		}
-
-		Curso curso = yamlMapper.readValue(inputStream, Curso.class);
-
-		if (cursosCargados.contains(curso.getId())) {
-			throw new ExcepcionCursoDuplicado("Curso duplicado detectado con UUID: " + curso.getId());
-		}
-
-		cursosCargados.add(curso.getId());
-		return curso;
+	public static Curso importarCurso(String nombreArchivo) throws IOException, ExcepcionCursoDuplicado {
+	    InputStream inputStream = Controlador.class.getResourceAsStream("/cursos/" + nombreArchivo);
+	    if (inputStream == null) {
+	        throw new IOException("Archivo no encontrado: /cursos/" + nombreArchivo);
+	    }
+	    return importarCursoDesdeStream(inputStream);
 	}
+
+	
+	public static Curso importarCurso(File archivo) throws IOException, ExcepcionCursoDuplicado {
+	    try (InputStream inputStream = new java.io.FileInputStream(archivo)) {
+	        return importarCursoDesdeStream(inputStream);
+	    }
+	}
+
+	private static Curso importarCursoDesdeStream(InputStream inputStream) throws IOException, ExcepcionCursoDuplicado {
+	    Curso curso = yamlMapper.readValue(inputStream, Curso.class);
+
+	    if (cursosCargados.contains(curso.getId())) {
+	        throw new ExcepcionCursoDuplicado("Curso duplicado detectado con UUID: " + curso.getId());
+	    }
+
+	    cursosCargados.add(curso.getId());
+	    return curso;
+	}
+
 
 	/**
 	 * Carga todos los cursos desde la carpeta /resources/cursos/

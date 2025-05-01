@@ -12,5 +12,7 @@ public interface ICursoEnProgreso {
     CursoEnProgreso buscarPorId(Long id);
     List<CursoEnProgreso> buscarTodos();
     CursoEnProgreso buscarPorCursoId(UUID cursoId);
+    void eliminarPorCursoId(UUID cursoId);
+
 }
 

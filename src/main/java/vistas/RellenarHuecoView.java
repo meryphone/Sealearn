@@ -68,9 +68,9 @@ public class RellenarHuecoView extends JDialog {
 		labelPregunta.setFont(new Font("Arial", Font.BOLD, 16));
 		labelPregunta.setHorizontalAlignment(SwingConstants.CENTER); // Centrado horizontal
 
-		// Configuración de constraints para GridBagLayout
+		// Configuraci�n de constraints para GridBagLayout
 		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.insets = new Insets(10, 10, 10, 10); // Márgenes
+		gbc.insets = new Insets(10, 10, 10, 10); // M�rgenes
 		panelPregunta.add(labelPregunta, gbc);
 
 		panelCentro.add(panelPregunta, BorderLayout.CENTER); // Centramos en el panel principal

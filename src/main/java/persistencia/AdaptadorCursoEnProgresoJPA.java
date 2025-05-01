@@ -107,4 +107,31 @@ public class AdaptadorCursoEnProgresoJPA implements ICursoEnProgreso {
             em.close();
         }
     }
+    
+    @Override
+    public void eliminarPorCursoId(UUID cursoId) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+
+        try {
+            tx.begin();
+            TypedQuery<CursoEnProgreso> query = em.createQuery(
+                "SELECT c FROM CursoEnProgreso c WHERE c.cursoId = :cursoId", CursoEnProgreso.class);
+            query.setParameter("cursoId", cursoId);
+            List<CursoEnProgreso> resultados = query.getResultList();
+
+            for (CursoEnProgreso c : resultados) {
+                CursoEnProgreso attached = em.contains(c) ? c : em.merge(c);
+                em.remove(attached);
+            }
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw new RuntimeException("Error al eliminar por cursoId", e);
+        } finally {
+            em.close();
+        }
+    }
+
 }

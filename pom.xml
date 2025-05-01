@@ -21,7 +21,6 @@
 	</properties>
 
 	<dependencies>
-
 		<!-- JPA API -->
 		<dependency>
 			<groupId>jakarta.persistence</groupId>

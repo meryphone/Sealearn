@@ -8,9 +8,14 @@ import dominio.PreguntaRellenarHueco;
 import dominio.PreguntaRespuestaCorta;
 import dominio.PreguntaTest;
 import excepciones.ExcepcionCursoActualVacio;
+import excepciones.ExcepcionCursoDuplicado;
 import utils.CursoUtils;
 import utils.MensajeError;
 import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -42,7 +47,7 @@ public class Principal {
 
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 892, 616);
+		frame.setBounds(100, 100, 1032, 666);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setBackground(Principal.BEIGE);
 
@@ -103,7 +108,7 @@ public class Principal {
 		btnStats.setPreferredSize(new Dimension(120, 40));
 		panelButtons.add(btnStats);
 		btnStats.addActionListener(e -> {
-			EstadisticaView stats = new EstadisticaView();
+			EstadisticaView stats = new EstadisticaView(controlador.getEstadistica());
 			stats.setVisible(true);
 		});
 
@@ -118,11 +123,26 @@ public class Principal {
 		Component rigidArea_1 = Box.createRigidArea(new Dimension(20, 20));
 		rigidArea_1.setPreferredSize(new Dimension(20, 60));
 		panelButtons.add(rigidArea_1);
+		btnExportStats.addActionListener(e -> {
+		    JFileChooser fileChooser = new JFileChooser();
+		    fileChooser.setDialogTitle("Exportar estad�sticas como txt");
 
-		JButton btnImport = new RoundButton("Importar Curso");
-		btnImport.setPreferredSize(new Dimension(120, 40));
-		panelButtons.add(btnImport);
-		panelButtons.add(Box.createRigidArea(new Dimension(20, 20)));
+		    int userSelection = fileChooser.showSaveDialog(frame);
+		    if (userSelection == JFileChooser.APPROVE_OPTION) {
+		        String rutaArchivo = fileChooser.getSelectedFile().getAbsolutePath();
+		        if (!rutaArchivo.endsWith(".txt")) {
+		            rutaArchivo += ".txt";
+		        }
+		        try {
+		            controlador.getEstadistica().exportar(rutaArchivo);
+		            JOptionPane.showMessageDialog(frame, "¡Estadísticas exportadas correctamente!");
+		        } catch (IOException ex) {
+		            ex.printStackTrace();
+		            JOptionPane.showMessageDialog(frame, "Error al exportar las estad�sticas", "Error", JOptionPane.ERROR_MESSAGE);
+		        }
+		    }
+		});
+
 
 		JPanel center1 = new JPanel();
 		center0.add(center1, BorderLayout.CENTER);
@@ -135,13 +155,63 @@ public class Principal {
 			for (Curso curso :  CursoUtils.cargarTodosLosCursos()) {
 				model.addElement(curso);
 			}
-	
-
+			
 		JList<Curso> courseList = new JList<Curso>(model);
 		courseList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		courseList.setCellRenderer(new CourseCellRenderer());
 		courseList.setBackground(Principal.BEIGE);
 		
+		JButton btnImport = new RoundButton("Importar Curso");
+		btnImport.setPreferredSize(new Dimension(120, 40));
+		panelButtons.add(btnImport);
+		panelButtons.add(Box.createRigidArea(new Dimension(20, 20)));
+		btnImport.addActionListener(e -> {
+		    JFileChooser fileChooser = new JFileChooser();
+		    fileChooser.setDialogTitle("Selecciona un archivo YAML de curso");
+
+		    int resultado = fileChooser.showOpenDialog(frame);
+		    if (resultado == JFileChooser.APPROVE_OPTION) {
+		        File archivo = fileChooser.getSelectedFile();
+		        try {
+					controlador.importarCurso(archivo);
+		        } catch (IOException e1) {
+		            JOptionPane.showMessageDialog(null, "Error al leer el archivo: " + e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		        } catch (ExcepcionCursoDuplicado e1) {
+		            JOptionPane.showMessageDialog(null, "Curso duplicado: " + e1.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
+		        }
+		        
+		        model.clear();
+		        for (Curso c : controlador.getCursos()) {
+		            model.addElement(c);
+		        }
+		    }
+		});
+
+		
+		JButton btnEliminarCurso = new RoundButton("Eliminar Curso");
+		btnEliminarCurso.setPreferredSize(new Dimension(130, 40));
+		panelButtons.add(btnEliminarCurso);
+
+		btnEliminarCurso.addActionListener(e -> {
+		    Curso cursoSeleccionado = courseList.getSelectedValue();
+		    if (cursoSeleccionado != null) {
+		        int confirm = JOptionPane.showConfirmDialog(frame, "�Deseas eliminar el curso seleccionado?", "Confirmación", JOptionPane.YES_NO_OPTION);
+		        if (confirm == JOptionPane.YES_OPTION) {
+		            controlador.eliminarCurso(cursoSeleccionado);
+		            model.removeElement(cursoSeleccionado);
+		        }
+		    } else {
+		        JOptionPane.showMessageDialog(frame, "Selecciona un curso para eliminar.");
+		    }
+		});
+
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				controlador.finalizarSesionCurso();
+				cursoActual = null;
+			}
+		});
+
 
 		btnIniciar.addActionListener(e -> {
 			try {
@@ -202,7 +272,7 @@ public class Principal {
 			Pregunta preguntaActual = cursoActual.getPreguntaActual();
 
 			if (preguntaActual == null) {
-				MensajeError.mostrarConfirmacion(frame, "¡Curso completado!");
+				MensajeError.mostrarConfirmacion(frame, "�Curso completado!");
 				cursoActual = controlador.finalizarSesionCurso();
 				
 				break;
@@ -232,10 +302,10 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<Curso> {
 	private JLabel descriptionLabel;
 	private JPanel textPanel;
 	private JPanel leftPanel; // Panel para el icono
-	private JPanel rightPanel; // Panel para el botón
+	private JPanel rightPanel; // Panel para el bot�n
 
 	public CourseCellRenderer() {
-		setLayout(new BorderLayout(10, 10)); // Añadir espacio entre componentes
+		setLayout(new BorderLayout(10, 10)); // A�adir espacio entre componentes
 		setBackground(Principal.BEIGE);
 
 		// Panel izquierdo (icono) con BoxLayout
@@ -248,33 +318,33 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<Curso> {
 
 		// Icono
 		iconLabel = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/gorro-graduacion.png")));
-		iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10)); // Márgenes
+		iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10)); // M�rgenes
 		iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrar horizontalmente
 		leftPanel.add(iconLabel);
 
 		// Espacio flexible abajo para centrar el icono
 		leftPanel.add(Box.createVerticalGlue());
 
-		// Panel derecho (botón) con BoxLayout
+		// Panel derecho (bot�n) con BoxLayout
 		rightPanel = new JPanel();
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS)); // Organizar verticalmente
 		rightPanel.setBackground(Principal.BEIGE);
 
-		// Espacio flexible arriba para centrar el botón
+		// Espacio flexible arriba para centrar el bot�n
 		rightPanel.add(Box.createVerticalGlue());
 
-		// Espacio flexible abajo para centrar el botón
+		// Espacio flexible abajo para centrar el bot�n
 		rightPanel.add(Box.createVerticalGlue());
 
 		// Nombre del curso
 		nameLabel = new JLabel();
-		nameLabel.setFont(new Font("Arial", Font.BOLD, 14)); // Fuente más grande para el nombre
+		nameLabel.setFont(new Font("Arial", Font.BOLD, 14)); // Fuente m�s grande para el nombre
 
-		// Descripción del curso
+		// Descripci�n del curso
 		descriptionLabel = new JLabel();
-		descriptionLabel.setFont(new Font("Arial", Font.PLAIN, 10)); // Fuente más pequeña para la descripción
+		descriptionLabel.setFont(new Font("Arial", Font.PLAIN, 10)); // Fuente m�s peque�a para la descripci�n
 
-		// Panel para el nombre y la descripción
+		// Panel para el nombre y la descripci�n
 		textPanel = new JPanel();
 		textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS)); // Organizar verticalmente
 		textPanel.setBackground(Principal.BEIGE.brighter());
@@ -282,20 +352,20 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<Curso> {
 		// Espacio flexible arriba para centrar el contenido
 		textPanel.add(Box.createVerticalGlue());
 
-		// Nombre y descripción
+		// Nombre y descripci�n
 		textPanel.add(nameLabel);
 		textPanel.add(descriptionLabel);
 
 		// Espacio flexible abajo para centrar el contenido
 		textPanel.add(Box.createVerticalGlue());
 
-		// Añadir componentes al panel principal
+		// A�adir componentes al panel principal
 		add(leftPanel, BorderLayout.WEST); // Panel izquierdo (icono)
-		add(textPanel, BorderLayout.CENTER); // Panel central (nombre y descripción)
-		add(rightPanel, BorderLayout.EAST); // Panel derecho (botón)
+		add(textPanel, BorderLayout.CENTER); // Panel central (nombre y descripci�n)
+		add(rightPanel, BorderLayout.EAST); // Panel derecho (bot�n)
 
-		// Establecer un tamaño preferido más alto para cada celda
-		setPreferredSize(new Dimension(300, 60)); // Ajusta el tamaño según tus necesidades
+		// Establecer un tama�o preferido m�s alto para cada celda
+		setPreferredSize(new Dimension(300, 60)); // Ajusta el tama�o seg�n tus necesidades
 
 	}
 
@@ -305,10 +375,10 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<Curso> {
 		// Asignar el nombre del curso
 		nameLabel.setText(value.getNombre());
 
-		// Asignar una descripción de ejemplo (puedes personalizarla según tus datos)
+		// Asignar una descripci�n de ejemplo (puedes personalizarla seg�n tus datos)
 		descriptionLabel.setText(value.getDescripcion());
 
-		// Cambiar el color de fondo si está seleccionado
+		// Cambiar el color de fondo si est� seleccionado
 		if (isSelected) {
 			setBackground(Principal.BEIGE.darker());
 			textPanel.setBackground(Principal.BEIGE.darker());

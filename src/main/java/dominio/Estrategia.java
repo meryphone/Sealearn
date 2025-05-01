@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Clase abstracta que define la interfaz común para todas las estrategias de
- * presentación de preguntas en un curso.
+ * Clase abstracta que define la interfaz comÃºn para todas las estrategias de
+ * presentaciÃ³n de preguntas en un curso.
  * 
- * Las subclases deben implementar la lógica específica para decidir qué
+ * Las subclases deben implementar la lÃ³gica especÃ­fica para decidir quÃ©
  * pregunta mostrar en cada paso del curso.
  */
 public abstract class Estrategia {
@@ -28,10 +28,10 @@ public abstract class Estrategia {
 	}		
 
 	/**
-	 * Devuelve el índice de la pregunta a mostrar en un paso determinado.
+	 * Devuelve el Ã­ndice de la pregunta a mostrar en un paso determinado.
 	 * 
-	 * @param nPregunta Número de paso actual del curso (0, 1, 2, ...)
-	 * @return Índice de la pregunta en la lista original, o -1 si ya no hay más
+	 * @param nPregunta NÃºmero de paso actual del curso (0, 1, 2, ...)
+	 * @return Ã�ndice de la pregunta en la lista original, o -1 si ya no hay mÃ¡s
 	 */
 	public abstract int mostrarPregunta(int nPregunta);
 	
