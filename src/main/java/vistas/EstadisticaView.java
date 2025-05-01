@@ -36,12 +36,12 @@ public class EstadisticaView extends JFrame {
         statModel.addElement(new StatItem("Preguntas totales", String.valueOf(estadistica.getTotalPreguntasRespondidas()), "/imagenes/preguntas.png"));
         statModel.addElement(new StatItem("Preguntas acertadas", String.valueOf(estadistica.getTotalAciertos()), "/imagenes/correcto.png"));
         statModel.addElement(new StatItem("Preguntas falladas", String.valueOf(estadistica.getTotalFallos()), "/imagenes/fallo.png"));
-
+        
         JList<StatItem> statList = new JList<>(statModel);
         statList.setCellRenderer(new StatCellRenderer());
         statList.setBackground(BEIGE);
         JScrollPane scrollPane = new JScrollPane(statList);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Margen interno para separar del borde
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); 
         add(scrollPane, BorderLayout.CENTER);
 
         // Panel inferior con botones
@@ -52,14 +52,14 @@ public class EstadisticaView extends JFrame {
         JButton backButton = new RoundButton("Atrás");
         backButton.setBackground(BUTTON_COLOR);
         backButton.setForeground(Color.WHITE);
-        backButton.setPreferredSize(new Dimension(70, 40)); // <-- más grande
+        backButton.setPreferredSize(new Dimension(70, 40));
         bottom.add(backButton, BorderLayout.WEST);
 
         // Botón "Restablecer estadísticas"
         JButton resetButton = new RoundButton("Restablecer");
         resetButton.setBackground(BUTTON_COLOR);
         resetButton.setForeground(Color.WHITE);
-        resetButton.setPreferredSize(new Dimension(120, 40)); // <-- más grande
+        resetButton.setPreferredSize(new Dimension(120, 40)); 
         bottom.add(resetButton, BorderLayout.EAST);
 
         add(bottom, BorderLayout.SOUTH);
