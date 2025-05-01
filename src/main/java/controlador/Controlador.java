@@ -1,7 +1,12 @@
 package controlador;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JOptionPane;
+
 import dominio.Curso;
 import dominio.CursoEnProgreso;
 import dominio.Estadistica;
@@ -119,11 +124,6 @@ public class Controlador {
 		estadistica.finalizarSesion();
 	}
 	
-	public void finalizarCurso() {
-		// Aquí hacer cosas de persistencia
-		cursoEnProgresoActual = null;
-	}
-
 	public CursoEnProgreso finalizarSesionCurso() {
 		if (cursoEnProgresoActual != null && cursoEnProgresoActual.isCompletado()) {
 			adaptadorCursoEnProgreso.eliminar(cursoEnProgresoActual);
@@ -146,5 +146,16 @@ public class Controlador {
 		adaptadorCursoEnProgreso.actualizar(cursoEnProgresoActual);
 		return cursoEnProgresoActual;
 	}
+
+	public void importarCurso(File archivo) throws IOException {
+		Curso curso = CursoUtils.importarCursoDesdeArchivo(archivo);
+	    cursosImportados.add(curso);
+	}
+	
+	public void eliminarCurso(Curso curso) {
+	    cursosImportados.remove(curso);
+	    adaptadorCursoEnProgreso.eliminarPorCursoId(curso.getId());
+	}
+
 
 }
