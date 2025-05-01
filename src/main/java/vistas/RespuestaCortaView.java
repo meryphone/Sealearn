@@ -4,7 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import controlador.Controlador;
 import dominio.PreguntaRespuestaCorta;
-import utils.MensajeError;
+import utils.Mensajes;
 
 public class RespuestaCortaView extends JDialog {
 
@@ -49,10 +49,8 @@ public class RespuestaCortaView extends JDialog {
 		JLabel icon = new JLabel(new ImageIcon(getClass().getResource("/imagenes/seal_looking_right.png")));
 		panelSuperior.add(icon);
 
-		JProgressBar progressBar = new JProgressBar();
-		int progreso = controlador.getProgreso();
-		int total = controlador.getTotalPreguntas();
-		progressBar.setValue((int) ((progreso * 100.0f) / total));
+		JProgressBar progressBar = new JProgressBar();	
+		progressBar.setValue(controlador.getPorcentajeProgreso());
 		progressBar.setStringPainted(true);
 		panelSuperior.add(progressBar);
 
@@ -95,15 +93,15 @@ public class RespuestaCortaView extends JDialog {
 		String respuestaUsuario = textField.getText().trim();
 
 		if (respuestaUsuario.isEmpty()) {
-			MensajeError.mostrarAdvertencia(this, "Por favor, introduce una respuesta.");
+			Mensajes.mostrarAdvertencia(this, "Por favor, introduce una respuesta.");
 			return;
 		}
 
 		boolean acierto = controlador.corregir(respuestaUsuario);
 		if (acierto) {
-			MensajeError.mostrarConfirmacion(this, "¡Correcto!");
+			Mensajes.mostrarConfirmacion(this, "¡Correcto!");
 		} else {
-			MensajeError.mostrarError(this,
+			Mensajes.mostrarError(this,
 				"Incorrecto. La respuesta correcta era: " + pregunta.getRespuestaCorrecta());
 		}
 

@@ -4,7 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import controlador.Controlador;
 import dominio.PreguntaTest;
-import utils.MensajeError;
+import utils.Mensajes;
 
 public class TestView extends JDialog {
 
@@ -47,10 +47,8 @@ public class TestView extends JDialog {
 		JLabel icon = new JLabel(new ImageIcon(getClass().getResource("/imagenes/seal_looking_right.png")));
 		panelSuperior.add(icon);
 
-		JProgressBar progressBar = new JProgressBar();
-		int progreso = controlador.getProgreso();
-		int total = controlador.getTotalPreguntas();
-		progressBar.setValue((int) ((progreso * 100.0f) / total));
+		JProgressBar progressBar = new JProgressBar();		
+		progressBar.setValue(controlador.getPorcentajeProgreso());
 		progressBar.setStringPainted(true);
 		panelSuperior.add(progressBar);
 
@@ -96,15 +94,15 @@ public class TestView extends JDialog {
 		String seleccion = obtenerRespuestaSeleccionada();
 
 		if (seleccion == null) {
-			MensajeError.mostrarAdvertencia(this, "Debes seleccionar una opción.");
+			Mensajes.mostrarAdvertencia(this, "Debes seleccionar una opción.");
 			return;
 		}
 
 		boolean acierto = controlador.corregir(seleccion);
 		if (acierto) {
-			MensajeError.mostrarConfirmacion(this, "¡Correcto!");
+			Mensajes.mostrarConfirmacion(this, "¡Correcto!");
 		} else {
-			MensajeError.mostrarError(this, "Incorrecto. La respuesta correcta era: " + pregunta.getRespuestaCorrecta());
+			Mensajes.mostrarError(this, "Incorrecto. La respuesta correcta era: " + pregunta.getRespuestaCorrecta());
 		}
 
 		dispose();

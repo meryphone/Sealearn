@@ -97,11 +97,11 @@ class ControladorTest {
         assertNotNull(controlador.getEstadistica());
        
     }
-    
+
     @AfterAll
     void borrarBaseDeDatos() {
     	adaptadorCursoEnProgreso.eliminarPorCursoId(cursoDePrueba.getId());
     }
-    
+
     
 }

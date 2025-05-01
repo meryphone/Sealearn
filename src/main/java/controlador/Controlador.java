@@ -30,11 +30,11 @@ public class Controlador {
 	private Controlador() {
 		adaptadorCursoEnProgreso = AdaptadorCursoEnProgresoJPA.getIntance();
 		adaptadorEstadistica = AdaptadorEstadisticaJPA.getIntance();
-		Estadistica stats = adaptadorEstadistica.buscarTodos().getLast();
-		if (stats != null) {
-			estadistica = stats;
-		} else {
+		List<Estadistica> stats = adaptadorEstadistica.buscarTodos();
+		if (stats.isEmpty()) {
 			estadistica = new Estadistica();
+		} else {
+			estadistica = stats.getLast();
 		}
 
 	}

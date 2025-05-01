@@ -96,7 +96,7 @@ public class Estadistica {
 
     public void exportar(String rutaArchivo) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(rutaArchivo))) {
-            writer.write("Estadísticas de estudio\n\n");
+            writer.write("Estadï¿½sticas de estudio\n\n");
             writer.write("Total de preguntas respondidas: " + totalPreguntasRespondidas + "\n");
             writer.write("Total de aciertos: " + totalAciertos + "\n");
             writer.write("Total de fallos: " + totalFallos + "\n");
@@ -106,11 +106,11 @@ public class Estadistica {
                 writer.write("Tiempo total de estudio: " + minutos + " minutos\n");
             }
 
-            writer.write("Mejor racha de días estudiando: " + mejorRacha + "\n");
+            writer.write("Mejor racha de dï¿½as estudiando: " + mejorRacha + "\n");
             writer.write("Racha actual: " + rachaActual + "\n");
 
             if (ultimoDiaEstudio != null) {
-                writer.write("Último día de estudio: "
+                writer.write("ï¿½ltimo dï¿½a de estudio: "
                         + ultimoDiaEstudio.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n");
             }
         }
@@ -156,4 +156,10 @@ public class Estadistica {
     public void setId(Long id) {
         this.id = id;
     }
+    
+    //Necesario para pruebas
+	public void setUltimoDiaEstudio(LocalDate ultimoDia) {
+		ultimoDiaEstudio = ultimoDia;
+		
+	}
 }

@@ -28,8 +28,7 @@ public class Curso {
 
     
     private UUID generarUUIDDeterminista(Curso this) {
-        String representacionUnica = this.toString(); 
-        System.out.println(representacionUnica);
+        String representacionUnica = this.toString();       
         return UUID.nameUUIDFromBytes(representacionUnica.getBytes());
     }
     
