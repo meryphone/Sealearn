@@ -10,7 +10,7 @@ Profesor: Jesús Sánchez Cuadrado
 
 ## Descripción
 
-Consiste en la aplicación de aprendizaje perfecta para aprender los conceptos básicos de la asignatura Tecnologías y Desarrollo de Software. Dispone de distintos niveles de dificultad, estilos de aprendizaje, control de estadísticas y un alegre acompañante que te acompañará en estas lecciones.
+Consiste en la aplicación de aprendizaje perfecta para aprender los conceptos básicos sobre lenguajes de programación. Dispone de distintos niveles de dificultad, estilos de aprendizaje, control de estadísticas y un alegre acompañante que te acompañará en estas lecciones.
 
 # ProyectoPDS
 
@@ -91,7 +91,7 @@ Un mismo usuario puede actuar como **Estudiante** (cuando realiza cursos y consu
 - **Actor**: Creador de cursos
 - **Flujo básico**:
   1. El creador de cursos accede a la opción de importar cursos.
-  2. El sistema solicita seleccionar un archivo JSON o YAML.
+  2. El sistema solicita seleccionar un archivo YAML.
   3. El creador de cursos selecciona un archivo.
   4. El sistema valida el formato y la estructura del archivo.
   5. Si el archivo es válido, el curso se añade a la biblioteca interna.
