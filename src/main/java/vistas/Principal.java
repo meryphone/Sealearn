@@ -11,6 +11,7 @@ import excepciones.ExcepcionCursoActualVacio;
 import utils.MensajeError;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -43,7 +44,7 @@ public class Principal {
 
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 892, 616);
+		frame.setBounds(100, 100, 1032, 666);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setBackground(Principal.BEIGE);
 
@@ -140,11 +141,6 @@ public class Principal {
 		});
 
 
-		JButton btnImport = new RoundButton("Importar Curso");
-		btnImport.setPreferredSize(new Dimension(120, 40));
-		panelButtons.add(btnImport);
-		panelButtons.add(Box.createRigidArea(new Dimension(20, 20)));
-
 		JPanel center1 = new JPanel();
 		center0.add(center1, BorderLayout.CENTER);
 		center1.setLayout(new BorderLayout());
@@ -156,12 +152,50 @@ public class Principal {
 			for (Curso curso : controlador.getCursos()) {
 				model.addElement(curso);
 			}
-	
-
+			
 		JList<Curso> courseList = new JList<Curso>(model);
 		courseList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		courseList.setCellRenderer(new CourseCellRenderer());
 		courseList.setBackground(Principal.BEIGE);
+		
+		JButton btnImport = new RoundButton("Importar Curso");
+		btnImport.setPreferredSize(new Dimension(120, 40));
+		panelButtons.add(btnImport);
+		panelButtons.add(Box.createRigidArea(new Dimension(20, 20)));
+		btnImport.addActionListener(e -> {
+		    JFileChooser fileChooser = new JFileChooser();
+		    fileChooser.setDialogTitle("Selecciona un archivo YAML de curso");
+
+		    int resultado = fileChooser.showOpenDialog(frame);
+		    if (resultado == JFileChooser.APPROVE_OPTION) {
+		        File archivo = fileChooser.getSelectedFile();
+		        try {
+					controlador.importarCurso(archivo);
+				} catch (IOException e1) {
+			        JOptionPane.showMessageDialog(null, "Error al importar curso:\n" + e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
+		        model.addElement(controlador.getCursos().get(controlador.getCursos().size() - 1));
+		        JOptionPane.showMessageDialog(frame, "Curso importado correctamente.");
+		    }
+		});
+
+		
+		JButton btnEliminarCurso = new RoundButton("Eliminar Curso");
+		btnEliminarCurso.setPreferredSize(new Dimension(130, 40));
+		panelButtons.add(btnEliminarCurso);
+
+		btnEliminarCurso.addActionListener(e -> {
+		    Curso cursoSeleccionado = courseList.getSelectedValue();
+		    if (cursoSeleccionado != null) {
+		        int confirm = JOptionPane.showConfirmDialog(frame, "¿Deseas eliminar el curso seleccionado?", "Confirmación", JOptionPane.YES_NO_OPTION);
+		        if (confirm == JOptionPane.YES_OPTION) {
+		            controlador.eliminarCurso(cursoSeleccionado);
+		            model.removeElement(cursoSeleccionado);
+		        }
+		    } else {
+		        JOptionPane.showMessageDialog(frame, "Selecciona un curso para eliminar.");
+		    }
+		});
 
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
