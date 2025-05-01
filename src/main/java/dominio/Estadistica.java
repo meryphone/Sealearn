@@ -147,6 +147,10 @@ public class Estadistica {
     public LocalDateTime getInicioSesion() {
         return inicioSesion;
     }
+    
+    public void setInicioSesion(LocalDateTime inicioSesion) {
+        this.inicioSesion = inicioSesion;
+    }
 
     public Long getId() {
         return id;

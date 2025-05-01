@@ -107,6 +107,7 @@ public class Principal {
 		btnStats.setPreferredSize(new Dimension(120, 40));
 		panelButtons.add(btnStats);
 		btnStats.addActionListener(e -> {
+		    controlador.finalizarSesionCurso(); 
 			EstadisticaView stats = new EstadisticaView(controlador.getEstadistica());
 			stats.setVisible(true);
 		});

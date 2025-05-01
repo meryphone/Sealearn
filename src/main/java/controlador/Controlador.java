@@ -1,6 +1,7 @@
 package controlador;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -133,6 +134,7 @@ public class Controlador {
 
 		if (estadistica != null) {
 			estadistica.finalizarSesion();
+	        estadistica.setInicioSesion(LocalDateTime.now()); 
 			adaptadorEstadistica.actualizar(estadistica);
 		}
 
