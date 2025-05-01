@@ -1,18 +1,19 @@
 package controlador;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import dominio.Curso;
 import dominio.CursoEnProgreso;
 import dominio.Dificultad;
 import dominio.Estadistica;
-import dominio.Estrategia;
 import dominio.Pregunta;
+import excepciones.CursoSinPreguntasCiertaDificultad;
+import excepciones.ExcepcionCursoActualVacio;
 import persistencia.AdaptadorCursoEnProgresoJPA;
 import persistencia.AdaptadorEstadisticaJPA;
 import persistencia.ICursoEnProgreso;
 import persistencia.IEstadistica;
-import utils.EstrategiaFactory;
 
 public class Controlador {
 
@@ -38,25 +39,31 @@ public class Controlador {
 	}
 
 	public CursoEnProgreso iniciarCurso(Curso cursoSeleccionado, String estrategia_, String dif)
-			throws RuntimeException {
-		try {
-
-			Dificultad dificultad = Dificultad.valueOf(dif.toUpperCase());
-
-			List<Pregunta> preguntasFiltradas = filtrarPorDificultad(cursoSeleccionado.getPreguntas(), dificultad);	
-
-			Estrategia estra = EstrategiaFactory.crearEstrategia(estrategia_, preguntasFiltradas.size());
+			throws CursoSinPreguntasCiertaDificultad, ExcepcionCursoActualVacio {
+		
+			if(cursoSeleccionado != null) {
+				
+				Dificultad dificultad = Dificultad.valueOf(dif.toUpperCase());
+				
+				List<Pregunta> preguntasFiltradas = new ArrayList<Pregunta>();					
+				preguntasFiltradas = filtrarPorDificultad(cursoSeleccionado.getPreguntas(), dificultad);	
+				
+				if(preguntasFiltradas.isEmpty()) {
+					throw new CursoSinPreguntasCiertaDificultad("No hay preguntas para la dificultad seleccionada.");
+				}			
+				
+				cursoEnProgresoActual = new CursoEnProgreso(cursoSeleccionado.getId(), estrategia_,
+						preguntasFiltradas, dificultad);
+				
+				estadistica.registrarEstudioHoy();
+				adaptadorCursoEnProgreso.guardar(cursoEnProgresoActual);
+				
+				return cursoEnProgresoActual;
+				
+			}else {
+				throw new ExcepcionCursoActualVacio("Seleccione un curso antes de comenzar");
+			}
 			
-			cursoEnProgresoActual = new CursoEnProgreso(cursoSeleccionado.getId(), estra,
-					preguntasFiltradas, dificultad);
-			
-			estadistica.registrarEstudioHoy();
-			adaptadorCursoEnProgreso.guardar(cursoEnProgresoActual);
-			return cursoEnProgresoActual;
-
-		} catch (Exception e) {
-			throw new RuntimeException("Error al iniciar el curso: " + e.getMessage(), e);
-		}
 	}
 
 	public List<Pregunta> filtrarPorDificultad(List<Pregunta> preguntas, Dificultad dificultad) {		

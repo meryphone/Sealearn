@@ -107,4 +107,5 @@ public class AdaptadorCursoEnProgresoJPA implements ICursoEnProgreso {
             em.close();
         }
     }
+    
 }

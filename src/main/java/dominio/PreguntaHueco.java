@@ -24,6 +24,6 @@ public class PreguntaHueco extends Pregunta {
 	}
 	
 	public void setListaOpciones(List<String> listaOpciones) {
-		this.listaOpciones = listaOpciones;
+		this.listaOpciones = new ArrayList<String>(listaOpciones);
 	}
 }

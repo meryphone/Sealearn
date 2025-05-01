@@ -8,7 +8,11 @@ import java.util.List;
  * luego las va repitiendo, asegurando que cada una se repita al menos una vez.
  */
 public class RepeticionEspaciada extends Estrategia {
-
+	
+	public RepeticionEspaciada() {
+	
+	}
+	
 	public RepeticionEspaciada(int totalPreguntas) {
 		super(totalPreguntas);
 	}

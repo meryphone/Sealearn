@@ -7,6 +7,7 @@ import dominio.Pregunta;
 import dominio.PreguntaRellenarHueco;
 import dominio.PreguntaRespuestaCorta;
 import dominio.PreguntaTest;
+import excepciones.CursoSinPreguntasCiertaDificultad;
 import excepciones.ExcepcionCursoActualVacio;
 import utils.CursoUtils;
 import utils.MensajeError;
@@ -132,62 +133,59 @@ public class Principal {
 		DefaultListModel<Curso> model = new DefaultListModel<Curso>();
 
 		// Cargar la lista de cursos
-			for (Curso curso :  CursoUtils.cargarTodosLosCursos()) {
-				model.addElement(curso);
-			}
-	
+		for (Curso curso : CursoUtils.cargarTodosLosCursos()) {
+			model.addElement(curso);
+		}
 
 		JList<Curso> courseList = new JList<Curso>(model);
 		courseList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		courseList.setCellRenderer(new CourseCellRenderer());
 		courseList.setBackground(Principal.BEIGE);
-		
 
 		btnIniciar.addActionListener(e -> {
-			try {
-				Curso cursoSeleccionado = courseList.getSelectedValue();
-				if (cursoSeleccionado != null) {
-
-					CursoEnProgreso cursoEnProgreso = controlador.reanudarCurso(cursoSeleccionado);
-
-					if (cursoEnProgreso != null) {
-						ReanudarCursoView dialog = new ReanudarCursoView(frame);
-						dialog.setVisible(true);
-
-						switch (dialog.getOpcionSeleccionada()) {
-						case REANUDAR:
-							cursoActual = cursoEnProgreso;
-							realizarCurso();
-							break;
-						case RESTABLECER:
-							cursoActual = controlador.restablecerCurso();
-							realizarCurso();
-							break;
-						case CANCELAR:
-							break;
-						}
-
-					} else {
-						ArrayList<String> parametros = Configuracion.mostrarDialogo(frame);
-						if (!parametros.isEmpty()) {
-							cursoActual = controlador.iniciarCurso(cursoSeleccionado, parametros.get(0),
-									parametros.get(1));
-							realizarCurso();
-						}
-					}
-
-				} else {
-					throw new ExcepcionCursoActualVacio("Seleccione un curso antes de comenzar");
-				}
-			} catch (ExcepcionCursoActualVacio ex) {
-				MensajeError.mostrarAdvertencia(frame, ex.getMessage());
-			} 
+			Curso cursoSeleccionado = courseList.getSelectedValue();
+			iniciarCurso(cursoSeleccionado);
 		});
 
 		JScrollPane scrollPane = new JScrollPane(courseList);
 		scrollPane.setPreferredSize(new Dimension(400, 200));
 		center1.add(scrollPane, BorderLayout.CENTER);
 
+	}
+
+	private void iniciarCurso(Curso cursoSeleccionado) {
+		CursoEnProgreso cursoEnProgreso = controlador.reanudarCurso(cursoSeleccionado);
+		try {
+			if (cursoEnProgreso != null) {
+				ReanudarCursoView dialog = new ReanudarCursoView(frame);
+				dialog.setVisible(true);
+
+				switch (dialog.getOpcionSeleccionada()) {
+				case REANUDAR:
+					cursoActual = cursoEnProgreso;
+					realizarCurso();
+					break;
+				case RESTABLECER:
+					cursoActual = controlador.restablecerCurso();
+					realizarCurso();
+					break;
+				case CANCELAR:
+					break;
+				}
+
+			} else {
+				ArrayList<String> parametros = Configuracion.mostrarDialogo(frame);
+				if (!parametros.isEmpty()) {
+					cursoActual = controlador.iniciarCurso(cursoSeleccionado, parametros.get(0), parametros.get(1));
+					realizarCurso();
+				}
+			}
+
+		} catch (ExcepcionCursoActualVacio ex) {
+			MensajeError.mostrarAdvertencia(frame, ex.getMessage());
+		} catch (CursoSinPreguntasCiertaDificultad ex) {
+			MensajeError.mostrarError(frame, ex.getMessage());
+		}
 	}
 
 	private void realizarCurso() {
@@ -204,7 +202,7 @@ public class Principal {
 			if (preguntaActual == null) {
 				MensajeError.mostrarConfirmacion(frame, "¡Curso completado!");
 				cursoActual = controlador.finalizarSesionCurso();
-				
+
 				break;
 			}
 

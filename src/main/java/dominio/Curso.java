@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 public class Curso {
 	
@@ -12,17 +15,24 @@ public class Curso {
     private String descripcion;
     private List<Pregunta> preguntas;
     
-    public Curso() {
-    	this.id = UUID.randomUUID();
-    };
-
-    public Curso(String nombre, String descripcion, List<Pregunta> preguntas, int progreso) {
-    	this.id = UUID.randomUUID();
+    @JsonCreator
+    public Curso(
+            @JsonProperty("nombre") String nombre,
+            @JsonProperty("descripcion") String descripcion,
+            @JsonProperty("preguntas") List<Pregunta> preguntas) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.preguntas = preguntas;
+        this.id = generarUUIDDeterminista();  
     }
-      
+
+    
+    private UUID generarUUIDDeterminista(Curso this) {
+        String representacionUnica = this.toString(); 
+        System.out.println(representacionUnica);
+        return UUID.nameUUIDFromBytes(representacionUnica.getBytes());
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -37,8 +47,7 @@ public class Curso {
     public String toString() {
         return "Curso: " + nombre + "\n" +
                "Descripción: " + descripcion + "\n" +
-               "Número de preguntas: " + (preguntas != null ? preguntas.size() : 0) + "\n" +
-               "Id: " + id ;
+               "Número de preguntas: " + (preguntas != null ? preguntas.size() : 0) + "\n" ;
     }   
 
     @Override
