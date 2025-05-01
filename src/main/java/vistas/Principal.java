@@ -7,15 +7,13 @@ import dominio.Pregunta;
 import dominio.PreguntaRellenarHueco;
 import dominio.PreguntaRespuestaCorta;
 import dominio.PreguntaTest;
+import excepciones.CursoSinPreguntasCiertaDificultad;
 import excepciones.ExcepcionCursoActualVacio;
 import excepciones.ExcepcionCursoDuplicado;
 import utils.CursoUtils;
-import utils.MensajeError;
+import utils.Mensajes;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.File;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -27,6 +25,7 @@ public class Principal {
 	public final static Color BUTTON_COLOR = new Color(8, 32, 50);
 	private Controlador controlador = Controlador.getInstance();
 	private CursoEnProgreso cursoActual;
+	DefaultListModel<Curso> model = new DefaultListModel<Curso>();
 
 	private JFrame frame;
 
@@ -116,6 +115,7 @@ public class Principal {
 		rigidArea.setPreferredSize(new Dimension(20, 20));
 		rigidArea.setMinimumSize(new Dimension(20, 20));
 		panelButtons.add(rigidArea);
+		
 
 		JButton btnExportStats = new RoundButton("Exportar estadisticas");
 		btnExportStats.setPreferredSize(new Dimension(170, 40));
@@ -124,140 +124,92 @@ public class Principal {
 		rigidArea_1.setPreferredSize(new Dimension(20, 60));
 		panelButtons.add(rigidArea_1);
 		btnExportStats.addActionListener(e -> {
-		    JFileChooser fileChooser = new JFileChooser();
-		    fileChooser.setDialogTitle("Exportar estad�sticas como txt");
-
-		    int userSelection = fileChooser.showSaveDialog(frame);
-		    if (userSelection == JFileChooser.APPROVE_OPTION) {
-		        String rutaArchivo = fileChooser.getSelectedFile().getAbsolutePath();
-		        if (!rutaArchivo.endsWith(".txt")) {
-		            rutaArchivo += ".txt";
-		        }
-		        try {
-		            controlador.getEstadistica().exportar(rutaArchivo);
-		            JOptionPane.showMessageDialog(frame, "¡Estadísticas exportadas correctamente!");
-		        } catch (IOException ex) {
-		            ex.printStackTrace();
-		            JOptionPane.showMessageDialog(frame, "Error al exportar las estad�sticas", "Error", JOptionPane.ERROR_MESSAGE);
-		        }
-		    }
+			exportarEstadisticas();
 		});
-
 
 		JPanel center1 = new JPanel();
 		center0.add(center1, BorderLayout.CENTER);
 		center1.setLayout(new BorderLayout());
 		center1.setBackground(Principal.BEIGE);
 
-		DefaultListModel<Curso> model = new DefaultListModel<Curso>();
-
 		// Cargar la lista de cursos
-			for (Curso curso :  CursoUtils.cargarTodosLosCursos()) {
-				model.addElement(curso);
-			}
-			
+		for (Curso curso : CursoUtils.cargarTodosLosCursos()) {
+			model.addElement(curso);
+		}
+
 		JList<Curso> courseList = new JList<Curso>(model);
 		courseList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		courseList.setCellRenderer(new CourseCellRenderer());
 		courseList.setBackground(Principal.BEIGE);
-		
+
 		JButton btnImport = new RoundButton("Importar Curso");
 		btnImport.setPreferredSize(new Dimension(120, 40));
 		panelButtons.add(btnImport);
 		panelButtons.add(Box.createRigidArea(new Dimension(20, 20)));
 		btnImport.addActionListener(e -> {
-		    JFileChooser fileChooser = new JFileChooser();
-		    fileChooser.setDialogTitle("Selecciona un archivo YAML de curso");
-
-		    int resultado = fileChooser.showOpenDialog(frame);
-		    if (resultado == JFileChooser.APPROVE_OPTION) {
-		        File archivo = fileChooser.getSelectedFile();
-		        try {
-					controlador.importarCurso(archivo);
-		        } catch (IOException e1) {
-		            JOptionPane.showMessageDialog(null, "Error al leer el archivo: " + e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-		        } catch (ExcepcionCursoDuplicado e1) {
-		            JOptionPane.showMessageDialog(null, "Curso duplicado: " + e1.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
-		        }
-		        
-		        model.clear();
-		        for (Curso c : controlador.getCursos()) {
-		            model.addElement(c);
-		        }
-		    }
+			importarCurso();
 		});
 
-		
 		JButton btnEliminarCurso = new RoundButton("Eliminar Curso");
 		btnEliminarCurso.setPreferredSize(new Dimension(130, 40));
 		panelButtons.add(btnEliminarCurso);
 
 		btnEliminarCurso.addActionListener(e -> {
-		    Curso cursoSeleccionado = courseList.getSelectedValue();
-		    if (cursoSeleccionado != null) {
-		        int confirm = JOptionPane.showConfirmDialog(frame, "�Deseas eliminar el curso seleccionado?", "Confirmación", JOptionPane.YES_NO_OPTION);
-		        if (confirm == JOptionPane.YES_OPTION) {
-		            controlador.eliminarCurso(cursoSeleccionado);
-		            model.removeElement(cursoSeleccionado);
-		        }
-		    } else {
-		        JOptionPane.showMessageDialog(frame, "Selecciona un curso para eliminar.");
-		    }
+			Curso cursoSeleccionado = courseList.getSelectedValue();
+			eliminarCurso(cursoSeleccionado);
 		});
-
-		frame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				controlador.finalizarSesionCurso();
-				cursoActual = null;
-			}
-		});
-
 
 		btnIniciar.addActionListener(e -> {
-			try {
-				Curso cursoSeleccionado = courseList.getSelectedValue();
-				if (cursoSeleccionado != null) {
-
-					CursoEnProgreso cursoEnProgreso = controlador.reanudarCurso(cursoSeleccionado);
-
-					if (cursoEnProgreso != null) {
-						ReanudarCursoView dialog = new ReanudarCursoView(frame);
-						dialog.setVisible(true);
-
-						switch (dialog.getOpcionSeleccionada()) {
-						case REANUDAR:
-							cursoActual = cursoEnProgreso;
-							realizarCurso();
-							break;
-						case RESTABLECER:
-							cursoActual = controlador.restablecerCurso();
-							realizarCurso();
-							break;
-						case CANCELAR:
-							break;
-						}
-
-					} else {
-						ArrayList<String> parametros = Configuracion.mostrarDialogo(frame);
-						if (!parametros.isEmpty()) {
-							cursoActual = controlador.iniciarCurso(cursoSeleccionado, parametros.get(0),
-									parametros.get(1));
-							realizarCurso();
-						}
-					}
-
-				} else {
-					throw new ExcepcionCursoActualVacio("Seleccione un curso antes de comenzar");
-				}
-			} catch (ExcepcionCursoActualVacio ex) {
-				MensajeError.mostrarAdvertencia(frame, ex.getMessage());
-			} 
+			Curso cursoSeleccionado = courseList.getSelectedValue();
+			iniciarCurso(cursoSeleccionado);
 		});
 
 		JScrollPane scrollPane = new JScrollPane(courseList);
 		scrollPane.setPreferredSize(new Dimension(400, 200));
 		center1.add(scrollPane, BorderLayout.CENTER);
+		
+		frame.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent e) {
+				controlador.finalizarSesionEstadistica();
+			}
+		});
 
+	}
+
+	private void iniciarCurso(Curso cursoSeleccionado) {
+		CursoEnProgreso cursoEnProgreso = controlador.reanudarCurso(cursoSeleccionado);
+		try {
+			if (cursoEnProgreso != null) {
+				ReanudarCursoView dialog = new ReanudarCursoView(frame);
+				dialog.setVisible(true);
+
+				switch (dialog.getOpcionSeleccionada()) {
+				case REANUDAR:
+					cursoActual = cursoEnProgreso;
+					realizarCurso();
+					break;
+				case RESTABLECER:
+					cursoActual = controlador.restablecerCurso();
+					realizarCurso();
+					break;
+				case CANCELAR:
+					break;
+				}
+
+			} else {
+				ArrayList<String> parametros = Configuracion.mostrarDialogo(frame);
+				if (!parametros.isEmpty()) {
+					cursoActual = controlador.iniciarCurso(cursoSeleccionado, parametros.get(0), parametros.get(1));
+					realizarCurso();
+				}
+			}
+
+		} catch (ExcepcionCursoActualVacio ex) {
+			Mensajes.mostrarAdvertencia(frame, ex.getMessage());
+		} catch (CursoSinPreguntasCiertaDificultad ex) {
+			Mensajes.mostrarError(frame, ex.getMessage());
+		}
 	}
 
 	private void realizarCurso() {
@@ -272,9 +224,8 @@ public class Principal {
 			Pregunta preguntaActual = cursoActual.getPreguntaActual();
 
 			if (preguntaActual == null) {
-				MensajeError.mostrarConfirmacion(frame, "�Curso completado!");
+				Mensajes.mostrarConfirmacion(frame, "!Curso completado!");
 				cursoActual = controlador.finalizarSesionCurso();
-				
 				break;
 			}
 
@@ -286,10 +237,62 @@ public class Principal {
 				new RespuestaCortaView(frame, (PreguntaRespuestaCorta) preguntaActual, onClose).setVisible(true);
 			}
 
-			if (cursoCancelado.get())
+			if (cursoCancelado.get()) {
+				cursoActual = controlador.finalizarSesionCurso();
 				break;
-
+			}
+			
 			controlador.avanzarProgreso();
+		}
+	}
+
+	private void importarCurso() {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Selecciona un archivo YAML de curso");
+
+		int resultado = fileChooser.showOpenDialog(frame);
+		if (resultado == JFileChooser.APPROVE_OPTION) {
+			String archivo = fileChooser.getSelectedFile().getName();
+			try {
+				Curso cursoAagregar = controlador.importarCurso(archivo);
+				model.addElement(cursoAagregar);
+			} catch (IOException e1) {
+				Mensajes.mostrarError(frame, "Error al leer el archivo: " + e1.getMessage());
+			} catch (ExcepcionCursoDuplicado e1) {
+				Mensajes.mostrarAdvertencia(frame, "El curso seleccionado ya está importado.");
+			}
+		}
+	}
+
+	private void eliminarCurso(Curso cursoSeleccionado) {
+		if (cursoSeleccionado != null) {
+			int confirm = Mensajes.mostrarSIoNO(frame, "¿Desea eliminar el curso seleccionado?");
+			if (confirm == JOptionPane.YES_OPTION) {
+				controlador.eliminarCurso(cursoSeleccionado);
+				model.removeElement(cursoSeleccionado);
+			}
+		} else {
+			Mensajes.mostrarAdvertencia(frame, "Seleccione un curso a eliminar");
+		}
+	}
+
+	private void exportarEstadisticas() {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Exportar estadísticas a PDF");
+
+		int userSelection = fileChooser.showSaveDialog(frame);
+		if (userSelection == JFileChooser.APPROVE_OPTION) {
+			String rutaArchivo = fileChooser.getSelectedFile().getAbsolutePath();
+			if (!rutaArchivo.endsWith(".txt")) {
+				rutaArchivo += ".txt";
+			}
+			try {
+				controlador.exportarEstadisticas(rutaArchivo);
+				Mensajes.mostrarConfirmacion(frame, "¡Estadísticas exportadas correctamente!");
+			} catch (IOException ex) {
+				ex.printStackTrace();
+				Mensajes.mostrarError(frame, "Error al exportar las estadísticas");
+			}
 		}
 	}
 
@@ -305,7 +308,7 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<Curso> {
 	private JPanel rightPanel; // Panel para el bot�n
 
 	public CourseCellRenderer() {
-		setLayout(new BorderLayout(10, 10)); // A�adir espacio entre componentes
+		setLayout(new BorderLayout(10, 10)); // Añadir espacio entre componentes
 		setBackground(Principal.BEIGE);
 
 		// Panel izquierdo (icono) con BoxLayout

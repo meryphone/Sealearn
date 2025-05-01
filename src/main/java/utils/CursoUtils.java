@@ -75,7 +75,7 @@ public class CursoUtils {
 							cursos.add(curso);
 						}
 					} catch (ExcepcionCursoDuplicado e) {
-					    System.err.println("Curso duplicado ignorado: " + e.getMessage());
+					    System.err.println("Curso duplicado ignorado: " + e.getMessage());//Quitar
 					}
 				}
 			}

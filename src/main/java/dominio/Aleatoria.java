@@ -7,7 +7,10 @@ import java.util.Collections;
  * sin repeticiones.
  */
 public class Aleatoria extends Estrategia {
-
+	
+	public Aleatoria() {
+		
+	}
     
     public Aleatoria(int totalPreguntas) {
     	super(totalPreguntas);

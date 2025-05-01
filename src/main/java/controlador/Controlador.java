@@ -1,41 +1,42 @@
 package controlador;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JOptionPane;
 import java.util.stream.Collectors;
 import dominio.Curso;
 import dominio.CursoEnProgreso;
 import dominio.Dificultad;
 import dominio.Estadistica;
-import dominio.Estrategia;
 import dominio.Pregunta;
+import excepciones.CursoSinPreguntasCiertaDificultad;
+import excepciones.ExcepcionCursoActualVacio;
 import excepciones.ExcepcionCursoDuplicado;
 import persistencia.AdaptadorCursoEnProgresoJPA;
 import persistencia.AdaptadorEstadisticaJPA;
 import persistencia.ICursoEnProgreso;
 import persistencia.IEstadistica;
 import utils.CursoUtils;
-import utils.EstrategiaFactory;
 
 public class Controlador {
 
 	private static Controlador controlador;
 	private Estadistica estadistica;
 	private CursoEnProgreso cursoEnProgresoActual;
-	private List<Curso> cursosImportados;
-	
+
 	private ICursoEnProgreso adaptadorCursoEnProgreso;
 	private IEstadistica adaptadorEstadistica;
 
 	private Controlador() {
-		estadistica = new Estadistica();	
 		adaptadorCursoEnProgreso = AdaptadorCursoEnProgresoJPA.getIntance();
 		adaptadorEstadistica = AdaptadorEstadisticaJPA.getIntance();
-		cursosImportados = CursoUtils.cargarTodosLosCursos();	
+		Estadistica stats = adaptadorEstadistica.buscarTodos().getLast();
+		if (stats != null) {
+			estadistica = stats;
+		} else {
+			estadistica = new Estadistica();
+		}
+
 	}
 
 	public static Controlador getInstance() {
@@ -46,31 +47,35 @@ public class Controlador {
 	}
 
 	public CursoEnProgreso iniciarCurso(Curso cursoSeleccionado, String estrategia_, String dif)
-			throws RuntimeException {
-		try {
+			throws CursoSinPreguntasCiertaDificultad, ExcepcionCursoActualVacio {
+
+		if (cursoSeleccionado != null) {
 
 			Dificultad dificultad = Dificultad.valueOf(dif.toUpperCase());
 
-			List<Pregunta> preguntasFiltradas = filtrarPorDificultad(cursoSeleccionado.getPreguntas(), dificultad);	
+			List<Pregunta> preguntasFiltradas = new ArrayList<Pregunta>();
+			preguntasFiltradas = filtrarPorDificultad(cursoSeleccionado.getPreguntas(), dificultad);
 
-			Estrategia estra = EstrategiaFactory.crearEstrategia(estrategia_, preguntasFiltradas.size());
-			
-			cursoEnProgresoActual = new CursoEnProgreso(cursoSeleccionado.getId(), estra,
-					preguntasFiltradas, dificultad);
-			
+			if (preguntasFiltradas.isEmpty()) {
+				throw new CursoSinPreguntasCiertaDificultad("No hay preguntas para la dificultad seleccionada.");
+			}
+
+			cursoEnProgresoActual = new CursoEnProgreso(cursoSeleccionado.getId(), estrategia_, preguntasFiltradas,
+					dificultad);
+
 			estadistica.registrarEstudioHoy();
 			adaptadorCursoEnProgreso.guardar(cursoEnProgresoActual);
+
 			return cursoEnProgresoActual;
 
-		} catch (Exception e) {
-			throw new RuntimeException("Error al iniciar el curso: " + e.getMessage(), e);
+		} else {
+			throw new ExcepcionCursoActualVacio("Seleccione un curso antes de comenzar");
 		}
+
 	}
 
-	public List<Pregunta> filtrarPorDificultad(List<Pregunta> preguntas, Dificultad dificultad) {		
-		return preguntas.stream()
-				.filter((p)-> p.getDificultad() == dificultad)
-				.collect(Collectors.toList());
+	public List<Pregunta> filtrarPorDificultad(List<Pregunta> preguntas, Dificultad dificultad) {
+		return preguntas.stream().filter((p) -> p.getDificultad() == dificultad).collect(Collectors.toList());
 	}
 
 	public boolean corregir(String respuesta) {
@@ -89,12 +94,17 @@ public class Controlador {
 	public CursoEnProgreso reanudarCurso(Curso cursoSeleccionado) {
 		CursoEnProgreso cursoEnprogreso = adaptadorCursoEnProgreso.buscarPorCursoId(cursoSeleccionado.getId());
 		if (cursoEnprogreso != null) {
-			cursoEnprogreso.setPreguntas(filtrarPorDificultad(cursoSeleccionado.getPreguntas(), cursoEnprogreso.getDificultad()));
+			cursoEnprogreso.setPreguntas(
+					filtrarPorDificultad(cursoSeleccionado.getPreguntas(), cursoEnprogreso.getDificultad()));
 			cursoEnprogreso.reconstruirEstrategia();
 			cursoEnProgresoActual = cursoEnprogreso;
 
 		}
 		return cursoEnprogreso;
+	}
+
+	public Estadistica getEstadistica() {
+		return estadistica;
 	}
 
 	public int getProgreso() {
@@ -104,20 +114,20 @@ public class Controlador {
 	public int getTotalPreguntas() {
 		return cursoEnProgresoActual != null ? cursoEnProgresoActual.getTotalPreguntas() : 0;
 	}
-	
 
-	public Estadistica getEstadistica() {
-		return estadistica;
-	}
-	
-	public List<Curso> getCursos(){
-		return cursosImportados;
-	}
-
-	public void finalizarSesion() {
+	public void finalizarSesionEstadistica() {
 		estadistica.finalizarSesion();
 	}
 	
+	public void restablecerEstadisticas() {
+		estadistica.reset();
+		adaptadorEstadistica.actualizar(estadistica);
+	}
+
+	public int getPorcentajeProgreso() {
+		return (int) ((cursoEnProgresoActual.getProgreso() * 100.0f) / cursoEnProgresoActual.getTotalPreguntas());
+	}
+
 	public CursoEnProgreso finalizarSesionCurso() {
 		if (cursoEnProgresoActual != null && cursoEnProgresoActual.isCompletado()) {
 			adaptadorCursoEnProgreso.eliminar(cursoEnProgresoActual);
@@ -134,24 +144,22 @@ public class Controlador {
 		return cursoEnProgresoActual;
 	}
 
-
 	public CursoEnProgreso restablecerCurso() {
 		cursoEnProgresoActual.setProgreso(CursoEnProgreso.PROGRESO_INICIAL);
 		adaptadorCursoEnProgreso.actualizar(cursoEnProgresoActual);
 		return cursoEnProgresoActual;
 	}
 
-	public void importarCurso(File archivo) throws IOException, ExcepcionCursoDuplicado {
-	        Curso curso = CursoUtils.importarCurso(archivo);
-	        cursosImportados.add(curso);
-	  
+	public Curso importarCurso(String archivo) throws IOException, ExcepcionCursoDuplicado {
+		return CursoUtils.importarCurso(archivo);
 	}
 
-	
+	public void exportarEstadisticas(String rutaArchivo) throws IOException {
+		estadistica.exportar(rutaArchivo);
+	}
+
 	public void eliminarCurso(Curso curso) {
-	    cursosImportados.remove(curso);
-	    adaptadorCursoEnProgreso.eliminarPorCursoId(curso.getId());
+		adaptadorCursoEnProgreso.eliminarPorCursoId(curso.getId());
 	}
-
 
 }

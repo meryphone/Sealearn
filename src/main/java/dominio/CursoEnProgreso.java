@@ -39,9 +39,9 @@ public class CursoEnProgreso {
 		this.progreso = PROGRESO_INICIAL;
 		this.cursoId = cursoId;
 		this.preguntas = preguntas;
-		this.estrategiaNombre = estrategia;
-		this.estrategia = EstrategiaFactory.crearEstrategia(estrategiaNombre, preguntas.size());	
+		this.estrategiaNombre = estrategia;			
 		this.dificultad = dificultad;
+		reconstruirEstrategia();
 	}
 
 	public void reconstruirEstrategia() {
