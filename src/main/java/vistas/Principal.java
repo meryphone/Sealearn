@@ -121,7 +121,7 @@ public class Principal {
 		panelButtons.add(rigidArea_1);
 		btnExportStats.addActionListener(e -> {
 		    JFileChooser fileChooser = new JFileChooser();
-		    fileChooser.setDialogTitle("Guardar estadísticas como TXT");
+		    fileChooser.setDialogTitle("Exportar estadísticas como txt");
 
 		    int userSelection = fileChooser.showSaveDialog(frame);
 		    if (userSelection == JFileChooser.APPROVE_OPTION) {
