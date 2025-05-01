@@ -1,81 +1,129 @@
-nombre: Curso de Python
-descripcion: Aprende Python con preguntas básicas y avanzadas
+nombre: "Curso Básico de Python"
+descripcion: "Aprende los fundamentos de Python: sintaxis, estructuras de control y manejo de datos."
 preguntas:
-  - !PreguntaTest
-    enunciado: ¿Cómo se declara una función en Python?
-    respuestaCorrecta: def
-    dificultad: facil
+  # --- Preguntas FÁCIL ---
+  - tipo: PreguntaTest
+    enunciado: "¿Qué palabra clave se usa para definir una función en Python?"
+    respuestaCorrecta: "def"
+    dificultad: FACIL
     listaOpciones:
-      - function
-      - def
-      - declare
+      - "function"
+      - "def"
+      - "func"
 
-  - !PreguntaRespuestaCorta
-    enunciado: ¿Qué palabra clave se usa para definir una clase?
-    respuestaCorrecta: class
-    dificultad: media
-
-  - !PreguntaRellenarHueco
-    enunciado: Para imprimir en consola usamos la función ___().
-    respuestaCorrecta: print
-    dificultad: facil
+  - tipo: PreguntaRellenarHueco
+    enunciado: "Los comentarios en Python comienzan con ___"
+    respuestaCorrecta: "#"
+    dificultad: FACIL
     listaOpciones:
-      - echo
-      - print
-      - say
+      - "#"
+      - "//"
+      - "--"
 
-  - !PreguntaTest
-    enunciado: ¿Qué estructura usamos para repetir código mientras una condición sea verdadera?
-    respuestaCorrecta: while
-    dificultad: media
+  - tipo: PreguntaRespuestaCorta
+    enunciado: "¿Qué tipo de bucle se usa para recorrer una secuencia en Python?"
+    respuestaCorrecta: "for"
+    dificultad: FACIL
+
+  - tipo: PreguntaTest
+    enunciado: "¿Cuál es el tipo de dato que representa números decimales en Python?"
+    respuestaCorrecta: "float"
+    dificultad: FACIL
     listaOpciones:
-      - until
-      - for
-      - while
+      - "int"
+      - "float"
+      - "double"
 
-  - !PreguntaRespuestaCorta
-    enunciado: ¿Qué tipo de datos representa verdadero o falso?
-    respuestaCorrecta: bool
-    dificultad: facil
-
-  - !PreguntaRellenarHueco
-    enunciado: Las listas se definen con corchetes ___.
+  - tipo: PreguntaRellenarHueco
+    enunciado: "Las listas en Python se definen usando corchetes ___"
     respuestaCorrecta: "[]"
-    dificultad: media
+    dificultad: FACIL
     listaOpciones:
-      - ()
-      - {}
       - "[]"
+      - "()"
+      - "{}"
 
-  - !PreguntaTest
-    enunciado: ¿Cómo se hace una importación en Python?
-    respuestaCorrecta: import
-    dificultad: facil
+  # --- Preguntas MEDIA ---
+  - tipo: PreguntaTest
+    enunciado: "¿Qué palabra reservada captura excepciones en Python?"
+    respuestaCorrecta: "except"
+    dificultad: MEDIA
     listaOpciones:
-      - load
-      - use
-      - import
+      - "catch"
+      - "except"
+      - "handle"
 
-  - !PreguntaRespuestaCorta
-    enunciado: ¿Cómo se llama la estructura que captura errores en Python?
-    respuestaCorrecta: try-except
-    dificultad: dificil
-
-  - !PreguntaRellenarHueco
-    enunciado: Una función puede devolver un valor usando ___.
-    respuestaCorrecta: return
-    dificultad: media
+  - tipo: PreguntaRellenarHueco
+    enunciado: "El ciclo que se repite mientras una condición es verdadera en Python es ___"
+    respuestaCorrecta: "while"
+    dificultad: MEDIA
     listaOpciones:
-      - end
-      - return
-      - yield
+      - "for"
+      - "while"
+      - "until"
 
-  - !PreguntaTest
-    enunciado: ¿Cuál de estos es un tipo de colección mutable?
-    respuestaCorrecta: list
-    dificultad: dificil
+  - tipo: PreguntaRespuestaCorta
+    enunciado: "¿Cómo se representa una cadena de caracteres en Python?"
+    respuestaCorrecta: "str"
+    dificultad: MEDIA
+
+  - tipo: PreguntaTest
+    enunciado: "¿Qué operador se usa para la división entera en Python?"
+    respuestaCorrecta: "//"
+    dificultad: MEDIA
     listaOpciones:
-      - tuple
-      - list
-      - str
+      - "/"
+      - "//"
+      - "%"
+
+  - tipo: PreguntaRellenarHueco
+    enunciado: "Para declarar un conjunto en Python usamos ___"
+    respuestaCorrecta: "{}"
+    dificultad: MEDIA
+    listaOpciones:
+      - "{}"
+      - "[]"
+      - "()"
+
+  # --- Preguntas DIFÍCIL ---
+  - tipo: PreguntaTest
+    enunciado: "¿Qué palabra clave se usa para definir una clase en Python?"
+    respuestaCorrecta: "class"
+    dificultad: DIFICIL
+    listaOpciones:
+      - "struct"
+      - "class"
+      - "object"
+
+  - tipo: PreguntaRellenarHueco
+    enunciado: "Para declarar funciones anónimas en Python usamos ___"
+    respuestaCorrecta: "lambda"
+    dificultad: DIFICIL
+    listaOpciones:
+      - "lambda"
+      - "anonymous"
+      - "func"
+
+  - tipo: PreguntaRespuestaCorta
+    enunciado: "¿Qué palabra reservada se usa para heredar de una clase en Python?"
+    respuestaCorrecta: "super"
+    dificultad: DIFICIL
+
+  - tipo: PreguntaTest
+    enunciado: "¿Qué módulo de Python sirve para trabajar con expresiones regulares?"
+    respuestaCorrecta: "re"
+    dificultad: DIFICIL
+    listaOpciones:
+      - "regex"
+      - "re"
+      - "expressions"
+
+  - tipo: PreguntaRellenarHueco
+    enunciado: "Para abrir un archivo en modo escritura usamos el modo ___"
+    respuestaCorrecta: "w"
+    dificultad: DIFICIL
+    listaOpciones:
+      - "r"
+      - "w"
+      - "rw"
 

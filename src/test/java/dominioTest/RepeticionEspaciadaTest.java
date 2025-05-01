@@ -16,7 +16,7 @@ class RepeticionEspaciadaTest {
         
         for (int i = 0; i < esperado.length; i++) {
             int obtenido = estrategia.mostrarPregunta(i);
-            assertEquals(esperado[i], obtenido, "Fallo en posici�n " + i);
+            assertEquals(esperado[i], obtenido);
         }
     }
 

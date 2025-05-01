@@ -1,12 +1,30 @@
 package dominio;
 
-public abstract class Pregunta {
+import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+
+@JsonTypeInfo(
+	    use = JsonTypeInfo.Id.NAME,
+	    include = JsonTypeInfo.As.PROPERTY,
+	    property = "tipo"
+	)
+	@JsonSubTypes({
+	    @JsonSubTypes.Type(value = PreguntaTest.class, name = "PreguntaTest"),
+	    @JsonSubTypes.Type(value = PreguntaRellenarHueco.class, name = "PreguntaRellenarHueco"),
+	    @JsonSubTypes.Type(value = PreguntaRespuestaCorta.class, name = "PreguntaRespuestaCorta")
+	})
+public abstract class Pregunta implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
 	private String enunciado;
 	private String respuestaCorrecta;
-	private String dificultad;
-	
-	public Pregunta(String enunciado, String respuestaCorrecta, String dificultad) {
+	private Dificultad dificultad;
+
+	public Pregunta(String enunciado, String respuestaCorrecta, Dificultad dificultad) {
 		this.enunciado = enunciado;
 		this.respuestaCorrecta = respuestaCorrecta;
 		this.dificultad = dificultad;
@@ -38,11 +56,11 @@ public abstract class Pregunta {
 		this.respuestaCorrecta = respuestaCorrecta;
 	}
 
-	public String getDificultad() {
+	public Dificultad getDificultad() {
 		return dificultad;
 	}
 
-	public void setDificultad(String dificultad) {
+	public void setDificultad(Dificultad dificultad) {
 		this.dificultad = dificultad;
 	}
 

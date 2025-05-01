@@ -1,5 +1,6 @@
 package dominio;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,7 +17,7 @@ public class CursoEnProgreso {
 	private Estrategia estrategia;
 	@Transient
 	private List<Pregunta> preguntas;		
-	private String dificultad;
+	private Dificultad dificultad;
 	private int progreso;
 	private String estrategiaNombre;
 
@@ -24,13 +25,22 @@ public class CursoEnProgreso {
 
 	public CursoEnProgreso() {
 	}
-
-	public CursoEnProgreso(UUID cursoId, Estrategia estrategia, List<Pregunta> preguntas, String dificultad) {
+	
+	public CursoEnProgreso(UUID cursoId, Estrategia estrategia, List<Pregunta> preguntas, Dificultad dificultad) {
 		this.progreso = PROGRESO_INICIAL;
 		this.cursoId = cursoId;
+		this.preguntas = preguntas;
 		this.estrategia = estrategia;
 		this.estrategiaNombre = estrategia.getClass().getSimpleName();
+		this.dificultad = dificultad;
+	}
+
+	public CursoEnProgreso(UUID cursoId, String estrategia, List<Pregunta> preguntas, Dificultad dificultad) {
+		this.progreso = PROGRESO_INICIAL;
+		this.cursoId = cursoId;
 		this.preguntas = preguntas;
+		this.estrategiaNombre = estrategia;
+		this.estrategia = EstrategiaFactory.crearEstrategia(estrategiaNombre, preguntas.size());	
 		this.dificultad = dificultad;
 	}
 
@@ -65,24 +75,20 @@ public class CursoEnProgreso {
 		this.progreso = progreso;
 	}
 
-	public Estrategia getEstrategia() {
-		return estrategia;
-	}
-
 	public int getTotalPreguntas() {
 		return estrategia.getTotalPreguntas();
 	}
 
 
 	public List<Pregunta> getPreguntas() {
-		return preguntas;
+		return Collections.unmodifiableList(preguntas);
 	}
 
 	public void setPreguntas(List<Pregunta> preguntas) {
 		this.preguntas = preguntas;
 	}
 
-	public String getDificultad() {
+	public Dificultad getDificultad() {
 		return dificultad;
 	}
 

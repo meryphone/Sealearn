@@ -1,81 +1,129 @@
-nombre: Curso de Java
-descripcion: Repasa conceptos esenciales de Java
+nombre: "Curso Básico de Java"
+descripcion: "Aprende Java desde los fundamentos hasta conceptos básicos de programación orientada a objetos."
 preguntas:
-  - !PreguntaTest
-    enunciado: ¿Cuál es el punto de entrada de una aplicación Java?
-    respuestaCorrecta: main
-    dificultad: media
+  # --- Preguntas FÁCIL ---
+  - tipo: PreguntaTest
+    enunciado: "¿Qué palabra clave define una clase en Java?"
+    respuestaCorrecta: "class"
+    dificultad: FACIL
     listaOpciones:
-      - run
-      - start
-      - main
+      - "class"
+      - "define"
+      - "method"
 
-  - !PreguntaRespuestaCorta
-    enunciado: ¿Qué palabra clave se usa para herencia?
-    respuestaCorrecta: extends
-    dificultad: media
-
-  - !PreguntaRellenarHueco
-    enunciado: Una clase que no puede ser extendida se declara como ___.
-    respuestaCorrecta: final
-    dificultad: dificil
+  - tipo: PreguntaRellenarHueco
+    enunciado: "El método principal en Java debe llamarse ___"
+    respuestaCorrecta: "main"
+    dificultad: FACIL
     listaOpciones:
-      - static
-      - abstract
-      - final
+      - "main"
+      - "start"
+      - "run"
 
-  - !PreguntaTest
-    enunciado: ¿Qué modificador permite acceder solo dentro del mismo paquete?
-    respuestaCorrecta: default
-    dificultad: dificil
+  - tipo: PreguntaRespuestaCorta
+    enunciado: "¿Qué palabra clave indica herencia entre clases en Java?"
+    respuestaCorrecta: "extends"
+    dificultad: FACIL
+
+  - tipo: PreguntaTest
+    enunciado: "¿Qué tipo de dato almacena valores verdaderos o falsos?"
+    respuestaCorrecta: "boolean"
+    dificultad: FACIL
     listaOpciones:
-      - public
-      - private
-      - default
+      - "int"
+      - "boolean"
+      - "char"
 
-  - !PreguntaRespuestaCorta
-    enunciado: ¿Cómo se llama el recolector de basura en Java?
-    respuestaCorrecta: Garbage Collector
-    dificultad: dificil
-
-  - !PreguntaRellenarHueco
-    enunciado: Las interfaces se definen con la palabra clave ___.
-    respuestaCorrecta: interface
-    dificultad: media
+  - tipo: PreguntaRellenarHueco
+    enunciado: "Las sentencias condicionales en Java comienzan con ___"
+    respuestaCorrecta: "if"
+    dificultad: FACIL
     listaOpciones:
-      - implements
-      - interface
-      - abstract
+      - "if"
+      - "switch"
+      - "while"
 
-  - !PreguntaTest
-    enunciado: ¿Cuál es el tipo de dato para números decimales?
-    respuestaCorrecta: double
-    dificultad: media
+  # --- Preguntas MEDIA ---
+  - tipo: PreguntaTest
+    enunciado: "¿Qué palabra clave se utiliza para definir una constante en Java?"
+    respuestaCorrecta: "final"
+    dificultad: MEDIA
     listaOpciones:
-      - int
-      - float
-      - double
+      - "static"
+      - "const"
+      - "final"
 
-  - !PreguntaRespuestaCorta
-    enunciado: ¿Cómo se llama el operador para comparar igualdad?
-    respuestaCorrecta: ==
-    dificultad: facil
-
-  - !PreguntaRellenarHueco
-    enunciado: Las clases en Java se agrupan en ___.
-    respuestaCorrecta: paquetes
-    dificultad: facil
+  - tipo: PreguntaRellenarHueco
+    enunciado: "En Java, los arreglos se definen usando corchetes ___"
+    respuestaCorrecta: "[]"
+    dificultad: MEDIA
     listaOpciones:
-      - paquetes
-      - carpetas
-      - módulos
+      - "[]"
+      - "{}"
+      - "()"
 
-  - !PreguntaTest
-    enunciado: ¿Cuál es la función de `System.out.println()`?
-    respuestaCorrecta: Imprimir en consola
-    dificultad: facil
+  - tipo: PreguntaRespuestaCorta
+    enunciado: "¿Qué tipo de excepción se lanza cuando un array supera sus límites?"
+    respuestaCorrecta: "ArrayIndexOutOfBoundsException"
+    dificultad: MEDIA
+
+  - tipo: PreguntaTest
+    enunciado: "¿Qué operador compara si dos valores son iguales en Java?"
+    respuestaCorrecta: "=="
+    dificultad: MEDIA
     listaOpciones:
-      - Leer entrada
-      - Crear variables
-      - Imprimir en consola
+      - "="
+      - "=="
+      - "equals"
+
+  - tipo: PreguntaRellenarHueco
+    enunciado: "El bucle que ejecuta al menos una vez su cuerpo es ___"
+    respuestaCorrecta: "do-while"
+    dificultad: MEDIA
+    listaOpciones:
+      - "while"
+      - "for"
+      - "do-while"
+
+  # --- Preguntas DIFÍCIL ---
+  - tipo: PreguntaTest
+    enunciado: "¿Qué modificador hace que un método pertenezca a la clase y no a la instancia?"
+    respuestaCorrecta: "static"
+    dificultad: DIFICIL
+    listaOpciones:
+      - "final"
+      - "abstract"
+      - "static"
+
+  - tipo: PreguntaRellenarHueco
+    enunciado: "Las clases que no pueden ser instanciadas se marcan como ___"
+    respuestaCorrecta: "abstract"
+    dificultad: DIFICIL
+    listaOpciones:
+      - "static"
+      - "abstract"
+      - "interface"
+
+  - tipo: PreguntaRespuestaCorta
+    enunciado: "¿Cómo se llama la superclase por defecto de todas las clases en Java?"
+    respuestaCorrecta: "Object"
+    dificultad: DIFICIL
+
+  - tipo: PreguntaTest
+    enunciado: "¿Qué estructura de control permite manejar múltiples excepciones en Java?"
+    respuestaCorrecta: "try-catch"
+    dificultad: DIFICIL
+    listaOpciones:
+      - "try-catch"
+      - "if-else"
+      - "switch"
+
+  - tipo: PreguntaRellenarHueco
+    enunciado: "Una lista ordenada y modificable en Java se representa con la clase ___"
+    respuestaCorrecta: "ArrayList"
+    dificultad: DIFICIL
+    listaOpciones:
+      - "Array"
+      - "ArrayList"
+      - "List"
 

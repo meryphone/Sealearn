@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
-
+import java.util.stream.Collectors;
 import dominio.Curso;
 import dominio.CursoEnProgreso;
+import dominio.Dificultad;
 import dominio.Estadistica;
 import dominio.Estrategia;
 import dominio.Pregunta;
+import excepciones.ExcepcionCursoDuplicado;
 import persistencia.AdaptadorCursoEnProgresoJPA;
 import persistencia.AdaptadorEstadisticaJPA;
 import persistencia.ICursoEnProgreso;
@@ -31,10 +33,9 @@ public class Controlador {
 
 	private Controlador() {
 		estadistica = new Estadistica();	
-		cursosImportados = CursoUtils.cargarTodosLosCursos();	
 		adaptadorCursoEnProgreso = AdaptadorCursoEnProgresoJPA.getIntance();
 		adaptadorEstadistica = AdaptadorEstadisticaJPA.getIntance();
-
+		cursosImportados = CursoUtils.cargarTodosLosCursos();	
 	}
 
 	public static Controlador getInstance() {
@@ -44,25 +45,21 @@ public class Controlador {
 		return controlador;
 	}
 
-	public CursoEnProgreso iniciarCurso(Curso cursoSeleccionado, String estrategia_, String dificultad)
+	public CursoEnProgreso iniciarCurso(Curso cursoSeleccionado, String estrategia_, String dif)
 			throws RuntimeException {
 		try {
 
-			System.out.println(dificultad);
+			Dificultad dificultad = Dificultad.valueOf(dif.toUpperCase());
 
-			List<Pregunta> preguntasFiltradas = filtrarPorDificultad(cursoSeleccionado.getPreguntas(), dificultad);
+			List<Pregunta> preguntasFiltradas = filtrarPorDificultad(cursoSeleccionado.getPreguntas(), dificultad);	
 
-			System.out.println(preguntasFiltradas.size());		
-
-			Estrategia estrategiaSeleccionada = EstrategiaFactory.crearEstrategia(estrategia_,
-					preguntasFiltradas.size());
-
-			cursoEnProgresoActual = new CursoEnProgreso(cursoSeleccionado.getId(), estrategiaSeleccionada,
+			Estrategia estra = EstrategiaFactory.crearEstrategia(estrategia_, preguntasFiltradas.size());
+			
+			cursoEnProgresoActual = new CursoEnProgreso(cursoSeleccionado.getId(), estra,
 					preguntasFiltradas, dificultad);
 			
 			estadistica.registrarEstudioHoy();
 			adaptadorCursoEnProgreso.guardar(cursoEnProgresoActual);
-			System.out.println("He creado el curso");
 			return cursoEnProgresoActual;
 
 		} catch (Exception e) {
@@ -70,14 +67,10 @@ public class Controlador {
 		}
 	}
 
-	public List<Pregunta> filtrarPorDificultad(List<Pregunta> preguntas, String dificultad) {
-		List<Pregunta> resultado = new ArrayList<>();
-		for (Pregunta p : preguntas) {
-			if (p.getDificultad().equalsIgnoreCase(dificultad)) {
-				resultado.add(p);
-			}
-		}
-		return resultado;
+	public List<Pregunta> filtrarPorDificultad(List<Pregunta> preguntas, Dificultad dificultad) {		
+		return preguntas.stream()
+				.filter((p)-> p.getDificultad() == dificultad)
+				.collect(Collectors.toList());
 	}
 
 	public boolean corregir(String respuesta) {
@@ -112,12 +105,13 @@ public class Controlador {
 		return cursoEnProgresoActual != null ? cursoEnProgresoActual.getTotalPreguntas() : 0;
 	}
 	
-	public List<Curso> getCursos(){
-		return cursosImportados;
-	}
 
 	public Estadistica getEstadistica() {
 		return estadistica;
+	}
+	
+	public List<Curso> getCursos(){
+		return cursosImportados;
 	}
 
 	public void finalizarSesion() {
@@ -147,10 +141,12 @@ public class Controlador {
 		return cursoEnProgresoActual;
 	}
 
-	public void importarCurso(File archivo) throws IOException {
-		Curso curso = CursoUtils.importarCursoDesdeArchivo(archivo);
-	    cursosImportados.add(curso);
+	public void importarCurso(File archivo) throws IOException, ExcepcionCursoDuplicado {
+	        Curso curso = CursoUtils.importarCurso(archivo);
+	        cursosImportados.add(curso);
+	  
 	}
+
 	
 	public void eliminarCurso(Curso curso) {
 	    cursosImportados.remove(curso);

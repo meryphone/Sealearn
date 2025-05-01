@@ -1,5 +1,8 @@
 package dominio;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Clase abstracta que define la interfaz comÃºn para todas las estrategias de
  * presentaciÃ³n de preguntas en un curso.
@@ -9,20 +12,20 @@ package dominio;
  */
 public abstract class Estrategia {
 
-	int totalPreguntas;
+	protected int totalPreguntasCurso;
+	protected List<Integer> ordenPreguntas;
 
 	/**
 	 * Constructor por defecto.
 	 */
 	public Estrategia() {
-		super();
+		ordenPreguntas = new ArrayList<>();
 	}
 
 	public Estrategia(int nPreguntas) {
-		super();
-		totalPreguntas = nPreguntas;
-	}
-	
+		totalPreguntasCurso = nPreguntas;
+		ordenPreguntas = new ArrayList<>();
+	}		
 
 	/**
 	 * Devuelve el Ã­ndice de la pregunta a mostrar en un paso determinado.
@@ -32,17 +35,14 @@ public abstract class Estrategia {
 	 */
 	public abstract int mostrarPregunta(int nPregunta);
 	
+	protected abstract void construirOrden();
+
+	public void setTotalPreguntas(int totalPreguntas) {
+		this.totalPreguntasCurso = totalPreguntas;
+	}
+	
 	public int getTotalPreguntas() {
-		return totalPreguntas;
+		return ordenPreguntas.size();
 	}
 
-	/**
-	 * Establece el nÃºmero total de preguntas disponibles. Este valor debe
-	 * configurarse antes de usar la estrategia.
-	 * 
-	 * @param nPreguntas Total de preguntas del curso
-	 */
-	public void setTotalPreguntas(int totalPreguntas) {
-		this.totalPreguntas = totalPreguntas;
-	}
 }

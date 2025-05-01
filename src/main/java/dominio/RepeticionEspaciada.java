@@ -9,15 +9,8 @@ import java.util.List;
  */
 public class RepeticionEspaciada extends Estrategia {
 
-	private List<Integer> ordenPreguntas;
-
-	public RepeticionEspaciada() {
-		ordenPreguntas = new ArrayList<>();
-	}
-
 	public RepeticionEspaciada(int totalPreguntas) {
 		super(totalPreguntas);
-		ordenPreguntas = new ArrayList<>();
 	}
 
 	@Override
@@ -31,28 +24,33 @@ public class RepeticionEspaciada extends Estrategia {
 		}
 		return -1;
 	}
-
+	
 	/**
 	 * Construye la lista de orden con lógica de repetición espaciada. Cada pregunta
 	 * se repite al menos una vez.
 	 */
-	private void construirOrden() {
-		List<Integer> originales = new ArrayList<>();
-		List<Integer> repetidas = new ArrayList<>();
 
-		for (int i = 0; i < totalPreguntas; i++) {
-			ordenPreguntas.add(i); // añadir pregunta nueva
-			originales.add(i); // registrar original
+	@Override
+	protected void construirOrden() {
+	    ordenPreguntas.clear();
+	    List<Integer> originales = new ArrayList<>();
+	    List<Integer> repetidas = new ArrayList<>();
 
-			if ((i + 1) % 3 == 0 && !repetidas.contains(originales.get(0))) {
-				ordenPreguntas.add(originales.get(0)); // repetir la más antigua no repetida
-				repetidas.add(originales.remove(0)); // mover a repetidas
-			}
-		}
+	    for (int i = 0; i < totalPreguntasCurso; i++) {
+	        ordenPreguntas.add(i);
+	        originales.add(i);
 
-		// Asegurar que todas se repiten al menos una vez
-		for (Integer faltante : originales) {
-			ordenPreguntas.add(faltante);
-		}
+	        if ((i + 1) % 3 == 0 && !repetidas.contains(originales.get(0))) {
+	            ordenPreguntas.add(originales.get(0));
+	            repetidas.add(originales.remove(0));
+	        }
+	    }
+
+	    // Asegurar que todas las preguntas se repiten al menos una vez
+	    for (Integer faltante : originales) {
+	        ordenPreguntas.add(faltante);
+	    }
 	}
+
+
 }

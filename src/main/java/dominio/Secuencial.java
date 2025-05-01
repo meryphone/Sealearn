@@ -12,7 +12,19 @@ public class Secuencial extends Estrategia {
 
 	@Override
 	public int mostrarPregunta(int nPregunta) {
-		return nPregunta < totalPreguntas ? nPregunta : -1;
+		if(ordenPreguntas.isEmpty()) {
+			construirOrden();
+		}
+		return nPregunta < ordenPreguntas.size() ? nPregunta : -1;
 	}
+
+	@Override
+	protected void construirOrden() {
+		for(int i = 0; i < totalPreguntasCurso; i++) {
+			ordenPreguntas.add(i);
+		}
+	}
+	
+	
 
 }

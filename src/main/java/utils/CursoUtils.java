@@ -6,73 +6,54 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
-
-import org.yaml.snakeyaml.TypeDescription;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import controlador.Controlador;
 import dominio.Curso;
-import dominio.Pregunta;
-import dominio.PreguntaRellenarHueco;
-import dominio.PreguntaRespuestaCorta;
-import dominio.PreguntaTest;
 import excepciones.ExcepcionCursoDuplicado;
 
 public class CursoUtils {
 
 	private static final Set<UUID> cursosCargados = new HashSet<>();
+	private static final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
 
 	/**
-	 * Importa un solo curso desde YAML. Detecta duplicados por UUID.
+	 * Importa un solo curso desde YAML usando Jackson. Detecta duplicados por UUID.
 	 * 
 	 * @param nombreArchivo nombre del archivo YAML
 	 * @return el objeto Curso
 	 * @throws ExcepcionCursoDuplicado si el UUID ya ha sido cargado
-	 * @throws IOException 
+	 * @throws IOException             si ocurre un error de lectura
 	 */
-	private static Curso cargarCursoDesdeInputStream(InputStream inputStream) throws IOException {
-	    Constructor constructor = new Constructor(Curso.class);
-	    TypeDescription cursoDescription = new TypeDescription(Curso.class);
-	    cursoDescription.addPropertyParameters("preguntas", Pregunta.class);
-	    constructor.addTypeDescription(cursoDescription);
+	public static Curso importarCurso(String nombreArchivo) throws IOException, ExcepcionCursoDuplicado {
+	    InputStream inputStream = Controlador.class.getResourceAsStream("/cursos/" + nombreArchivo);
+	    if (inputStream == null) {
+	        throw new IOException("Archivo no encontrado: /cursos/" + nombreArchivo);
+	    }
+	    return importarCursoDesdeStream(inputStream);
+	}
 
-	    constructor.addTypeDescription(new TypeDescription(PreguntaTest.class, TagName("PreguntaTest")));
-	    constructor.addTypeDescription(new TypeDescription(PreguntaRellenarHueco.class, TagName("PreguntaRellenarHueco")));
-	    constructor.addTypeDescription(new TypeDescription(PreguntaRespuestaCorta.class, TagName("PreguntaRespuestaCorta")));
+	
+	public static Curso importarCurso(File archivo) throws IOException, ExcepcionCursoDuplicado {
+	    try (InputStream inputStream = new java.io.FileInputStream(archivo)) {
+	        return importarCursoDesdeStream(inputStream);
+	    }
+	}
 
-	    Yaml yaml = new Yaml(constructor);
-	    Curso curso = yaml.load(inputStream);
+	private static Curso importarCursoDesdeStream(InputStream inputStream) throws IOException, ExcepcionCursoDuplicado {
+	    Curso curso = yamlMapper.readValue(inputStream, Curso.class);
 
 	    if (cursosCargados.contains(curso.getId())) {
-	        throw new IOException("Curso duplicado con UUID: " + curso.getId());
+	        throw new ExcepcionCursoDuplicado("Curso duplicado detectado con UUID: " + curso.getId());
 	    }
 
 	    cursosCargados.add(curso.getId());
 	    return curso;
 	}
 
-	public static Curso importarCursoDesdeResources(String nombreArchivo) throws IOException {
-	    String ruta = "/cursos/" + nombreArchivo;
-	    try (InputStream inputStream = Controlador.class.getResourceAsStream(ruta)) {
-	        if (inputStream == null) {
-	            throw new IOException("Archivo no encontrado: " + ruta);
-	        }
-	        return cargarCursoDesdeInputStream(inputStream);
-	    }
-	}
-	
-	public static Curso importarCursoDesdeArchivo(File archivo) throws IOException {
-	    try (InputStream inputStream = new java.io.FileInputStream(archivo)) {
-	        return cargarCursoDesdeInputStream(inputStream);
-	    }
-	}
-
-
 
 	/**
 	 * Carga todos los cursos desde la carpeta /resources/cursos/
-	 * Llama internamente a importarCurso() que ya detecta duplicados.
 	 */
 	public static List<Curso> cargarTodosLosCursos() {
 		List<Curso> cursos = new ArrayList<>();
@@ -88,22 +69,22 @@ public class CursoUtils {
 
 			if (archivos != null) {
 				for (File archivo : archivos) {
-					Curso curso = importarCursoDesdeResources(archivo.getName());
-					if (curso != null) {
-						cursos.add(curso);
+					try {
+						Curso curso = importarCurso(archivo.getName());
+						if (curso != null) {
+							cursos.add(curso);
+						}
+					} catch (ExcepcionCursoDuplicado e) {
+					    System.err.println("Curso duplicado ignorado: " + e.getMessage());
 					}
 				}
 			}
 		} catch (URISyntaxException e) {
 			throw new RuntimeException("Error al acceder a la carpeta /cursos/", e);
-		}catch (IOException e) {
-			throw new RuntimeException(e.getMessage(), e);
+		} catch (IOException e) {
+			throw new RuntimeException("Error leyendo un curso", e);
 		}
 
 		return cursos;
-	}
-
-	private static String TagName(String name) {
-		return "!" + name;
 	}
 }

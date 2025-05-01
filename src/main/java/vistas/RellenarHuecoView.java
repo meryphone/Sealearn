@@ -68,9 +68,9 @@ public class RellenarHuecoView extends JDialog {
 		labelPregunta.setFont(new Font("Arial", Font.BOLD, 16));
 		labelPregunta.setHorizontalAlignment(SwingConstants.CENTER); // Centrado horizontal
 
-		// Configuración de constraints para GridBagLayout
+		// Configuraciï¿½n de constraints para GridBagLayout
 		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.insets = new Insets(10, 10, 10, 10); // Márgenes
+		gbc.insets = new Insets(10, 10, 10, 10); // Mï¿½rgenes
 		panelPregunta.add(labelPregunta, gbc);
 
 		panelCentro.add(panelPregunta, BorderLayout.CENTER); // Centramos en el panel principal
@@ -89,7 +89,7 @@ public class RellenarHuecoView extends JDialog {
 		boolean acierto = controlador.corregir(respuestaSeleccionada);
 
 		if (acierto) {
-			MensajeError.mostrarConfirmacion(this, "¡Correcto!");
+			MensajeError.mostrarConfirmacion(this, "Â¡Correcto!");
 		} else {
 			MensajeError.mostrarError(this,
 					"Incorrecto. La respuesta correcta era: " + pregunta.getRespuestaCorrecta());
