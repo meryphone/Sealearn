@@ -14,7 +14,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import dominio.Secuencial;
 import dominio.Estrategia;
 import dominio.Pregunta;
-import dominio.PreguntaHueco;
 import dominio.CursoEnProgreso;
 
 class ControladorTest {
