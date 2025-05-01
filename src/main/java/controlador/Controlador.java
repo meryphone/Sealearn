@@ -114,10 +114,6 @@ public class Controlador {
 	public int getTotalPreguntas() {
 		return cursoEnProgresoActual != null ? cursoEnProgresoActual.getTotalPreguntas() : 0;
 	}
-
-	public void finalizarSesionEstadistica() {
-		estadistica.finalizarSesion();
-	}
 	
 	public void restablecerEstadisticas() {
 		estadistica.reset();

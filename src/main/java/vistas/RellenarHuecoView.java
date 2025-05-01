@@ -9,8 +9,8 @@ import utils.Mensajes;
 public class RellenarHuecoView extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-
-	private final Controlador controlador = Controlador.getInstance();
+	
+	Controlador controlador = Controlador.getInstance();
 	private final PreguntaRellenarHueco pregunta;
 	private final Runnable onCloseCallback;
 
@@ -46,9 +46,7 @@ public class RellenarHuecoView extends JDialog {
 		panelSuperior.add(icon);
 
 		JProgressBar progressBar = new JProgressBar();
-		int progreso = controlador.getProgreso();
-		int total = controlador.getTotalPreguntas();
-		progressBar.setValue((int) ((progreso * 100.0f) / total));
+		progressBar.setValue(controlador.getPorcentajeProgreso());
 		progressBar.setStringPainted(true);
 		panelSuperior.add(progressBar);
 

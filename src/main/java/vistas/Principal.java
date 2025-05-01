@@ -167,13 +167,6 @@ public class Principal {
 		JScrollPane scrollPane = new JScrollPane(courseList);
 		scrollPane.setPreferredSize(new Dimension(400, 200));
 		center1.add(scrollPane, BorderLayout.CENTER);
-		
-		frame.addWindowListener(new java.awt.event.WindowAdapter() {
-			@Override
-			public void windowClosing(java.awt.event.WindowEvent e) {
-				controlador.finalizarSesionEstadistica();
-			}
-		});
 
 	}
 
