@@ -96,4 +96,18 @@ public class CursoEnProgreso {
 		return progreso == getTotalPreguntas();
 	}
 
+	public Estrategia getEstrategia() {
+		return estrategia;
+	}
+
+	public String getEstrategiaNombre() {
+		return estrategiaNombre;
+	}
+
+	public static int getProgresoInicial() {
+		return PROGRESO_INICIAL;
+	}
+	
+	
+
 }
