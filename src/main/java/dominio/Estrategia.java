@@ -42,7 +42,7 @@ public abstract class Estrategia {
 	}
 	
 	public int getTotalPreguntas() {
-		return ordenPreguntas.size();
+		return totalPreguntasCurso;
 	}
 
 }
