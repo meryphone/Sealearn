@@ -33,8 +33,6 @@ public abstract class Pregunta implements Serializable {
 	public Pregunta() {
 	}
 
-	// Getters y Setters
-
 	public boolean validarRespuesta(String respuestaUsuario) {
 		return respuestaCorrecta.equalsIgnoreCase(respuestaUsuario);
 	}
