@@ -42,6 +42,10 @@ public class CursoUtils {
 		cursosCargados.add(curso.getId());
 		return curso;
 	}
+	
+	public static void eliminarCurso(UUID cursoID) {
+		cursosCargados.remove(cursoID);
+	}
 
 
 	/**

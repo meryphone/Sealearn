@@ -3,6 +3,7 @@ package controlador;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import dominio.Curso;
 import dominio.CursoEnProgreso;
@@ -23,7 +24,6 @@ public class Controlador {
 	private static Controlador controlador;
 	private Estadistica estadistica;
 	private CursoEnProgreso cursoEnProgresoActual;
-
 	private ICursoEnProgreso adaptadorCursoEnProgreso;
 	private IEstadistica adaptadorEstadistica;
 
@@ -31,14 +31,15 @@ public class Controlador {
 		adaptadorCursoEnProgreso = AdaptadorCursoEnProgresoJPA.getIntance();
 		adaptadorEstadistica = AdaptadorEstadisticaJPA.getIntance();
 		List<Estadistica> stats = adaptadorEstadistica.buscarTodos();
-		if (stats.isEmpty()) {
-			estadistica = new Estadistica();
-		} else {
-			estadistica = stats.getLast();
-		}
-
+		this.estadistica = stats.isEmpty() ? new Estadistica() : stats.getLast();
 	}
-
+	
+	public Controlador(Estadistica stats, ICursoEnProgreso cursoAdapter, IEstadistica estadisticaAdapter) {
+		this.adaptadorCursoEnProgreso = cursoAdapter;
+        this.adaptadorEstadistica = estadisticaAdapter;
+        this.estadistica = stats;
+	}
+	        
 	public static Controlador getInstance() {
 		if (controlador == null) {
 			controlador = new Controlador();
@@ -66,16 +67,12 @@ public class Controlador {
 			estadistica.registrarEstudioHoy();
 			adaptadorCursoEnProgreso.guardar(cursoEnProgresoActual);
 
-			return cursoEnProgresoActual;
+			return cursoEnProgresoActual; 
 
 		} else {
 			throw new ExcepcionCursoActualVacio("Seleccione un curso antes de comenzar");
 		}
 
-	}
-
-	public List<Pregunta> filtrarPorDificultad(List<Pregunta> preguntas, Dificultad dificultad) {
-		return preguntas.stream().filter((p) -> p.getDificultad() == dificultad).collect(Collectors.toList());
 	}
 
 	public boolean corregir(String respuesta) {
@@ -154,8 +151,13 @@ public class Controlador {
 		estadistica.exportar(rutaArchivo);
 	}
 
-	public void eliminarCurso(Curso curso) {
-		adaptadorCursoEnProgreso.eliminarPorCursoId(curso.getId());
+	public void eliminarCurso(UUID curso) {
+		adaptadorCursoEnProgreso.eliminarPorCursoId(curso);
+		CursoUtils.eliminarCurso(curso);
+	}
+	
+	private List<Pregunta> filtrarPorDificultad(List<Pregunta> preguntas, Dificultad dificultad) {
+		return preguntas.stream().filter((p) -> p.getDificultad() == dificultad).collect(Collectors.toList());
 	}
 
 }

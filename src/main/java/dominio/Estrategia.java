@@ -15,16 +15,10 @@ public abstract class Estrategia {
 	protected int totalPreguntasCurso;
 	protected List<Integer> ordenPreguntas;
 
-	/**
-	 * Constructor por defecto.
-	 */
-	public Estrategia() {
-		ordenPreguntas = new ArrayList<>();
-	}
-
 	public Estrategia(int nPreguntas) {
 		totalPreguntasCurso = nPreguntas;
 		ordenPreguntas = new ArrayList<>();
+		construirOrden();
 	}		
 
 	/**

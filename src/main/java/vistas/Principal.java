@@ -43,6 +43,12 @@ public class Principal {
 	public Principal() {
 		initialize();
 	}
+	
+	public Principal(Controlador controlador, CursoEnProgreso cursoEnProgreso){
+		initialize();
+		this.controlador = controlador;
+		this.cursoActual = cursoEnProgreso;
+	}
 
 	private void initialize() {
 		frame = new JFrame();
@@ -170,7 +176,7 @@ public class Principal {
 
 	}
 
-	private void iniciarCurso(Curso cursoSeleccionado) {
+	protected void iniciarCurso(Curso cursoSeleccionado) {
 		CursoEnProgreso cursoEnProgreso = controlador.reanudarCurso(cursoSeleccionado);
 		try {
 			if (cursoEnProgreso != null) {
@@ -205,7 +211,7 @@ public class Principal {
 		}
 	}
 
-	private void realizarCurso() {
+	protected void realizarCurso() {
 		AtomicBoolean cursoCancelado = new AtomicBoolean(false);
 
 		Runnable onClose = () -> {
@@ -239,7 +245,7 @@ public class Principal {
 		}
 	}
 
-	private void importarCurso() {
+	protected void importarCurso() {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Selecciona un archivo YAML de curso");
 
@@ -257,11 +263,11 @@ public class Principal {
 		}
 	}
 
-	private void eliminarCurso(Curso cursoSeleccionado) {
+	protected void eliminarCurso(Curso cursoSeleccionado) {
 		if (cursoSeleccionado != null) {
 			int confirm = Mensajes.mostrarSIoNO(frame, "¿Desea eliminar el curso seleccionado?");
 			if (confirm == JOptionPane.YES_OPTION) {
-				controlador.eliminarCurso(cursoSeleccionado);
+				controlador.eliminarCurso(cursoSeleccionado.getId());
 				model.removeElement(cursoSeleccionado);
 			}
 		} else {
@@ -269,7 +275,7 @@ public class Principal {
 		}
 	}
 
-	private void exportarEstadisticas() {
+	protected void exportarEstadisticas() {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Exportar estadísticas a PDF");
 
@@ -388,7 +394,7 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<Curso> {
 			textPanel.setBackground(Principal.BEIGE.brighter());
 			leftPanel.setBackground(Principal.BEIGE.brighter());
 			rightPanel.setBackground(Principal.BEIGE.brighter());
-			iconLabel.setBackground(Principal.BEIGE.brighter());
+			iconLabel.setBackground(Principal.BEIGE.brighter()); 
 			nameLabel.setBackground(Principal.BEIGE.brighter());
 			descriptionLabel.setBackground(Principal.BEIGE.brighter());
 		}

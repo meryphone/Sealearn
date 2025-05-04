@@ -9,19 +9,12 @@ import java.util.List;
  */
 public class RepeticionEspaciada extends Estrategia {
 	
-	public RepeticionEspaciada() {
-	
-	}
-	
 	public RepeticionEspaciada(int totalPreguntas) {
 		super(totalPreguntas);
 	}
 
 	@Override
 	public int mostrarPregunta(int nPregunta) {
-		if (ordenPreguntas.isEmpty()) {
-			construirOrden();
-		}
 
 		if (nPregunta < ordenPreguntas.size()) {
 			return ordenPreguntas.get(nPregunta);
