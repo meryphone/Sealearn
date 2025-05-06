@@ -10,7 +10,6 @@ import dominio.PreguntaTest;
 import excepciones.CursoSinPreguntasCiertaDificultad;
 import excepciones.ExcepcionCursoActualVacio;
 import excepciones.ExcepcionCursoDuplicado;
-import utils.CursoUtils;
 import utils.Mensajes;
 import java.awt.*;
 import java.io.IOException;
@@ -139,7 +138,7 @@ public class Principal {
 		center1.setBackground(Principal.BEIGE);
 
 		// Cargar la lista de cursos
-		for (Curso curso : CursoUtils.cargarTodosLosCursos()) {
+		for (Curso curso : controlador.getCursos()) {
 			model.addElement(curso);
 		}
 

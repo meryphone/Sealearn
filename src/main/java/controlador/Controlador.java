@@ -10,6 +10,7 @@ import dominio.CursoEnProgreso;
 import dominio.Dificultad;
 import dominio.Estadistica;
 import dominio.Pregunta;
+import dominio.RepositorioCursos;
 import excepciones.CursoSinPreguntasCiertaDificultad;
 import excepciones.ExcepcionCursoActualVacio;
 import excepciones.ExcepcionCursoDuplicado;
@@ -24,20 +25,23 @@ public class Controlador {
 	private static Controlador controlador;
 	private Estadistica estadistica;
 	private CursoEnProgreso cursoEnProgresoActual;
+	private RepositorioCursos repoCursos;
 	private ICursoEnProgreso adaptadorCursoEnProgreso;
 	private IEstadistica adaptadorEstadistica;
 
 	private Controlador() {
+		repoCursos = RepositorioCursos.getInstance();
 		adaptadorCursoEnProgreso = AdaptadorCursoEnProgresoJPA.getIntance();
 		adaptadorEstadistica = AdaptadorEstadisticaJPA.getIntance();
 		List<Estadistica> stats = adaptadorEstadistica.buscarTodos();
 		this.estadistica = stats.isEmpty() ? new Estadistica() : stats.getLast();
 	}
 	
-	public Controlador(Estadistica stats, ICursoEnProgreso cursoAdapter, IEstadistica estadisticaAdapter) {
+	public Controlador(Estadistica stats, ICursoEnProgreso cursoAdapter, IEstadistica estadisticaAdapter, RepositorioCursos repoCurso) {
 		this.adaptadorCursoEnProgreso = cursoAdapter;
         this.adaptadorEstadistica = estadisticaAdapter;
         this.estadistica = stats;
+        this.repoCursos = repoCurso;
 	}
 	        
 	public static Controlador getInstance() {
@@ -144,7 +148,7 @@ public class Controlador {
 	}
 
 	public Curso importarCurso(String archivo) throws IOException, ExcepcionCursoDuplicado {
-		return CursoUtils.importarCurso(archivo);
+		return repoCursos.importarCurso(archivo);
 	}
 
 	public void exportarEstadisticas(String rutaArchivo) throws IOException {
@@ -153,7 +157,11 @@ public class Controlador {
 
 	public void eliminarCurso(UUID curso) {
 		adaptadorCursoEnProgreso.eliminarPorCursoId(curso);
-		CursoUtils.eliminarCurso(curso);
+		repoCursos.eliminarCurso(curso);
+	}
+	
+	public List<Curso> getCursos(){
+		return repoCursos.getCursos();
 	}
 	
 	private List<Pregunta> filtrarPorDificultad(List<Pregunta> preguntas, Dificultad dificultad) {

@@ -14,7 +14,7 @@ public class Configuracion extends JDialog {
 	private String dificultad = null;
 
 	public Configuracion(JFrame owner) {
-		super(owner, "Configuración", true);
+		super(owner, "Configuraciï¿½n", true);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 449, 309);
 
@@ -97,7 +97,7 @@ public class Configuracion extends JDialog {
 	}
 
 	/**
-	 * Muestra el diálogo de configuración y devuelve los parámetros seleccionados
+	 * Muestra el diï¿½logo de configuraciï¿½n y devuelve los parï¿½metros seleccionados
 	 */
 	public static ArrayList<String> mostrarDialogo(JFrame owner) {
 		ArrayList<String> parametros = new ArrayList<>();
