@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import dominio.Curso;
 import dominio.CursoEnProgreso;
 import dominio.Dificultad;
 import dominio.Estadistica;
 import dominio.Pregunta;
+import dominio.RepositorioCursos;
 import excepciones.CursoSinPreguntasCiertaDificultad;
 import excepciones.ExcepcionCursoActualVacio;
 import excepciones.ExcepcionCursoDuplicado;
@@ -17,29 +19,31 @@ import persistencia.AdaptadorCursoEnProgresoJPA;
 import persistencia.AdaptadorEstadisticaJPA;
 import persistencia.ICursoEnProgreso;
 import persistencia.IEstadistica;
-import utils.CursoUtils;
 
 public class Controlador {
 
 	private static Controlador controlador;
 	private Estadistica estadistica;
 	private CursoEnProgreso cursoEnProgresoActual;
-
+	private RepositorioCursos repoCursos;
 	private ICursoEnProgreso adaptadorCursoEnProgreso;
 	private IEstadistica adaptadorEstadistica;
 
 	private Controlador() {
+		repoCursos = RepositorioCursos.getInstance();
 		adaptadorCursoEnProgreso = AdaptadorCursoEnProgresoJPA.getIntance();
 		adaptadorEstadistica = AdaptadorEstadisticaJPA.getIntance();
 		List<Estadistica> stats = adaptadorEstadistica.buscarTodos();
-		if (stats.isEmpty()) {
-			estadistica = new Estadistica();
-		} else {
-			estadistica = stats.getLast();
-		}
-
+		this.estadistica = stats.isEmpty() ? new Estadistica() : stats.getLast();
 	}
-
+	
+	public Controlador(Estadistica stats, ICursoEnProgreso cursoAdapter, IEstadistica estadisticaAdapter, RepositorioCursos repoCurso) {
+		this.adaptadorCursoEnProgreso = cursoAdapter;
+        this.adaptadorEstadistica = estadisticaAdapter;
+        this.estadistica = stats;
+        this.repoCursos = repoCurso;
+	}
+	        
 	public static Controlador getInstance() {
 		if (controlador == null) {
 			controlador = new Controlador();
@@ -67,16 +71,12 @@ public class Controlador {
 			estadistica.registrarEstudioHoy();
 			adaptadorCursoEnProgreso.guardar(cursoEnProgresoActual);
 
-			return cursoEnProgresoActual;
+			return cursoEnProgresoActual; 
 
 		} else {
 			throw new ExcepcionCursoActualVacio("Seleccione un curso antes de comenzar");
 		}
 
-	}
-
-	public List<Pregunta> filtrarPorDificultad(List<Pregunta> preguntas, Dificultad dificultad) {
-		return preguntas.stream().filter((p) -> p.getDificultad() == dificultad).collect(Collectors.toList());
 	}
 
 	public boolean corregir(String respuesta) {
@@ -149,15 +149,24 @@ public class Controlador {
 	}
 
 	public Curso importarCurso(String archivo) throws IOException, ExcepcionCursoDuplicado {
-		return CursoUtils.importarCurso(archivo);
+		return repoCursos.importarCurso(archivo);
 	}
 
 	public void exportarEstadisticas(String rutaArchivo) throws IOException {
 		estadistica.exportar(rutaArchivo);
 	}
 
-	public void eliminarCurso(Curso curso) {
-		adaptadorCursoEnProgreso.eliminarPorCursoId(curso.getId());
+	public void eliminarCurso(UUID curso) {
+		adaptadorCursoEnProgreso.eliminarPorCursoId(curso);
+		repoCursos.eliminarCurso(curso);
+	}
+	
+	public List<Curso> getCursos(){
+		return repoCursos.getCursos();
+	}
+	
+	private List<Pregunta> filtrarPorDificultad(List<Pregunta> preguntas, Dificultad dificultad) {
+		return preguntas.stream().filter((p) -> p.getDificultad() == dificultad).collect(Collectors.toList());
 	}
 
 }

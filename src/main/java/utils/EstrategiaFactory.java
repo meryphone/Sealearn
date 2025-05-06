@@ -1,19 +1,23 @@
 package utils;
 
+import dominio.Aleatoria;
 import dominio.Estrategia;
+import dominio.RepeticionEspaciada;
+import dominio.Secuencial;
 
 public class EstrategiaFactory {
 
     public static Estrategia crearEstrategia(String nombre, int totalPreguntas) {
-        try {        	
-        	nombre = nombre.replace(" ", "");
-            Class<?> clazz = Class.forName("dominio." + nombre);
-            Estrategia estrategia = (Estrategia) clazz.getDeclaredConstructor().newInstance();          
-            estrategia.setTotalPreguntas(totalPreguntas);          
-            return estrategia;
-        } catch (Exception e) {        	
-        	e.printStackTrace();
-            throw new RuntimeException("Estrategia no válida: " + nombre, e);           
-        }
+    
+    switch (nombre) {
+	case "Repeticion Espaciada": 
+		return new RepeticionEspaciada(totalPreguntas);
+	case "Aleatoria":
+		return new Aleatoria(totalPreguntas);
+	case "Secuencial":	
+		return new Secuencial(totalPreguntas);
+	default:
+		throw new IllegalArgumentException("Unexpected value: " + nombre);
+	}
     }
 }

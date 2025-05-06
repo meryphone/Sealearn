@@ -1,107 +1,139 @@
 package controladorTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import controlador.Controlador;
-import dominio.Curso;
-import dominio.Dificultad;
-import dominio.Pregunta;
-import dominio.PreguntaTest;
-import excepciones.CursoSinPreguntasCiertaDificultad;
-import excepciones.ExcepcionCursoActualVacio;
-import persistencia.AdaptadorCursoEnProgresoJPA;
-
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.AfterAll;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import controlador.Controlador;
+import dominio.Curso;
+import dominio.CursoEnProgreso;
+import dominio.Dificultad;
+import dominio.Estadistica;
+import dominio.Pregunta;
+import dominio.PreguntaTest;
+import dominio.RepositorioCursos;
+import excepciones.CursoSinPreguntasCiertaDificultad;
+import excepciones.ExcepcionCursoActualVacio;
+import persistencia.ICursoEnProgreso;
+import persistencia.IEstadistica;
 
-@TestInstance(Lifecycle.PER_CLASS)
-class ControladorTest {
+public class ControladorTest {
 
-    private Controlador controlador;
-    private Curso cursoDePrueba;
-    private AdaptadorCursoEnProgresoJPA adaptadorCursoEnProgreso;
-    
-    @BeforeAll
-    void setUp() {
-        controlador = Controlador.getInstance();
-        adaptadorCursoEnProgreso = AdaptadorCursoEnProgresoJPA.getIntance();
-        
-        List<Pregunta> preguntas = new ArrayList<>();
-        preguntas.add(new PreguntaTest("¿2+2?", "4", List.of("3", "4", "5"), Dificultad.FACIL));
-        preguntas.add(new PreguntaTest("¿3+5?", "8", List.of("6", "7", "8"), Dificultad.FACIL));
-        preguntas.add(new PreguntaTest("¿10-2?", "8", List.of("7", "8", "9"), Dificultad.MEDIA));
+	private Controlador controlador;
+	private Estadistica estadisticaMock;
+	private RepositorioCursos repoCurso;
+	private ICursoEnProgreso cursoRepoMock;
+	private IEstadistica estadisticaRepoMock;
+	private CursoEnProgreso cursoEnProgresoMock;
+	private Curso curso;
 
-        cursoDePrueba = new Curso("Curso Test", "Un curso de prueba", preguntas);
-    }
-    
-    @Test
-    void testIniciarCursoSinPreguntasFiltradas() {
-        assertThrows(CursoSinPreguntasCiertaDificultad.class, () -> {
-            controlador.iniciarCurso(cursoDePrueba, "Secuencial", "dificil"); // No hay preguntas "DIFICIL"
-        });
-    }
-    
-    @Test
-    void testIniciarCursoCorrectamente() {
-        assertDoesNotThrow(() -> {
-            controlador.iniciarCurso(cursoDePrueba, "Secuencial","facil");
-        });
-    }
+	@BeforeEach
+	void setUp() {
+		estadisticaMock = mock(Estadistica.class);
+		cursoRepoMock = mock(ICursoEnProgreso.class);
+		estadisticaRepoMock = mock(IEstadistica.class);
+		repoCurso = mock(RepositorioCursos.class);
+		cursoEnProgresoMock = mock(CursoEnProgreso.class);
+		curso = mock(Curso.class);
 
-    @Test
-    void testFiltrarPorDificultad() {
-        List<Pregunta> faciles = controlador.filtrarPorDificultad(cursoDePrueba.getPreguntas(), Dificultad.FACIL);
-        assertEquals(2, faciles.size());
+		List<Pregunta> preguntas = List.of(new PreguntaTest("¿2+2?", "4", List.of("3", "4", "5"), Dificultad.FACIL),
+				new PreguntaTest("¿5+5?", "10", List.of("10", "11", "12"), Dificultad.FACIL));
 
-        List<Pregunta> medias = controlador.filtrarPorDificultad(cursoDePrueba.getPreguntas(), Dificultad.MEDIA);
-        assertEquals(1, medias.size());
+		curso = new Curso("Curso Test", "Descripción", new ArrayList<>(preguntas));
 
-        List<Pregunta> dificiles = controlador.filtrarPorDificultad(cursoDePrueba.getPreguntas(), Dificultad.DIFICIL);
-        assertEquals(0, dificiles.size());
-    }
+		controlador = new Controlador(estadisticaMock, cursoRepoMock, estadisticaRepoMock, repoCurso);
+	}
 
-    @Test
-    void testCorregirRespuestaCorrecta() throws CursoSinPreguntasCiertaDificultad, ExcepcionCursoActualVacio {
-        boolean resultado = controlador.corregir("4");
-        assertTrue(resultado);
-    }
+	@Test
+	public void testCursoSeleccionadoEsNull_lanzaExcepcion() {
+		assertThrows(ExcepcionCursoActualVacio.class, () -> {
+			controlador.iniciarCurso(null, "Secuencial", "FACIL");
+		});
+	}
 
-    @Test
-    void testCorregirRespuestaIncorrecta() throws CursoSinPreguntasCiertaDificultad, ExcepcionCursoActualVacio {
+	@Test
+	public void testCursoSinPreguntasFiltradas_lanzaExcepcion() {
+		Curso cursoVacio = new Curso("C1", "desc", List.of());
 
-        boolean resultado = controlador.corregir("5");
-        assertFalse(resultado);
-    }
+		assertThrows(CursoSinPreguntasCiertaDificultad.class, () -> {
+			controlador.iniciarCurso(cursoVacio, "Aleatoria", "MEDIA");
+		});
+	}
 
-    @Test
-    void testAvanzarProgreso() throws CursoSinPreguntasCiertaDificultad, ExcepcionCursoActualVacio {
+	@Test
+	public void testCursoConPreguntasValidas_flujoCorrecto() throws Exception {
+		Pregunta p1 = new PreguntaTest("¿2+2?", "4", List.of("3", "4", "5"), Dificultad.FACIL);
+		Curso curso = new Curso("C2", "desc", List.of(p1));
 
-        int progresoAntes = controlador.getProgreso();
-        controlador.avanzarProgreso();
+		CursoEnProgreso result = controlador.iniciarCurso(curso, "RepeticionEspaciada", "facil");
 
-        int progresoDespues = controlador.getProgreso();
-        assertEquals(progresoAntes + 1, progresoDespues);
-    }
+		assertNotNull(result);
+		assertEquals(curso.getId(), result.getCursoId());
+		verify(estadisticaMock).registrarEstudioHoy();
+		verify(cursoRepoMock).guardar(any(CursoEnProgreso.class));
+	}
 
-    @Test
-    void testFinalizarSesionCurso() throws CursoSinPreguntasCiertaDificultad, ExcepcionCursoActualVacio {
+	@Test
+	public void testDificultadNoValida_lanzaIllegalArgument() {
+		Pregunta p1 = new PreguntaTest("Pregunta", "R", List.of("R"), Dificultad.FACIL);
+		Curso curso = new Curso("C3", "desc", List.of(p1));
 
-        assertNull(controlador.finalizarSesionCurso());
-        assertNotNull(controlador.getEstadistica());
-       
-    }
+		assertThrows(IllegalArgumentException.class, () -> {
+			controlador.iniciarCurso(curso, "Aleatoria", "INVALIDA");
+		});
+	}
 
-    @AfterAll
-    void borrarBaseDeDatos() {
-    	adaptadorCursoEnProgreso.eliminarPorCursoId(cursoDePrueba.getId());
-    }
+	@Test
+	public void testReanudarCurso_existente() {
+		when(curso.getId()).thenReturn(java.util.UUID.randomUUID());
+		when(curso.getPreguntas()).thenReturn(List.of());
+		when(cursoRepoMock.buscarPorCursoId(any())).thenReturn(cursoEnProgresoMock);
 
-    
+		CursoEnProgreso result = controlador.reanudarCurso(curso);
+
+		assertEquals(cursoEnProgresoMock, result);
+		verify(cursoEnProgresoMock).setPreguntas(anyList());
+		verify(cursoEnProgresoMock).reconstruirEstrategia();
+	}
+
+	@Test
+	public void testReanudarCurso_noExistente() {
+		when(curso.getId()).thenReturn(java.util.UUID.randomUUID());
+		when(cursoRepoMock.buscarPorCursoId(any())).thenReturn(null);
+
+		CursoEnProgreso result = controlador.reanudarCurso(curso);
+
+		assertNull(result);
+	}
+
+	@Test
+	public void testRestablecerEstadisticas() {
+		controlador.restablecerEstadisticas();
+		verify(estadisticaMock).reset();
+		verify(estadisticaRepoMock).actualizar(estadisticaMock);
+	}
+	
+	  @Test
+	    void reanudarCurso_existenteDevuelveCursoYReconstruyeEstrategia() {
+	        CursoEnProgreso mockProgreso = mock(CursoEnProgreso.class);
+	        when(cursoRepoMock.buscarPorCursoId(curso.getId())).thenReturn(mockProgreso);
+	        when(mockProgreso.getDificultad()).thenReturn(Dificultad.FACIL);
+
+	        CursoEnProgreso result = controlador.reanudarCurso(curso);
+	        assertNotNull(result);
+	        verify(mockProgreso).reconstruirEstrategia();
+	    }
+
 }

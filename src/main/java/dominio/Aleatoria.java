@@ -7,10 +7,6 @@ import java.util.Collections;
  * sin repeticiones.
  */
 public class Aleatoria extends Estrategia {
-	
-	public Aleatoria() {
-		
-	}
     
     public Aleatoria(int totalPreguntas) {
     	super(totalPreguntas);
@@ -18,9 +14,6 @@ public class Aleatoria extends Estrategia {
 
     @Override
     public int mostrarPregunta(int nPregunta) {
-        if (ordenPreguntas.isEmpty()) {
-            construirOrden();			
-        }
 
         if (nPregunta < ordenPreguntas.size()) {
             return ordenPreguntas.get(nPregunta);

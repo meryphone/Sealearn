@@ -1,4 +1,4 @@
-package utils;
+package dominio;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,13 +9,26 @@ import java.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import controlador.Controlador;
-import dominio.Curso;
 import excepciones.ExcepcionCursoDuplicado;
 
-public class CursoUtils {
+public class RepositorioCursos {
 
-	private static final Set<UUID> cursosCargados = new HashSet<>();
+	private Map<UUID, Curso> cursosCargados ;
+	private static RepositorioCursos repoCursos;
 	private static final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
+	
+	
+	private RepositorioCursos() {
+		cursosCargados = new HashMap<UUID, Curso>();
+		this.cargarTodosLosCursos();
+	}
+	
+	public static RepositorioCursos getInstance() {
+		if(repoCursos == null) {
+			repoCursos = new RepositorioCursos();
+		}
+		return repoCursos;
+	}
 
 	/**
 	 * Importa un solo curso desde YAML usando Jackson. Detecta duplicados por UUID.
@@ -25,7 +38,7 @@ public class CursoUtils {
 	 * @throws ExcepcionCursoDuplicado si el UUID ya ha sido cargado
 	 * @throws IOException             si ocurre un error de lectura
 	 */
-	public static Curso importarCurso(String nombreArchivo) throws ExcepcionCursoDuplicado, IOException {
+	public Curso importarCurso(String nombreArchivo) throws ExcepcionCursoDuplicado, IOException {
 		String ruta = "/cursos/" + nombreArchivo;
 
 		InputStream inputStream = Controlador.class.getResourceAsStream(ruta);
@@ -35,19 +48,26 @@ public class CursoUtils {
 
 		Curso curso = yamlMapper.readValue(inputStream, Curso.class);
 
-		if (cursosCargados.contains(curso.getId())) {
+		if (cursosCargados.containsKey(curso.getId())) {
 			throw new ExcepcionCursoDuplicado("Curso duplicado detectado con UUID: " + curso.getId());
 		}
 
-		cursosCargados.add(curso.getId());
+		cursosCargados.put(curso.getId(),curso);
 		return curso;
 	}
-
+	
+	public void eliminarCurso(UUID cursoID) {
+		cursosCargados.remove(cursoID);
+	}
+	
+	public List<Curso> getCursos(){
+		return Collections.unmodifiableList( new ArrayList<Curso>(cursosCargados.values()));
+	}
 
 	/**
 	 * Carga todos los cursos desde la carpeta /resources/cursos/
 	 */
-	public static List<Curso> cargarTodosLosCursos() {
+	private List<Curso> cargarTodosLosCursos() {
 		List<Curso> cursos = new ArrayList<>();
 
 		URL folderURL = Controlador.class.getResource("/cursos/");
