@@ -61,7 +61,7 @@ public class RepositorioCursos {
 	}
 	
 	public List<Curso> getCursos(){
-		return Collections.unmodifiableList((ArrayList<Curso>) cursosCargados.values());
+		return Collections.unmodifiableList( new ArrayList<Curso>(cursosCargados.values()));
 	}
 
 	/**

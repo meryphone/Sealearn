@@ -18,7 +18,6 @@ import persistencia.AdaptadorCursoEnProgresoJPA;
 import persistencia.AdaptadorEstadisticaJPA;
 import persistencia.ICursoEnProgreso;
 import persistencia.IEstadistica;
-import utils.CursoUtils;
 
 public class Controlador {
 
