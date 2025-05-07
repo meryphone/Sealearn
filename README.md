@@ -8,7 +8,8 @@ Profesor: Jesús Sánchez Cuadrado
 
 # SeaLearn
 
-
+- [Casos de uso](requisitos)
+- [Diseño](diseño)
 
 ## Descripción
 
