@@ -5,6 +5,8 @@ Aquí presentamos las distitntas funcionalidades del sistema mediante casos de u
 >[!NOTE]
 >Un mismo usuario puede actuar como **Estudiante** (cuando realiza cursos y consulta estadísticas) y como **Creador de cursos** (cuando importa, exporta o elimina cursos de la biblioteca interna).
 
+---
+
 ### Seleccionar curso
 
 - **Actor**: Estudiante
