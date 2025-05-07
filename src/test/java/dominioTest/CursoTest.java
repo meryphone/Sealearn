@@ -19,9 +19,9 @@ class CursoTest {
     void setUp() {
         curso = new Curso(
             "Curso de ejemplo",
-            "Descripción del curso",
+            "Descripcion del curso",
             List.of(
-                new PreguntaRespuestaCorta("¿Lenguaje de esta clase?", "Java", Dificultad.FACIL)
+                new PreguntaRespuestaCorta("ï¿½Lenguaje de esta clase?", "Java", Dificultad.FACIL)
             )
         );
     }

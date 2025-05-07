@@ -7,12 +7,24 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "Cursos")
 public class Curso {
 	
+	@Id
 	private UUID id;
     private String nombre;
     private String descripcion;
+    
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "curso_id")
     private List<Pregunta> preguntas;
     
     @JsonCreator
@@ -25,7 +37,10 @@ public class Curso {
         this.preguntas = preguntas;
         this.id = generarUUIDDeterminista();  
     }
-
+    
+    public Curso() {
+    	
+    }
     
     private UUID generarUUIDDeterminista(Curso this) {
         String representacionUnica = this.toString();       

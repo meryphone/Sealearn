@@ -12,6 +12,8 @@ import utils.EstrategiaFactory;
 public class CursoEnProgreso {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	Long id;
 	private UUID cursoId;
 	@Transient
 	private Estrategia estrategia;

@@ -96,7 +96,7 @@ public class Estadistica {
 
     public void exportar(String rutaArchivo) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(rutaArchivo))) {
-            writer.write("Estad�sticas de estudio\n\n");
+            writer.write("Estadisticas de estudio\n\n");
             writer.write("Total de preguntas respondidas: " + totalPreguntasRespondidas + "\n");
             writer.write("Total de aciertos: " + totalAciertos + "\n");
             writer.write("Total de fallos: " + totalFallos + "\n");
@@ -110,7 +110,7 @@ public class Estadistica {
             writer.write("Racha actual: " + rachaActual + "\n");
 
             if (ultimoDiaEstudio != null) {
-                writer.write("�ltimo d�a de estudio: "
+                writer.write("Ultimo d�a de estudio: "
                         + ultimoDiaEstudio.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n");
             }
         }

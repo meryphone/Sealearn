@@ -12,6 +12,7 @@ import excepciones.ExcepcionCursoActualVacio;
 import excepciones.ExcepcionCursoDuplicado;
 import utils.Mensajes;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -43,12 +44,6 @@ public class Principal {
 		initialize();
 	}
 	
-	public Principal(Controlador controlador, CursoEnProgreso cursoEnProgreso){
-		initialize();
-		this.controlador = controlador;
-		this.cursoActual = cursoEnProgreso;
-	}
-
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1032, 666);
@@ -112,7 +107,6 @@ public class Principal {
 		btnStats.setPreferredSize(new Dimension(120, 40));
 		panelButtons.add(btnStats);
 		btnStats.addActionListener(e -> {
-		    controlador.finalizarSesionCurso(); 
 			EstadisticaView stats = new EstadisticaView(controlador.getEstadistica());
 			stats.setVisible(true);
 		});
@@ -176,7 +170,7 @@ public class Principal {
 
 	}
 
-	protected void iniciarCurso(Curso cursoSeleccionado) {
+	private void iniciarCurso(Curso cursoSeleccionado) {
 		CursoEnProgreso cursoEnProgreso = controlador.reanudarCurso(cursoSeleccionado);
 		try {
 			if (cursoEnProgreso != null) {
@@ -211,11 +205,10 @@ public class Principal {
 		}
 	}
 
-	protected void realizarCurso() {
+	private void realizarCurso() {
 		AtomicBoolean cursoCancelado = new AtomicBoolean(false);
 
 		Runnable onClose = () -> {
-			cursoActual = null;
 			cursoCancelado.set(true);
 		};
 
@@ -245,13 +238,13 @@ public class Principal {
 		}
 	}
 
-	protected void importarCurso() {
+	private void importarCurso() {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Selecciona un archivo YAML de curso");
 
 		int resultado = fileChooser.showOpenDialog(frame);
 		if (resultado == JFileChooser.APPROVE_OPTION) {
-			String archivo = fileChooser.getSelectedFile().getName();
+			File archivo = fileChooser.getSelectedFile();
 			try {
 				Curso cursoAagregar = controlador.importarCurso(archivo);
 				model.addElement(cursoAagregar);
@@ -263,11 +256,11 @@ public class Principal {
 		}
 	}
 
-	protected void eliminarCurso(Curso cursoSeleccionado) {
+	private void eliminarCurso(Curso cursoSeleccionado) {
 		if (cursoSeleccionado != null) {
 			int confirm = Mensajes.mostrarSIoNO(frame, "¿Desea eliminar el curso seleccionado?");
 			if (confirm == JOptionPane.YES_OPTION) {
-				controlador.eliminarCurso(cursoSeleccionado.getId());
+				controlador.eliminarCurso(cursoSeleccionado);
 				model.removeElement(cursoSeleccionado);
 			}
 		} else {
@@ -275,7 +268,7 @@ public class Principal {
 		}
 	}
 
-	protected void exportarEstadisticas() {
+	private void exportarEstadisticas() {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Exportar estadísticas a PDF");
 

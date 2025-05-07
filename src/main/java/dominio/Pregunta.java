@@ -5,6 +5,16 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
+
 
 @JsonTypeInfo(
 	    use = JsonTypeInfo.Id.NAME,
@@ -16,10 +26,17 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 	    @JsonSubTypes.Type(value = PreguntaRellenarHueco.class, name = "PreguntaRellenarHueco"),
 	    @JsonSubTypes.Type(value = PreguntaRespuestaCorta.class, name = "PreguntaRespuestaCorta")
 	})
+
+@Entity
+@Inheritance(strategy =  InheritanceType.SINGLE_TABLE)
+@Table(name = "Preguntas")
+@DiscriminatorColumn(name = "tipo_pregunta", discriminatorType = DiscriminatorType.STRING)
 public abstract class Pregunta implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	Long id;
 	private String enunciado;
 	private String respuestaCorrecta;
 	private Dificultad dificultad;

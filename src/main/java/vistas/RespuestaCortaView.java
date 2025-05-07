@@ -109,7 +109,6 @@ public class RespuestaCortaView extends JDialog {
 	}
 	
 	private void cerrarSesion() {
-		controlador.finalizarSesionCurso();
 		if (onCloseCallback != null) {
 			onCloseCallback.run();
 		}

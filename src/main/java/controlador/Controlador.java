@@ -1,10 +1,10 @@
 package controlador;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import dominio.Curso;
 import dominio.CursoEnProgreso;
@@ -16,7 +16,9 @@ import excepciones.CursoSinPreguntasCiertaDificultad;
 import excepciones.ExcepcionCursoActualVacio;
 import excepciones.ExcepcionCursoDuplicado;
 import persistencia.AdaptadorCursoEnProgresoJPA;
+import persistencia.AdaptadorCursoJPA;
 import persistencia.AdaptadorEstadisticaJPA;
+import persistencia.ICurso;
 import persistencia.ICursoEnProgreso;
 import persistencia.IEstadistica;
 
@@ -28,11 +30,13 @@ public class Controlador {
 	private RepositorioCursos repoCursos;
 	private ICursoEnProgreso adaptadorCursoEnProgreso;
 	private IEstadistica adaptadorEstadistica;
+	private ICurso adaptadorCurso;
 
 	private Controlador() {
 		repoCursos = RepositorioCursos.getInstance();
 		adaptadorCursoEnProgreso = AdaptadorCursoEnProgresoJPA.getIntance();
 		adaptadorEstadistica = AdaptadorEstadisticaJPA.getIntance();
+		adaptadorCurso = AdaptadorCursoJPA.getInstance();
 		List<Estadistica> stats = adaptadorEstadistica.buscarTodos();
 		this.estadistica = stats.isEmpty() ? new Estadistica() : stats.getLast();
 	}
@@ -126,17 +130,16 @@ public class Controlador {
 	}
 
 	public CursoEnProgreso finalizarSesionCurso() {
-		if (cursoEnProgresoActual != null && cursoEnProgresoActual.isCompletado()) {
+		
+		if (cursoEnProgresoActual.isCompletado()) {
 			adaptadorCursoEnProgreso.eliminar(cursoEnProgresoActual);
-		} else if (cursoEnProgresoActual != null && !cursoEnProgresoActual.isCompletado()) {
+		} else  {
 			adaptadorCursoEnProgreso.actualizar(cursoEnProgresoActual);
 		}
 
-		if (estadistica != null) {
-			estadistica.finalizarSesion();
-	        estadistica.setInicioSesion(LocalDateTime.now()); 
-			adaptadorEstadistica.actualizar(estadistica);
-		}
+		estadistica.finalizarSesion();
+	    estadistica.setInicioSesion(LocalDateTime.now()); 
+		adaptadorEstadistica.actualizar(estadistica);
 
 		cursoEnProgresoActual = null;
 		return cursoEnProgresoActual;
@@ -148,7 +151,7 @@ public class Controlador {
 		return cursoEnProgresoActual;
 	}
 
-	public Curso importarCurso(String archivo) throws IOException, ExcepcionCursoDuplicado {
+	public Curso importarCurso(File archivo) throws IOException, ExcepcionCursoDuplicado {
 		return repoCursos.importarCurso(archivo);
 	}
 
@@ -156,9 +159,10 @@ public class Controlador {
 		estadistica.exportar(rutaArchivo);
 	}
 
-	public void eliminarCurso(UUID curso) {
-		adaptadorCursoEnProgreso.eliminarPorCursoId(curso);
-		repoCursos.eliminarCurso(curso);
+	public void eliminarCurso(Curso curso) {
+		adaptadorCurso.eliminar(curso);
+		adaptadorCursoEnProgreso.eliminarPorCursoId(curso.getId());
+		repoCursos.eliminarCurso(curso.getId());
 	}
 	
 	public List<Curso> getCursos(){

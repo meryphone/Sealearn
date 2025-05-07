@@ -1,12 +1,14 @@
 package dominioTest;
 
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 
 import dominio.Aleatoria;
 
-public class AleatoriaTest extends TestCase {
+public class AleatoriaTest  {
 	
 	@Test
 	void testAleatoria() {

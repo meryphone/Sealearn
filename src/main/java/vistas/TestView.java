@@ -116,7 +116,6 @@ public class TestView extends JDialog {
 	}
 	
 	private void cerrarSesion() {
-		controlador.finalizarSesionCurso();
 		if (onCloseCallback != null) {
 			onCloseCallback.run();
 		}
