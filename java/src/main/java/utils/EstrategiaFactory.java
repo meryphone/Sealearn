@@ -10,7 +10,7 @@ public class EstrategiaFactory {
     public static Estrategia crearEstrategia(String nombre, int totalPreguntas) {
     
     switch (nombre) {
-	case "Repeticion Espaciada": 
+	case "RepeticionEspaciada": 
 		return new RepeticionEspaciada(totalPreguntas);
 	case "Aleatoria":
 		return new Aleatoria(totalPreguntas);

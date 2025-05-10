@@ -156,7 +156,6 @@ public class Estadistica {
         return id;
     }
 
-    // Setter para ID (necesario para JPA)
     public void setId(Long id) {
         this.id = id;
     }
