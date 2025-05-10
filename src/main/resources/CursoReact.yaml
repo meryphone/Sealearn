@@ -1,0 +1,129 @@
+nombre: "Curso Basico de React"
+descripcion: "Aprende los fundamentos de React, incluyendo JSX, hooks, componentes y patrones avanzados."
+preguntas:
+  # --- Preguntas FÁCIL ---
+  - tipo: PreguntaTest
+    enunciado: "¿Qué comando se usa para crear una aplicación React?"
+    respuestaCorrecta: "npx create-react-app"
+    dificultad: FACIL
+    listaOpciones:
+      - "npx create-react-app"
+      - "npm install react"
+      - "create-react"
+
+  - tipo: PreguntaRellenarHueco
+    enunciado: "El hook usado para manejar estado es ___"
+    respuestaCorrecta: "useState"
+    dificultad: FACIL
+    listaOpciones:
+      - "useState"
+      - "useEffect"
+      - "useContext"
+
+  - tipo: PreguntaRespuestaCorta
+    enunciado: "¿Qué librería se usa para el enrutamiento en aplicaciones React?"
+    respuestaCorrecta: "react-router-dom"
+    dificultad: FACIL
+
+  - tipo: PreguntaTest
+    enunciado: "¿Cuál es la extensión típica de archivos que contienen JSX?"
+    respuestaCorrecta: ".jsx"
+    dificultad: FACIL
+    listaOpciones:
+      - ".jsx"
+      - ".js"
+      - ".ts"
+
+  - tipo: PreguntaRellenarHueco
+    enunciado: "Para mostrar contenido condicional, se usa ___ en JSX"
+    respuestaCorrecta: "operadores lógicos"
+    dificultad: FACIL
+    listaOpciones:
+      - "operadores lógicos"
+      - "bucle for"
+      - "switch"
+
+  # --- Preguntas MEDIA ---
+  - tipo: PreguntaTest
+    enunciado: "¿Qué hook se usa para efectos secundarios en React?"
+    respuestaCorrecta: "useEffect"
+    dificultad: MEDIA
+    listaOpciones:
+      - "useEffect"
+      - "useCallback"
+      - "useReducer"
+
+  - tipo: PreguntaRellenarHueco
+    enunciado: "El atributo especial ___ se usa para listas en React"
+    respuestaCorrecta: "key"
+    dificultad: MEDIA
+    listaOpciones:
+      - "key"
+      - "id"
+      - "index"
+
+  - tipo: PreguntaRespuestaCorta
+    enunciado: "¿Qué estructura usa React para actualizar la interfaz sin modificar el DOM real?"
+    respuestaCorrecta: "Virtual DOM"
+    dificultad: MEDIA
+
+  - tipo: PreguntaTest
+    enunciado: "¿Qué hook evita recrear funciones en cada render?"
+    respuestaCorrecta: "useCallback"
+    dificultad: MEDIA
+    listaOpciones:
+      - "useMemo"
+      - "useCallback"
+      - "useState"
+
+  - tipo: PreguntaRellenarHueco
+    enunciado: "Las props en React son ___"
+    respuestaCorrecta: "inmutables"
+    dificultad: MEDIA
+    listaOpciones:
+      - "mutables"
+      - "opcional"
+      - "inmutables"
+
+  # --- Preguntas DIFÍCIL ---
+  - tipo: PreguntaTest
+    enunciado: "¿Qué patrón permite a un componente aceptar una función para decidir qué renderizar?"
+    respuestaCorrecta: "render props"
+    dificultad: DIFICIL
+    listaOpciones:
+      - "render props"
+      - "context"
+      - "HOC"
+
+  - tipo: PreguntaRellenarHueco
+    enunciado: "El hook ___ permite acceder a un contexto global en React"
+    respuestaCorrecta: "useContext"
+    dificultad: DIFICIL
+    listaOpciones:
+      - "useContext"
+      - "useState"
+      - "useGlobal"
+
+  - tipo: PreguntaRespuestaCorta
+    enunciado: "¿Cómo se llama la técnica para envolver un componente y extender su funcionalidad?"
+    respuestaCorrecta: "HOC"
+    dificultad: DIFICIL
+
+  - tipo: PreguntaTest
+    enunciado: "¿Qué hook permite guardar un valor entre renders sin causar renderizado?"
+    respuestaCorrecta: "useRef"
+    dificultad: DIFICIL
+    listaOpciones:
+      - "useEffect"
+      - "useRef"
+      - "useMemo"
+
+  - tipo: PreguntaRellenarHueco
+    enunciado: "Para evitar renders innecesarios en componentes React se usa ___"
+    respuestaCorrecta: "React.memo"
+    dificultad: DIFICIL
+    listaOpciones:
+      - "React.memo"
+      - "useRef"
+      - "context"
+
