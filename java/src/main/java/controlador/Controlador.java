@@ -126,8 +126,12 @@ public class Controlador {
 	}
 
 	public int getPorcentajeProgreso() {
-		return (int) ((cursoEnProgresoActual.getProgreso() * 100.0f) / cursoEnProgresoActual.getTotalPreguntas());
+	    if (cursoEnProgresoActual == null) return 0;
+	    int total = cursoEnProgresoActual.getTotalPreguntas();
+	    if (total == 0) return 0;
+	    return (cursoEnProgresoActual.getProgreso() * 100) / total;
 	}
+
 
 	public CursoEnProgreso finalizarSesionCurso() {
 		
@@ -172,5 +176,12 @@ public class Controlador {
 	private List<Pregunta> filtrarPorDificultad(List<Pregunta> preguntas, Dificultad dificultad) {
 		return preguntas.stream().filter((p) -> p.getDificultad() == dificultad).collect(Collectors.toList());
 	}
+
+	//necesario para pruebas
+	public void setCursoEnProgresoActual(CursoEnProgreso cursoEnProgresoActual) {
+		this.cursoEnProgresoActual = cursoEnProgresoActual;
+	}
+	
+	
 
 }
