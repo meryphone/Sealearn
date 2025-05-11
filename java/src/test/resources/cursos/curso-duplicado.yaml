@@ -1,7 +1,0 @@
-nombre: Curso Repetido
-descripcion: Curso duplicado
-preguntas:
-  - tipo: PreguntaRespuestaCorta
-    enunciado: ¿Duplicado?
-    respuestaCorrecta: sí
-    dificultad: FACIL

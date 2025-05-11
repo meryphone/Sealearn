@@ -73,6 +73,7 @@ public class Controlador {
 					dificultad);
 
 			estadistica.registrarEstudioHoy();
+		    estadistica.setInicioSesion(LocalDateTime.now()); // Se reinicia al comenzar una nueva sesión
 			adaptadorCursoEnProgreso.guardar(cursoEnProgresoActual);
 
 			return cursoEnProgresoActual; 
@@ -142,7 +143,6 @@ public class Controlador {
 		}
 
 		estadistica.finalizarSesion();
-	    estadistica.setInicioSesion(LocalDateTime.now()); 
 		adaptadorEstadistica.actualizar(estadistica);
 
 		cursoEnProgresoActual = null;

@@ -1,7 +1,0 @@
-nombre: Curso Test
-descripcion: Un curso de prueba
-preguntas:
-  - tipo: PreguntaRespuestaCorta
-    enunciado: ¿Color del cielo?
-    respuestaCorrecta: azul
-    dificultad: FACIL

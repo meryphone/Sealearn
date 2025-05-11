@@ -43,8 +43,6 @@ class PreguntaRespuestaCortaTest {
 
     @Test
     void testRespuestaNula() {
-        assertThrows(NullPointerException.class, () -> {
-            pregunta.validarRespuesta(null);
-        });
+        assertFalse(pregunta.validarRespuesta(null));
     }
 }

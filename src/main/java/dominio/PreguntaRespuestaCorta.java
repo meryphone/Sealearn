@@ -2,7 +2,6 @@ package dominio;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
 @Entity
