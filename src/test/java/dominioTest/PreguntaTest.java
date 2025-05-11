@@ -2,17 +2,23 @@ package dominioTest;
 
 import dominio.PreguntaRespuestaCorta;
 import dominio.Dificultad;
+import dominio.Pregunta;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PreguntaRespuestaCortaTest {
 
-    private PreguntaRespuestaCorta pregunta;
 
-    @BeforeEach
+class PreguntaTest {
+	
+    private Pregunta pregunta;
+
+	@BeforeEach
     void setUp() {
+		// Se realizan las pruebas con RespuestaCorta porque es el tipo de pregunta mas sencillo de instanciar
+		// y el metodo de validar pregunta funciona igual para todas las subclases de pregunta
         pregunta = new PreguntaRespuestaCorta("¿Capital de España?", "Madrid", Dificultad.FACIL);
     }
 
@@ -43,8 +49,7 @@ class PreguntaRespuestaCortaTest {
 
     @Test
     void testRespuestaNula() {
-        assertThrows(NullPointerException.class, () -> {
-            pregunta.validarRespuesta(null);
-        });
+        assertFalse(pregunta.validarRespuesta(null));
+        
     }
 }

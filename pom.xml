@@ -18,7 +18,7 @@
 
 		<!-- Dependency versions -->
 		<junit.version>5.11.0</junit.version>
-		<mockito.version>5.10.0</mockito.version>		
+		<mockito.version>5.10.0</mockito.version>
 		<jakarta.persistence.version>3.1.0</jakarta.persistence.version>
 		<hibernate.version>6.4.4.Final</hibernate.version>
 		<sqlite.jdbc.version>3.45.2.0</sqlite.jdbc.version>
@@ -74,7 +74,7 @@
 			<version>3.27.2</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- Mock -->
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -82,7 +82,7 @@
 			<version>${mockito.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- Jackson -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -119,26 +119,47 @@
 					<useModulePath>false</useModulePath>
 				</configuration>
 			</plugin>
-
 			<plugin>
-			<groupId>org.jacoco</groupId>
-			<artifactId>jacoco-maven-plugin</artifactId>
-			<version>0.8.12</version>
-			<executions>
-				<execution>
-					<goals>
-						<goal>prepare-agent</goal>
-					</goals>
-				</execution>
-				<execution>
-					<id>report</id>
-					<phase>prepare-package</phase>
-					<goals>
-						<goal>report</goal>
-					</goals>
-				</execution>
-			</executions>
-			</plugin>			
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.2</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>App.Sealearn</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.12</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+		</testResources>
 	</build>
 </project>

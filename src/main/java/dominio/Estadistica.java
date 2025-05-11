@@ -156,13 +156,18 @@ public class Estadistica {
         return id;
     }
 
+    // Setter para ID (necesario para JPA)
     public void setId(Long id) {
         this.id = id;
     }
     
-    //Necesario para pruebas
+    // Necesario para pruebas
 	public void setUltimoDiaEstudio(LocalDate ultimoDia) {
-		ultimoDiaEstudio = ultimoDia;
-		
+		ultimoDiaEstudio = ultimoDia;		
 	}
+	
+	public void setRachaActual(int racha) {
+		rachaActual = racha;		
+	}
+	
 }
