@@ -11,13 +11,13 @@ import excepciones.CursoSinPreguntasCiertaDificultad;
 import excepciones.ExcepcionCursoActualVacio;
 import excepciones.ExcepcionCursoDuplicado;
 import utils.Mensajes;
+
+import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.swing.*;
 
 public class Principal extends JFrame {
 
@@ -27,13 +27,12 @@ public class Principal extends JFrame {
 	private Controlador controlador = Controlador.getInstance();
 	private CursoEnProgreso cursoActual;
 	DefaultListModel<Curso> model = new DefaultListModel<Curso>();
-	private JFrame frame;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 			try {
-				Principal window = new Principal();
-				window.frame.setVisible(true);
+				Principal ventana = new Principal();
+				ventana.setVisible(true);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -43,15 +42,14 @@ public class Principal extends JFrame {
 	public Principal() {
 		initialize();
 	}
-	
+
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 1032, 666);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setBackground(Principal.BEIGE);
+		setBounds(100, 100, 1032, 666);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		getContentPane().setBackground(Principal.BEIGE);
 
 		JPanel top = new JPanel();
-		frame.getContentPane().add(top, BorderLayout.NORTH);
+		getContentPane().add(top, BorderLayout.NORTH);
 		top.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		JLabel title = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/Titulo.png")));
@@ -59,17 +57,17 @@ public class Principal extends JFrame {
 		top.setBackground(BEIGE);
 
 		JPanel left = new JPanel();
-		frame.getContentPane().add(left, BorderLayout.WEST);
+		getContentPane().add(left, BorderLayout.WEST);
 		left.setBackground(Principal.BEIGE);
 		left.add(Box.createRigidArea(new Dimension(150, 20)));
 
 		JPanel right = new JPanel();
-		frame.getContentPane().add(right, BorderLayout.EAST);
+		getContentPane().add(right, BorderLayout.EAST);
 		right.setBackground(Principal.BEIGE);
 		right.add(Box.createRigidArea(new Dimension(150, 20)));
 
 		JPanel down = new JPanel();
-		frame.getContentPane().add(down, BorderLayout.SOUTH);
+		getContentPane().add(down, BorderLayout.SOUTH);
 		down.setBackground(Principal.BEIGE);
 
 		JLabel sealLeft = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/seal_looking_right.png")));
@@ -95,7 +93,7 @@ public class Principal extends JFrame {
 		down.add(sealRight);
 
 		JPanel center0 = new JPanel();
-		frame.getContentPane().add(center0, BorderLayout.CENTER);
+		getContentPane().add(center0, BorderLayout.CENTER);
 		center0.setLayout(new BorderLayout());
 		center0.setBackground(Principal.BEIGE);
 
@@ -111,18 +109,12 @@ public class Principal extends JFrame {
 			stats.setVisible(true);
 		});
 
-		Component rigidArea = Box.createRigidArea(new Dimension(20, 40));
-		rigidArea.setPreferredSize(new Dimension(20, 20));
-		rigidArea.setMinimumSize(new Dimension(20, 20));
-		panelButtons.add(rigidArea);
-		
+		panelButtons.add(Box.createRigidArea(new Dimension(20, 20)));
 
 		JButton btnExportStats = new RoundButton("Exportar estadisticas");
 		btnExportStats.setPreferredSize(new Dimension(170, 40));
 		panelButtons.add(btnExportStats);
-		Component rigidArea_1 = Box.createRigidArea(new Dimension(20, 20));
-		rigidArea_1.setPreferredSize(new Dimension(20, 60));
-		panelButtons.add(rigidArea_1);
+		panelButtons.add(Box.createRigidArea(new Dimension(20, 60)));
 		btnExportStats.addActionListener(e -> {
 			exportarEstadisticas();
 		});
@@ -132,7 +124,6 @@ public class Principal extends JFrame {
 		center1.setLayout(new BorderLayout());
 		center1.setBackground(Principal.BEIGE);
 
-		// Cargar la lista de cursos
 		for (Curso curso : controlador.getCursos()) {
 			model.addElement(curso);
 		}
@@ -153,7 +144,6 @@ public class Principal extends JFrame {
 		JButton btnEliminarCurso = new RoundButton("Eliminar Curso");
 		btnEliminarCurso.setPreferredSize(new Dimension(130, 40));
 		panelButtons.add(btnEliminarCurso);
-
 		btnEliminarCurso.addActionListener(e -> {
 			Curso cursoSeleccionado = courseList.getSelectedValue();
 			eliminarCurso(cursoSeleccionado);
@@ -167,76 +157,67 @@ public class Principal extends JFrame {
 		JScrollPane scrollPane = new JScrollPane(courseList);
 		scrollPane.setPreferredSize(new Dimension(400, 200));
 		center1.add(scrollPane, BorderLayout.CENTER);
-
 	}
 
 	private void iniciarCurso(Curso cursoSeleccionado) {
 		CursoEnProgreso cursoEnProgreso = controlador.reanudarCurso(cursoSeleccionado);
 		try {
 			if (cursoEnProgreso != null) {
-				ReanudarCursoView dialog = new ReanudarCursoView(frame);
+				ReanudarCursoView dialog = new ReanudarCursoView(this);
 				dialog.setVisible(true);
 
 				switch (dialog.getOpcionSeleccionada()) {
-				case REANUDAR:
-					cursoActual = cursoEnProgreso;
-					realizarCurso();
-					break;
-				case RESTABLECER:
-					cursoActual = controlador.restablecerCurso();
-					realizarCurso();
-					break;
-				case CANCELAR:
-					break;
+					case REANUDAR:
+						cursoActual = cursoEnProgreso;
+						realizarCurso();
+						break;
+					case RESTABLECER:
+						cursoActual = controlador.restablecerCurso();
+						realizarCurso();
+						break;
+					case CANCELAR:
+						break;
 				}
-
 			} else {
-				ArrayList<String> parametros = Configuracion.mostrarDialogo(frame);
+				ArrayList<String> parametros = Configuracion.mostrarDialogo(this);
 				if (!parametros.isEmpty()) {
 					cursoActual = controlador.iniciarCurso(cursoSeleccionado, parametros.get(0), parametros.get(1));
 					realizarCurso();
 				}
 			}
-
 		} catch (ExcepcionCursoActualVacio ex) {
-			Mensajes.mostrarAdvertencia(frame, ex.getMessage());
+			Mensajes.mostrarAdvertencia(this, ex.getMessage());
 		} catch (CursoSinPreguntasCiertaDificultad ex) {
-			Mensajes.mostrarError(frame, ex.getMessage());
+			Mensajes.mostrarError(this, ex.getMessage());
 		}
 	}
-	
-	/*
-	 * Metodo que maneja que controla la realizacion del curso
-	 */
+
 	private void realizarCurso() {
 		AtomicBoolean cursoCancelado = new AtomicBoolean(false);
-
-		Runnable onClose = () -> {
-			cursoCancelado.set(true);
-		};
+		Runnable onClose = () -> cursoCancelado.set(true);
 
 		while (cursoActual != null && !cursoCancelado.get()) {
 			Pregunta preguntaActual = cursoActual.getPreguntaActual();
 
 			if (preguntaActual == null) {
-				Mensajes.mostrarConfirmacion(frame, "!Curso completado!");
+				Mensajes.mostrarConfirmacion(this, "!Curso completado!");
 				cursoActual = controlador.finalizarSesionCurso();
 				break;
 			}
 
 			if (preguntaActual instanceof PreguntaTest) {
-				new TestView(frame, (PreguntaTest) preguntaActual, onClose).setVisible(true);
+				new TestView(this, (PreguntaTest) preguntaActual, onClose).setVisible(true);
 			} else if (preguntaActual instanceof PreguntaRellenarHueco) {
-				new RellenarHuecoView(frame, (PreguntaRellenarHueco) preguntaActual, onClose).setVisible(true);
+				new RellenarHuecoView(this, (PreguntaRellenarHueco) preguntaActual, onClose).setVisible(true);
 			} else if (preguntaActual instanceof PreguntaRespuestaCorta) {
-				new RespuestaCortaView(frame, (PreguntaRespuestaCorta) preguntaActual, onClose).setVisible(true);
+				new RespuestaCortaView(this, (PreguntaRespuestaCorta) preguntaActual, onClose).setVisible(true);
 			}
 
 			if (cursoCancelado.get()) {
 				cursoActual = controlador.finalizarSesionCurso();
 				break;
 			}
-			
+
 			controlador.avanzarProgreso();
 		}
 	}
@@ -245,29 +226,29 @@ public class Principal extends JFrame {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Selecciona un archivo YAML de curso");
 
-		int resultado = fileChooser.showOpenDialog(frame);
+		int resultado = fileChooser.showOpenDialog(this);
 		if (resultado == JFileChooser.APPROVE_OPTION) {
 			File archivo = fileChooser.getSelectedFile();
 			try {
 				Curso cursoAagregar = controlador.importarCurso(archivo);
 				model.addElement(cursoAagregar);
 			} catch (IOException e1) {
-				Mensajes.mostrarError(frame, "Error al leer el archivo: " + e1.getMessage());
+				Mensajes.mostrarError(this, "Error al leer el archivo: " + e1.getMessage());
 			} catch (ExcepcionCursoDuplicado e1) {
-				Mensajes.mostrarAdvertencia(frame, "El curso seleccionado ya está importado.");
+				Mensajes.mostrarAdvertencia(this, "El curso seleccionado ya está importado.");
 			}
 		}
 	}
 
 	private void eliminarCurso(Curso cursoSeleccionado) {
 		if (cursoSeleccionado != null) {
-			int confirm = Mensajes.mostrarSIoNO(frame, "¿Desea eliminar el curso seleccionado?");
+			int confirm = Mensajes.mostrarSIoNO(this, "¿Desea eliminar el curso seleccionado?");
 			if (confirm == JOptionPane.YES_OPTION) {
 				controlador.eliminarCurso(cursoSeleccionado);
 				model.removeElement(cursoSeleccionado);
 			}
 		} else {
-			Mensajes.mostrarAdvertencia(frame, "Seleccione un curso a eliminar");
+			Mensajes.mostrarAdvertencia(this, "Seleccione un curso a eliminar");
 		}
 	}
 
@@ -275,7 +256,7 @@ public class Principal extends JFrame {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Exportar estadísticas a PDF");
 
-		int userSelection = fileChooser.showSaveDialog(frame);
+		int userSelection = fileChooser.showSaveDialog(this);
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
 			String rutaArchivo = fileChooser.getSelectedFile().getAbsolutePath();
 			if (!rutaArchivo.endsWith(".txt")) {
@@ -283,14 +264,13 @@ public class Principal extends JFrame {
 			}
 			try {
 				controlador.exportarEstadisticas(rutaArchivo);
-				Mensajes.mostrarConfirmacion(frame, "¡Estadísticas exportadas correctamente!");
+				Mensajes.mostrarConfirmacion(this, "¡Estadísticas exportadas correctamente!");
 			} catch (IOException ex) {
 				ex.printStackTrace();
-				Mensajes.mostrarError(frame, "Error al exportar las estadísticas");
+				Mensajes.mostrarError(this, "Error al exportar las estadísticas");
 			}
 		}
 	}
-
 }
 
 class CourseCellRenderer extends JPanel implements ListCellRenderer<Curso> {
