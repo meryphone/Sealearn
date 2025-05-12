@@ -12,6 +12,11 @@ import java.time.temporal.ChronoUnit;
 import jakarta.persistence.*;
 import utils.DurationAttributeConverter;
 
+/**
+ * Representa las estadísticas de estudio de un usuario,
+ * incluyendo tiempo total de estudio, número de aciertos y fallos,
+ * así como rachas de días consecutivos de estudio.
+ */
 @Entity
 @Table(name = "Estadisticas")
 public class Estadistica {
@@ -32,6 +37,9 @@ public class Estadistica {
     private LocalDateTime inicioSesion;
     private LocalDate ultimoDiaEstudio;
 
+    /**
+     * Constructor por defecto. Inicializa las estadísticas en valores predeterminados.
+     */
     public Estadistica() {
         this.tiempoTotalEstudio = Duration.ZERO;
         this.mejorRacha = 0;
@@ -43,24 +51,29 @@ public class Estadistica {
         this.ultimoDiaEstudio = null;
     }
 
+    /**
+     * Registra una nueva respuesta del usuario.
+     *
+     * @param acierto true si la respuesta fue correcta; false si fue incorrecta.
+     */
     public void registrarRespuesta(boolean acierto) {
-		totalPreguntasRespondidas++;
+        totalPreguntasRespondidas++;
+        if (acierto) {
+            totalAciertos++;
+        } else {
+            totalFallos++;
+        }
+    }
 
-		if (acierto) {
-			totalAciertos++;
-		} else {
-			totalFallos++;
-		}
-	}
-
+    /**
+     * Registra el día de estudio actual y actualiza la racha correspondiente.
+     */
     public void registrarEstudioHoy() {
         LocalDate hoy = LocalDate.now();
-
         if (ultimoDiaEstudio == null) {
             rachaActual = 1;
         } else {
             long diasEntre = ChronoUnit.DAYS.between(ultimoDiaEstudio, hoy);
-
             if (diasEntre == 1) {
                 rachaActual++;
             } else if (diasEntre > 1) {
@@ -75,6 +88,9 @@ public class Estadistica {
         ultimoDiaEstudio = hoy;
     }
 
+    /**
+     * Finaliza la sesión actual y acumula el tiempo transcurrido al total de estudio.
+     */
     public void finalizarSesion() {
         if (inicioSesion != null) {
             Duration duracion = Duration.between(inicioSesion, LocalDateTime.now());
@@ -83,6 +99,9 @@ public class Estadistica {
         }
     }
 
+    /**
+     * Reinicia todas las estadísticas al estado inicial.
+     */
     public void reset() {
         this.totalPreguntasRespondidas = 0;
         this.totalAciertos = 0;
@@ -94,9 +113,15 @@ public class Estadistica {
         this.inicioSesion = LocalDateTime.now();
     }
 
+    /**
+     * Exporta las estadísticas actuales a un archivo de texto.
+     *
+     * @param rutaArchivo Ruta del archivo donde se escribirá la información.
+     * @throws IOException si ocurre un error al escribir el archivo.
+     */
     public void exportar(String rutaArchivo) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(rutaArchivo))) {
-            writer.write("Estadisticas de estudio\n\n");
+            writer.write("Estadísticas de estudio\n\n");
             writer.write("Total de preguntas respondidas: " + totalPreguntasRespondidas + "\n");
             writer.write("Total de aciertos: " + totalAciertos + "\n");
             writer.write("Total de fallos: " + totalFallos + "\n");
@@ -106,15 +131,17 @@ public class Estadistica {
                 writer.write("Tiempo total de estudio: " + minutos + " minutos\n");
             }
 
-            writer.write("Mejor racha de d�as estudiando: " + mejorRacha + "\n");
+            writer.write("Mejor racha de días estudiando: " + mejorRacha + "\n");
             writer.write("Racha actual: " + rachaActual + "\n");
 
             if (ultimoDiaEstudio != null) {
-                writer.write("Ultimo d�a de estudio: "
+                writer.write("Último día de estudio: "
                         + ultimoDiaEstudio.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n");
             }
         }
     }
+
+    // --- Getters y Setters ---
 
     public int getTotalPreguntasRespondidas() {
         return totalPreguntasRespondidas;
@@ -147,7 +174,7 @@ public class Estadistica {
     public LocalDateTime getInicioSesion() {
         return inicioSesion;
     }
-    
+
     public void setInicioSesion(LocalDateTime inicioSesion) {
         this.inicioSesion = inicioSesion;
     }
@@ -159,10 +186,12 @@ public class Estadistica {
     public void setId(Long id) {
         this.id = id;
     }
-    
-    //Necesario para pruebas
-	public void setUltimoDiaEstudio(LocalDate ultimoDia) {
-		ultimoDiaEstudio = ultimoDia;
-		
-	}
+
+    public void setUltimoDiaEstudio(LocalDate ultimoDia) {
+        this.ultimoDiaEstudio = ultimoDia;
+    }
+
+    public void setRachaActual(int racha) {
+        this.rachaActual = racha;
+    }
 }

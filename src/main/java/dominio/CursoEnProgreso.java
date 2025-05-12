@@ -7,109 +7,131 @@ import java.util.UUID;
 import jakarta.persistence.*;
 import utils.EstrategiaFactory;
 
+/**
+ * Representa un curso que está siendo realizado por un usuario, incluyendo
+ * su progreso, dificultad y estrategia de presentación de preguntas.
+ */
 @Entity
 @Table(name = "CursosEnProceso")
 public class CursoEnProgreso {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	Long id;
-	private UUID cursoId;
-	@Transient
-	private Estrategia estrategia;
-	@Transient
-	private List<Pregunta> preguntas;		
-	private Dificultad dificultad;
-	private int progreso;
-	private String estrategiaNombre;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Long id;
 
-	public static final int PROGRESO_INICIAL = 0;
+    private UUID cursoId;
 
-	public CursoEnProgreso() {
-	}
-	
-	public CursoEnProgreso(UUID cursoId, Estrategia estrategia, List<Pregunta> preguntas, Dificultad dificultad) {
-		this.progreso = PROGRESO_INICIAL;
-		this.cursoId = cursoId;
-		this.preguntas = preguntas;
-		this.estrategia = estrategia;
-		this.estrategiaNombre = estrategia.getClass().getSimpleName();
-		this.dificultad = dificultad;
-	}
+    @Transient
+    private Estrategia estrategia;
 
-	public CursoEnProgreso(UUID cursoId, String estrategia, List<Pregunta> preguntas, Dificultad dificultad) {
-		this.progreso = PROGRESO_INICIAL;
-		this.cursoId = cursoId;
-		this.preguntas = preguntas;
-		this.estrategiaNombre = estrategia;			
-		this.dificultad = dificultad;
-		reconstruirEstrategia();
-	}
+    @Transient
+    private List<Pregunta> preguntas;
 
-	public void reconstruirEstrategia() {
-		this.estrategia = EstrategiaFactory.crearEstrategia(estrategiaNombre, preguntas.size());		
-	}
+    private Dificultad dificultad;
 
-	public Pregunta getPreguntaActual() {
-		int indice = estrategia.mostrarPregunta(progreso);
-		if (indice >= 0 && indice < preguntas.size()) {
-			return preguntas.get(indice);
-		}
-		return null;
-	}
+    private int progreso;
 
-	public void avanzar() {
-		progreso++;
-	}
+    private String estrategiaNombre;
 
-	// Getters y Setters
+    public static final int PROGRESO_INICIAL = 0;
 
+    public CursoEnProgreso() {
+    }
 
-	public UUID getCursoId() {
-		return cursoId;
-	}
+    
+    public CursoEnProgreso(UUID cursoId, Estrategia estrategia, List<Pregunta> preguntas, Dificultad dificultad) {
+        this.progreso = PROGRESO_INICIAL;
+        this.cursoId = cursoId;
+        this.preguntas = preguntas;
+        this.estrategia = estrategia;
+        this.estrategiaNombre = estrategia.getClass().getSimpleName();
+        this.dificultad = dificultad;
+    }
 
-	public int getProgreso() {
-		return progreso;
-	}
+    public CursoEnProgreso(UUID cursoId, String estrategia, List<Pregunta> preguntas, Dificultad dificultad) {
+        this.progreso = PROGRESO_INICIAL;
+        this.cursoId = cursoId;
+        this.preguntas = preguntas;
+        this.estrategiaNombre = estrategia;
+        this.dificultad = dificultad;
+        reconstruirEstrategia();
+    }
 
-	public void setProgreso(int progreso) {
-		this.progreso = progreso;
-	}
+    public CursoEnProgreso(UUID id, int i) {
+        this.cursoId = id;
+        progreso = i;
+    }
 
-	public int getTotalPreguntas() {
-		return estrategia.getTotalPreguntas();
-	}
+    public void reconstruirEstrategia() {
+        this.estrategia = EstrategiaFactory.crearEstrategia(estrategiaNombre, preguntas.size());
+    }
 
+    /**
+     * Devuelve la pregunta que corresponde al progreso actual según la estrategia.
+     * 
+     * @return Pregunta actual o null si el índice está fuera de rango
+     */
+    public Pregunta getPreguntaActual() {
+        int indice = estrategia.mostrarPregunta(progreso);
+        if (indice >= 0 && indice < preguntas.size()) {
+            return preguntas.get(indice);
+        }
+        return null;
+    }
 
-	public List<Pregunta> getPreguntas() {
-		return Collections.unmodifiableList(preguntas);
-	}
+    /** Avanza al siguiente paso del progreso. */
+    public void avanzar() {
+        progreso++;
+    }
 
-	public void setPreguntas(List<Pregunta> preguntas) {
-		this.preguntas = preguntas;
-	}
+    // --- Getters y Setters ---
 
-	public Dificultad getDificultad() {
-		return dificultad;
-	}
+    public UUID getCursoId() {
+        return cursoId;
+    }
 
-	public boolean isCompletado() {
-		return progreso == getTotalPreguntas();
-	}
+    public int getProgreso() {
+        return progreso;
+    }
 
-	public Estrategia getEstrategia() {
-		return estrategia;
-	}
+    public void setProgreso(int progreso) {
+        this.progreso = progreso;
+    }
 
-	public String getEstrategiaNombre() {
-		return estrategiaNombre;
-	}
+    public int getTotalPreguntas() {
+        return estrategia.getTotalPreguntas();
+    }
 
-	public static int getProgresoInicial() {
-		return PROGRESO_INICIAL;
-	}
-	
-	
+    public List<Pregunta> getPreguntas() {
+        return Collections.unmodifiableList(preguntas);
+    }
 
+    public void setPreguntas(List<Pregunta> preguntas) {
+        this.preguntas = preguntas;
+    }
+
+    public Dificultad getDificultad() {
+        return dificultad;
+    }
+
+    /**
+     * Verifica si el curso ha sido completado.
+     * 
+     * @return true si el progreso alcanza el total de preguntas
+     */
+    public boolean isCompletado() {
+        return progreso == getTotalPreguntas();
+    }
+
+    public Estrategia getEstrategia() {
+        return estrategia;
+    }
+
+    public String getEstrategiaNombre() {
+        return estrategiaNombre;
+    }
+
+    public static int getProgresoInicial() {
+        return PROGRESO_INICIAL;
+    }
 }

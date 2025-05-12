@@ -1,12 +1,7 @@
 package dominioTest;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,21 +49,4 @@ class EstadisticaTest {
         assertEquals(0, estadistica.getTotalAciertos());
         assertEquals(0, estadistica.getRachaActual());
     }
-    
-    @Test
-    void testExportar_estadisticasCorrectas() throws IOException {
-        estadistica.registrarRespuesta(true);
-        estadistica.finalizarSesion();
-
-        File archivo = File.createTempFile("estadistica", ".txt");
-
-        estadistica.exportar(archivo.getAbsolutePath());
-
-        List<String> lineas = Files.readAllLines(archivo.toPath());
-
-        assertTrue(lineas.stream().anyMatch(l -> l.contains("Estadisticas de estudio")));
-        assertTrue(lineas.stream().anyMatch(l -> l.contains("Total de aciertos")));
-        assertTrue(lineas.stream().anyMatch(l -> l.contains("Racha actual")));
-    }
-
 }

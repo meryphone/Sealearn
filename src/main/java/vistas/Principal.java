@@ -19,14 +19,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.*;
 
-public class Principal {
+public class Principal extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	public final static Color BEIGE = new Color(211, 204, 194);
 	public final static Color BUTTON_COLOR = new Color(8, 32, 50);
 	private Controlador controlador = Controlador.getInstance();
 	private CursoEnProgreso cursoActual;
 	DefaultListModel<Curso> model = new DefaultListModel<Curso>();
-
 	private JFrame frame;
 
 	public static void main(String[] args) {
@@ -204,7 +204,10 @@ public class Principal {
 			Mensajes.mostrarError(frame, ex.getMessage());
 		}
 	}
-
+	
+	/*
+	 * Metodo que maneja que controla la realizacion del curso
+	 */
 	private void realizarCurso() {
 		AtomicBoolean cursoCancelado = new AtomicBoolean(false);
 
@@ -296,11 +299,11 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<Curso> {
 	private JLabel nameLabel;
 	private JLabel descriptionLabel;
 	private JPanel textPanel;
-	private JPanel leftPanel; // Panel para el icono
-	private JPanel rightPanel; // Panel para el bot�n
+	private JPanel leftPanel; 
+	private JPanel rightPanel; 
 
 	public CourseCellRenderer() {
-		setLayout(new BorderLayout(10, 10)); // Añadir espacio entre componentes
+		setLayout(new BorderLayout(10, 10)); 
 		setBackground(Principal.BEIGE);
 
 		// Panel izquierdo (icono) con BoxLayout
@@ -313,7 +316,7 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<Curso> {
 
 		// Icono
 		iconLabel = new JLabel(new ImageIcon(Principal.class.getResource("/imagenes/gorro-graduacion.png")));
-		iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10)); // M�rgenes
+		iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10)); 
 		iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrar horizontalmente
 		leftPanel.add(iconLabel);
 
@@ -325,55 +328,52 @@ class CourseCellRenderer extends JPanel implements ListCellRenderer<Curso> {
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS)); // Organizar verticalmente
 		rightPanel.setBackground(Principal.BEIGE);
 
-		// Espacio flexible arriba para centrar el bot�n
+		// Espacio flexible arriba para centrar el boton
 		rightPanel.add(Box.createVerticalGlue());
 
-		// Espacio flexible abajo para centrar el bot�n
+		// Espacio flexible abajo para centrar el boton
 		rightPanel.add(Box.createVerticalGlue());
 
 		// Nombre del curso
 		nameLabel = new JLabel();
-		nameLabel.setFont(new Font("Arial", Font.BOLD, 14)); // Fuente m�s grande para el nombre
+		nameLabel.setFont(new Font("Arial", Font.BOLD, 14)); 
 
-		// Descripci�n del curso
+		// Descripcion del curso
 		descriptionLabel = new JLabel();
-		descriptionLabel.setFont(new Font("Arial", Font.PLAIN, 10)); // Fuente m�s peque�a para la descripci�n
+		descriptionLabel.setFont(new Font("Arial", Font.PLAIN, 10)); 
 
-		// Panel para el nombre y la descripci�n
+		// Panel para el nombre y la descripcion
 		textPanel = new JPanel();
-		textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS)); // Organizar verticalmente
+		textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS)); 
 		textPanel.setBackground(Principal.BEIGE.brighter());
 
 		// Espacio flexible arriba para centrar el contenido
 		textPanel.add(Box.createVerticalGlue());
 
-		// Nombre y descripci�n
+		// Nombre y descripcion
 		textPanel.add(nameLabel);
 		textPanel.add(descriptionLabel);
 
 		// Espacio flexible abajo para centrar el contenido
 		textPanel.add(Box.createVerticalGlue());
+		
+		add(leftPanel, BorderLayout.WEST); 
+		add(textPanel, BorderLayout.CENTER); 
+		add(rightPanel, BorderLayout.EAST); 
 
-		// A�adir componentes al panel principal
-		add(leftPanel, BorderLayout.WEST); // Panel izquierdo (icono)
-		add(textPanel, BorderLayout.CENTER); // Panel central (nombre y descripci�n)
-		add(rightPanel, BorderLayout.EAST); // Panel derecho (bot�n)
 
-		// Establecer un tama�o preferido m�s alto para cada celda
-		setPreferredSize(new Dimension(300, 60)); // Ajusta el tama�o seg�n tus necesidades
+		setPreferredSize(new Dimension(300, 60)); 
 
 	}
 
 	@Override
 	public Component getListCellRendererComponent(JList<? extends Curso> list, Curso value, int index,
 			boolean isSelected, boolean cellHasFocus) {
-		// Asignar el nombre del curso
+		
 		nameLabel.setText(value.getNombre());
 
-		// Asignar una descripci�n de ejemplo (puedes personalizarla seg�n tus datos)
 		descriptionLabel.setText(value.getDescripcion());
 
-		// Cambiar el color de fondo si est� seleccionado
 		if (isSelected) {
 			setBackground(Principal.BEIGE.darker());
 			textPanel.setBackground(Principal.BEIGE.darker());

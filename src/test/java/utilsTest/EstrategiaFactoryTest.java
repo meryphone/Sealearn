@@ -12,7 +12,7 @@ class EstrategiaFactoryTest {
 	@Test
 	void construyeEstrategia() {
 		Estrategia estrategia1 = new RepeticionEspaciada(10);
-		Estrategia estrategia2 = EstrategiaFactory.crearEstrategia("RepeticionEspaciada", 10);
+		Estrategia estrategia2 = EstrategiaFactory.crearEstrategia("Repeticion Espaciada", 10);
 		assertTrue(estrategia1.getClass().equals(estrategia2.getClass()) &&
 				 estrategia1.getTotalPreguntas() == estrategia2.getTotalPreguntas());
 	}
