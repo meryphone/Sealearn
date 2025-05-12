@@ -20,10 +20,10 @@
 ## Opcion 2: Ejecutar desde Eclipse
 
 **Paso 1**: Importe el proyecto en Eclipse
-**Paso 2**: Accede a src/java/main abre el paquete de vistas
-**Paso 3**: Ejecute la clase Principal
+**Paso 2**: Accede a src/java/main abre el paquete 'App'
+**Paso 3**: Ejecute la clase 'Sealearn.java'
 
-A través de la ventana principal tiene acceso a el resto de ventanas y todas las funcionalidades implementadas.
+A través de esta ventana principal tiene acceso a el resto de ventanas y todas las funcionalidades implementadas.
 
 ## Opcion 3: Compilar el código fuente
 
