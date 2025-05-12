@@ -82,8 +82,8 @@ public class Controlador {
 
             cursoEnProgresoActual = new CursoEnProgreso(cursoSeleccionado.getId(), estrategia_, preguntasFiltradas, dificultad);
             estadistica.registrarEstudioHoy();
-            adaptadorCursoEnProgreso.guardar(cursoEnProgresoActual);
-
+		    estadistica.setInicioSesion(LocalDateTime.now()); // Se reinicia al comenzar una nueva sesión
+			adaptadorCursoEnProgreso.guardar(cursoEnProgresoActual);
             return cursoEnProgresoActual;
         } else {
             throw new ExcepcionCursoActualVacio("Seleccione un curso antes de comenzar");
@@ -176,7 +176,6 @@ public class Controlador {
             adaptadorCursoEnProgreso.actualizar(cursoEnProgresoActual);
         }
         estadistica.finalizarSesion();
-        estadistica.setInicioSesion(LocalDateTime.now());
         adaptadorEstadistica.actualizar(estadistica);
         cursoEnProgresoActual = null;
         return cursoEnProgresoActual;
@@ -225,6 +224,7 @@ public class Controlador {
     public List<Curso> getCursos() {
         return repoCursos.getCursos();
     }
+
 
     /**
      * Filtra preguntas por dificultad.

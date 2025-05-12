@@ -38,6 +38,7 @@ public class CursoEnProgreso {
     public CursoEnProgreso() {
     }
 
+    
     public CursoEnProgreso(UUID cursoId, Estrategia estrategia, List<Pregunta> preguntas, Dificultad dificultad) {
         this.progreso = PROGRESO_INICIAL;
         this.cursoId = cursoId;

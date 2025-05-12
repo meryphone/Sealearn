@@ -92,11 +92,11 @@ public class RespuestaCortaView extends JDialog {
 	private void validarRespuesta() {
 		String respuestaUsuario = textField.getText().trim();
 
-		if (respuestaUsuario.isEmpty()) {
-			Mensajes.mostrarAdvertencia(this, "Por favor, introduce una respuesta.");
-			return;
+		if (respuestaUsuario == null || respuestaUsuario.isEmpty()) {
+		    Mensajes.mostrarAdvertencia(this, "Por favor, introduce una respuesta.");
+		    return;
 		}
-
+		
 		boolean acierto = controlador.corregir(respuestaUsuario);
 		if (acierto) {
 			Mensajes.mostrarConfirmacion(this, "¡Correcto!");
